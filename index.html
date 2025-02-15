@@ -1,11 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xenia Manger</title>
+    <title>Xenia Manager</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    Coming soon.
+    <header>
+        <div class="logo-container">
+            <img src="https://avatars.githubusercontent.com/u/173571265?s=200&v=4" alt="Xenia Logo">
+            <h1>Xenia Manager</h1>
+            <button id="theme-toggle" aria-label="Toggle Theme">🌙</button>
+        </div>
+    </header>
+    <section class="section-box">
+        <h2>ℹ️ About Xenia Manager</h2>
+        <p>Xenia Manager is a tool designed to simplify the use of the Xenia Emulator. It aims to make playing games and
+            installing specific game patches more straightforward and user-friendly, while also providing an easy-to-use
+            interface for adjusting Xenia settings.</p>
+        <p>This project is not affiliated with the Xenia Team in any way.</p>
+    </section>
+    <section class="section-box">
+        <h2>🌟 Main Features</h2>
+        <ul class="features">
+            <li>✅ Easy 1-click setup for Xenia</li>
+            <li>🔄 Automatic updater for Xenia</li>
+            <li>🛠️ Support for game patches</li>
+            <li>📂 Support for managing downloadable content and game updates</li>
+            <li>🎮 Per game configuration profiles</li>
+            <li>🎯 Optimized settings for games made by the community.</li>
+            <li>💾 Import and export game saves</li>
+            <li>⚡ Low resource usage</li>
+        </ul>
+    </section>
+    <div class="grid-container">
+        <section class="section-box">
+            <h2>🚀 Latest Release</h2>
+            <p>Get the latest stable version of Xenia Manager for the best performance and reliability.</p>
+            <p><a href="https://github.com/xenia-manager/xenia-manager/releases/latest/download/xenia_manager.zip">Download
+                    Xenia Manager</a></p>
+        </section>
+        <section class="section-box">
+            <h2>🧪 Experimental Builds</h2>
+            <p>Try out the latest experimental features before they are merged into the stable release.</p>
+            <p><a href="https://github.com/xenia-manager/experimental-builds">Download Experimental Builds</a></p>
+        </section>
+    </div>
+    <div class="grid-container">
+        <section class="section-box">
+            <h2>📜 Optimized Settings Wiki</h2>
+            <p>Access a collection of optimized settings tailored by the community for the best gameplay experience.</p>
+            <p><a href="https://github.com/xenia-manager/Optimized-Settings">View Supported Games</a></p>
+            <p><a href="https://github.com/A1eNaz/Xenia-Game-Settings/wiki">AleNaz's Wiki</a></p>
+        </section>
+        <section class="section-box">
+            <h2>📌 Project</h2>
+            <p>Follow the development roadmap and track upcoming features and fixes.</p>
+            <p><a href="https://github.com/orgs/xenia-manager/projects/2">Project Details</a></p>
+        </section>
+    </div>
+    <section class="section-box">
+        <h2>🖼️ Screenshots</h2>
+        <div class="slider">
+            <button class="slider-button left">&#10094;</button>
+            <div class="slides">
+                <img src="https://raw.githubusercontent.com/xenia-manager/xenia-manager/refs/heads/main/Assets/Screenshots/2.%20Home%20with%20games.png"
+                    alt="Home with Games">
+                <img src="https://raw.githubusercontent.com/xenia-manager/xenia-manager/refs/heads/main/Assets/Screenshots/3.%20Xenia%20Settings.gif"
+                    alt="Xenia Settings">
+                <img src="https://raw.githubusercontent.com/xenia-manager/xenia-manager/refs/heads/main/Assets/Screenshots/4.%20Xenia%20Manager%20Settings.png"
+                    alt="Xenia Manager Settings">
+            </div>
+            <button class="slider-button right">&#10095;</button>
+        </div>
+        <section class="section-box">
+            <h2>🛠 Quickstart</h2>
+            <p>Get started with Xenia Manager quickly and easily. Follow the step-by-step guide to set up the emulator,
+                configure your games, and troubleshoot common issues.</p>
+            <ul>
+                <li><a href="https://github.com/xenia-manager/xenia-manager/wiki/Quickstart">View Quickstart Guide</a>
+                </li>
+                <li><a href="https://github.com/xenia-manager/xenia-manager/wiki/FAQ">Frequently Asked Questions</a>
+                </li>
+                <li><a href="https://github.com/xenia-manager/xenia-manager/wiki/Contributing">How to Contribute</a>
+                </li>
+            </ul>
+        </section>
+    </section>
+    <footer class="section-box credits">
+        <h2>🎨 Credits</h2>
+        <div class="section-box">
+            <h3>Research & References</h3>
+            <ul>
+                <li><a href="https://icons8.com/icons">Icons8</a> (for compatibility rating icons)</li>
+                <li><a href="https://xenia.jp/">Xenia Team</a> (for creating Xenia)</li>
+                <li><a href="https://github.com/Team-Resurgent/Xbox360Toolkit">Team Resurgent</a> (for creating
+                    Xbox360Toolkit)</li>
+                <h3>Libraries used</h3>
+                <li><a href="https://github.com/dlemstra/Magick.NET">Magick.NET</a> (for creating game icons)</li>
+                <li><a href="https://www.newtonsoft.com/json">Newtonsoft.JSON</a> (for pasring .JSON files)</li>
+                <li><a href="https://serilog.net/">Serilog</a> (for logging and diagnostics)</li>
+                <li><a href="https://github.com/xoofx/Tomlyn">Tomlyn</a> (for parsing .TOML files)</li>
+            </ul>
+        </div>
+    </footer>
+    <script>
+        const slides = document.querySelector('.slides');
+        const images = document.querySelectorAll('.slides img');
+        let currentIndex = 0;
+        const intervalTime = 3000; // Time in milliseconds (3000ms = 3 seconds)
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleButton = document.getElementById('theme-toggle');
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+
+            if (currentTheme === 'light') {
+                document.body.classList.add('light-mode');
+                toggleButton.textContent = '🌙';
+            } else {
+                toggleButton.textContent = '☀️';
+            }
+
+            toggleButton.addEventListener('click', () => {
+                document.body.classList.toggle('light-mode');
+                const theme = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+                localStorage.setItem('theme', theme);
+                toggleButton.textContent = theme === 'light' ? '🌙' : '☀️';
+            });
+        });
+        // Update the slider position
+        function updateSlider() {
+            slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
+
+        // Move to the next slide
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % images.length;
+            updateSlider();
+        }
+
+        // Move to the previous slide
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            updateSlider();
+        }
+
+        // Set up automatic sliding
+        let slideInterval = setInterval(nextSlide, intervalTime);
+
+        // Pause sliding when hovering over the slider
+        slides.addEventListener('mouseenter', () => {
+            clearInterval(slideInterval);
+        });
+
+        // Resume sliding when not hovering over the slider
+        slides.addEventListener('mouseleave', () => {
+            slideInterval = setInterval(nextSlide, intervalTime);
+        });
+
+        // Add event listeners for navigation buttons
+        document.querySelector('.slider-button.right').addEventListener('click', () => {
+            nextSlide();
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, intervalTime);
+        });
+
+        document.querySelector('.slider-button.left').addEventListener('click', () => {
+            prevSlide();
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, intervalTime);
+        });
+
+    </script>
+
 </body>
+
 </html>

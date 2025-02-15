@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xenia Manager</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+    .screenshots-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 10px;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+    }
+    .screenshots-grid img {
+        width: 100%;
+        max-width: 400px;
+        border-radius: 10px;
+    }
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            background-color: #181818;
+            color: white;
+        }
+        a {
+            color: lightblue;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        img {
+            width: 80%;
+            max-width: 600px;
+            margin: 10px 0;
+        }
+        .features, .credits ul {
+            list-style: none;
+            padding: 0;
+        }
+.section-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+        .features li, .credits ul li {
+            margin: 10px 0;
+        }
+        .credits {
+            margin-top: 20px;
+        }
+        .logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adds spacing between icon and text */
+    padding: 10px;
+        }
+        .logo-container img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+        .section-box {
+            border: 1px solid #444;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            background-color: #252525;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="https://avatars.githubusercontent.com/u/173571265?s=200&v=4" alt="Xenia Logo">
+            <h1>Xenia Manager</h1>
+        </div>
+    </header>
+    <section class="section-box">
+        <h2>ℹ️ About Xenia Manager</h2>
+        <p>Xenia Manager is a tool designed to simplify the use of the Xenia Emulator. It aims to make playing games and installing specific game patches more straightforward and user-friendly, while also providing an easy-to-use interface for adjusting Xenia settings.</p>
+        <p>This project is not affiliated with the Xenia Team in any way.</p>
+    </section>
+    <div class="grid-container">
+        <section class="section-box">
+            <h2>🚀 Latest Release</h2>
+            <p>Get the latest stable version of Xenia Manager for the best performance and reliability.</p>
+            <p><a href="https://github.com/xenia-manager/xenia-manager/releases">Download Xenia Manager</a></p>
+        </section>
+        <section class="section-box">
+            <h2>🧪 Experimental Builds</h2>
+            <p>Try out the latest experimental features before they are merged into the stable release.</p>
+            <p><a href="https://github.com/xenia-manager/experimental-builds">Download Experimental Builds</a></p>
+        </section>
+        <section class="section-box">
+            <h2>📜 Optimized Settings Wiki</h2>
+            <p>Access a collection of optimized settings tailored by the community for the best gameplay experience.</p>
+            <p><a href="https://github.com/xenia-manager/Optimized-Settings">View Supported Games</a></p>
+            <p><a href="https://github.com/A1eNaz/Xenia-Game-Settings/wiki">AleNaz's Wiki</a></p>
+        </section>
+        <section class="section-box">
+            <h2>📌 Project</h2>
+            <p>Follow the development roadmap and track upcoming features and fixes.</p>
+            <p><a href="https://github.com/orgs/xenia-manager/projects/2">Project Details</a></p>
+        </section>
+    </div>
+    <section class="section-box">
+        <h2>🌟 Main Features</h2>
+        <ul class="features">
+            <li>✅ Easy 1-click setup for Xenia</li>
+            <li>🔄 Automatic updater for Xenia</li>
+            <li>🛠️ Support for game patches</li>
+            <li>📂 Support for managing downloadable content and game updates</li>
+            <li>🎮 Per game configuration profiles</li>
+            <li>🎯 Optimized settings for games made by the community.</li>
+            <li>💾 Import and export game saves</li>
+            <li>⚡ Low resource usage</li>
+        </ul>
+    </section>
+<section class="section-box">
+    <h2>🖼️ Screenshots</h2>
+    <div class="screenshots-grid">
+        <img src="https://raw.githubusercontent.com/xenia-manager/xenia-manager/refs/heads/main/Assets/Screenshots/1.%20Welcome.png" alt="Welcome">
+        <img src="https://raw.githubusercontent.com/xenia-manager/xenia-manager/refs/heads/main/Assets/Screenshots/2.%20Home%20with%20games.png" alt="Home with Games">
+        <img src="https://raw.githubusercontent.com/xenia-manager/xenia-manager/refs/heads/main/Assets/Screenshots/3.%20Xenia%20Settings.gif" alt="Xenia Settings">
+        <img src="https://raw.githubusercontent.com/xenia-manager/xenia-manager/refs/heads/main/Assets/Screenshots/4.%20Xenia%20Manager%20Settings.png" alt="Xenia Manager Settings">
+    </div>
+    <section class="section-box">
+        <h2>🛠 Quickstart</h2>
+        <p>Get started with Xenia Manager quickly and easily. Follow the step-by-step guide to set up the emulator, configure your games, and troubleshoot common issues.</p>
+        <ul>
+        <li><a href="https://github.com/xenia-manager/xenia-manager/wiki/Quickstart">View Quickstart Guide</a></li>
+        <li><a href="https://github.com/xenia-manager/xenia-manager/wiki/FAQ">Frequently Asked Questions</a></li>
+        <li><a href="https://github.com/xenia-manager/xenia-manager/wiki/Contributing">How to Contribute</a></li>
+        </ul>
+    </section>
+</section>
+    <footer class="section-box credits">
+        <h2>🎨 Credits</h2>
+        <div class="section-box">
+            <h3>Research & References</h3>
+            <ul>
+                <li><a href="https://icons8.com/icons">Icons8</a> (for compatibility rating icons)</li>
+                <li><a href="https://xenia.jp/">Xenia Team</a> (for creating Xenia)</li>
+                <li><a href="https://github.com/Team-Resurgent/Xbox360Toolkit">Team Resurgent</a> (for creating Xbox360Toolkit)</li>
+            <h3>Libraries used</h3>
+                <li><a href="https://github.com/dlemstra/Magick.NET">Magick.NET</a> (for creating game icons)</li>
+                <li><a href="https://www.newtonsoft.com/json">Newtonsoft.JSON</a> (for pasring .JSON files)</li>
+                <li><a href="https://serilog.net/">Serilog</a> (for logging and diagnostics)</li>
+                <li><a href="https://github.com/xoofx/Tomlyn">Tomlyn</a> (for parsing .TOML files)</li>
+            </ul>
+        </div>
+    </footer>
+</body>
+</html>

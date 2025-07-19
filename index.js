@@ -165,3 +165,89 @@ class SteamStyleSlideshow {
 document.addEventListener('DOMContentLoaded', () => {
     new SteamStyleSlideshow();
 });
+
+let cachedGamesTableHTML = null;
+
+async function showSupportedGames() {
+    // If already cached, use it
+    if (cachedGamesTableHTML) {
+        displayGamesModal(cachedGamesTableHTML);
+        return;
+    }
+
+    const baseURL = "https://xenia-manager.github.io/Optimized-Settings/";
+    const url = baseURL;
+    const response = await fetch(url);
+    const text = await response.text();
+
+    // Extract the table HTML from the Markdown
+    const tableMatch = text.match(/<table id="games-table"[\s\S]*?<\/table>/);
+    if (!tableMatch) {
+        alert("Could not find games table.");
+        return;
+    }
+    let tableHTML = tableMatch[0];
+
+    // Load into a temporary DOM so we can rewrite img srcs
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = tableHTML;
+    const table = tempDiv.querySelector('table');
+    if (table) {
+        // For each <img> in the first <td> of each row, prepend the baseURL
+        table.querySelectorAll('tr').forEach(row => {
+            const firstTd = row.querySelector('td:first-child img');
+            if (firstTd) {
+                const relSrc = firstTd.getAttribute('src');
+                // Only rewrite if it's a relative path
+                if (!/^https?:\/\//i.test(relSrc)) {
+                    firstTd.src = baseURL + relSrc;
+                }
+            }
+        });
+        tableHTML = table.outerHTML;
+    }
+
+    // Cache for future use
+    cachedGamesTableHTML = tableHTML;
+    displayGamesModal(tableHTML);
+}
+
+function displayGamesModal(tableHTML) {
+    // Create a modal backdrop
+    let backdrop = document.getElementById('games-modal-backdrop');
+    if (!backdrop) {
+        backdrop = document.createElement('div');
+        backdrop.id = 'games-modal-backdrop';
+        backdrop.className = 'games-modal-backdrop';
+        document.body.appendChild(backdrop);
+    }
+    backdrop.style.display = 'block';
+
+    // Create the modal
+    let modal = document.getElementById('games-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'games-modal';
+        modal.className = 'games-modal';
+        modal.innerHTML = `
+            <button class="games-modal-close" aria-label="Close">&times;</button>
+            <h2 class="games-modal-title">Supported Games</h2>
+            <div id="games-table-container"></div>
+        `;
+        document.body.appendChild(modal);
+
+        // Close on button click or backdrop click
+        modal.querySelector('.games-modal-close').onclick = closeGamesModal;
+        backdrop.onclick = closeGamesModal;
+    }
+    document.getElementById('games-table-container').innerHTML = tableHTML;
+    modal.style.display = 'block';
+
+    function closeGamesModal() {
+        modal.style.display = 'none';
+        backdrop.style.display = 'none';
+    }
+}
+
+// Attach to your button
+document.getElementById('view-supported-games-btn').onclick = showSupportedGames;

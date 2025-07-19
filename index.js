@@ -1,8 +1,7 @@
 class SteamStyleSlideshow {
     constructor() {
         this.currentIndex = 0;
-        this.isPlaying = true;
-
+        this.lastDirection = 'right';
         this.slides = [
             {
                 url: "screenshots/2. Library (Filled).png",
@@ -40,8 +39,6 @@ class SteamStyleSlideshow {
                 description: "Easily install, update, or remove Xenia builds (including Canary, Mousehook, and Netplay)."
             }
         ];
-
-
         this.init();
     }
 
@@ -49,6 +46,7 @@ class SteamStyleSlideshow {
         this.setupEventListeners();
         this.setupThemeToggle();
         this.preloadImages();
+        this.updateSlide();
     }
 
     setupEventListeners() {
@@ -72,28 +70,37 @@ class SteamStyleSlideshow {
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') this.previousSlide();
             if (e.key === 'ArrowRight') this.nextSlide();
-            if (e.key === ' ') {
-                e.preventDefault();
-            }
+            if (e.key === ' ') e.preventDefault();
         });
+
+        // Navigation buttons (if present)
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        if (prevBtn) prevBtn.addEventListener('click', () => this.previousSlide());
+        if (nextBtn) nextBtn.addEventListener('click', () => this.nextSlide());
     }
 
     goToSlide(index) {
+        if (index < 0 || index >= this.slides.length) return;
         this.lastDirection = index > this.currentIndex ? 'right' : 'left';
         this.currentIndex = index;
         this.updateSlide();
     }
 
     nextSlide() {
-        this.lastDirection = 'right';
-        this.currentIndex = (this.currentIndex + 1) % this.slides.length;
-        this.updateSlide();
+        if (this.currentIndex < this.slides.length - 1) {
+            this.lastDirection = 'right';
+            this.currentIndex++;
+            this.updateSlide();
+        }
     }
 
     previousSlide() {
-        this.lastDirection = 'left';
-        this.currentIndex = (this.currentIndex - 1 + this.slides.length) % this.slides.length;
-        this.updateSlide();
+        if (this.currentIndex > 0) {
+            this.lastDirection = 'left';
+            this.currentIndex--;
+            this.updateSlide();
+        }
     }
 
     updateSlide() {
@@ -102,11 +109,11 @@ class SteamStyleSlideshow {
         const title = document.getElementById('image-title');
         const description = document.getElementById('image-description');
 
-        // Determine direction
-        const direction = this.lastDirection === 'left' ? 'slide-left' : 'slide-right';
+        if (!mainImage || !title || !description) return;
 
-        // Change image with animation
-        mainImage.classList.remove('slide-left', 'slide-right'); // remove old classes
+        // Animation direction
+        const direction = this.lastDirection === 'left' ? 'slide-left' : 'slide-right';
+        mainImage.classList.remove('slide-left', 'slide-right');
         void mainImage.offsetWidth; // force reflow
         mainImage.src = slide.url;
         mainImage.alt = slide.title;
@@ -115,23 +122,24 @@ class SteamStyleSlideshow {
         mainImage.classList.add(direction);
 
         // Update active states
-        document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
-            thumb.classList.toggle('active', index === this.currentIndex);
+        document.querySelectorAll('.thumbnail').forEach((thumb, idx) => {
+            thumb.classList.toggle('active', idx === this.currentIndex);
         });
-
-        document.querySelectorAll('.progress-dot').forEach((dot, index) => {
-            dot.classList.toggle('active', index === this.currentIndex);
+        document.querySelectorAll('.progress-dot').forEach((dot, idx) => {
+            dot.classList.toggle('active', idx === this.currentIndex);
         });
 
         // Update navigation buttons
-        document.getElementById('prev-btn').disabled = this.currentIndex === 0;
-        document.getElementById('next-btn').disabled = this.currentIndex === this.slides.length - 1;
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        if (prevBtn) prevBtn.disabled = this.currentIndex === 0;
+        if (nextBtn) nextBtn.disabled = this.currentIndex === this.slides.length - 1;
     }
 
     setupThemeToggle() {
         const toggleButton = document.getElementById('theme-toggle');
+        if (!toggleButton) return;
         const toggleIcon = toggleButton.querySelector('.toggle-icon');
-
         const savedTheme = localStorage.getItem('xenia-theme') || 'dark';
         this.applyTheme(savedTheme, toggleIcon);
 
@@ -146,10 +154,10 @@ class SteamStyleSlideshow {
     applyTheme(theme, toggleIcon) {
         if (theme === 'light') {
             document.body.classList.add('light-mode');
-            toggleIcon.textContent = '🌙';
+            if (toggleIcon) toggleIcon.textContent = '🌙';
         } else {
             document.body.classList.remove('light-mode');
-            toggleIcon.textContent = '☀️';
+            if (toggleIcon) toggleIcon.textContent = '☀️';
         }
     }
 
@@ -169,51 +177,51 @@ document.addEventListener('DOMContentLoaded', () => {
 let cachedGamesTableHTML = null;
 
 async function showSupportedGames() {
-    // If already cached, use it
     if (cachedGamesTableHTML) {
         displayGamesModal(cachedGamesTableHTML);
         return;
     }
 
     const baseURL = "https://xenia-manager.github.io/Optimized-Settings/";
-    const url = baseURL;
-    const response = await fetch(url);
-    const text = await response.text();
+    try {
+        const response = await fetch(baseURL);
+        if (!response.ok) throw new Error("Network response was not ok");
+        const text = await response.text();
 
-    // Extract the table HTML from the Markdown
-    const tableMatch = text.match(/<table id="games-table"[\s\S]*?<\/table>/);
-    if (!tableMatch) {
-        alert("Could not find games table.");
-        return;
-    }
-    let tableHTML = tableMatch[0];
+        // Extract the table HTML from the Markdown
+        const tableMatch = text.match(/<table id="games-table"[\s\S]*?<\/table>/);
+        if (!tableMatch) {
+            alert("Could not find games table.");
+            return;
+        }
+        let tableHTML = tableMatch[0];
 
-    // Load into a temporary DOM so we can rewrite img srcs
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = tableHTML;
-    const table = tempDiv.querySelector('table');
-    if (table) {
-        // For each <img> in the first <td> of each row, prepend the baseURL
-        table.querySelectorAll('tr').forEach(row => {
-            const firstTd = row.querySelector('td:first-child img');
-            if (firstTd) {
-                const relSrc = firstTd.getAttribute('src');
-                // Only rewrite if it's a relative path
-                if (!/^https?:\/\//i.test(relSrc)) {
-                    firstTd.src = baseURL + relSrc;
+        // Load into a temporary DOM so we can rewrite img srcs
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = tableHTML;
+        const table = tempDiv.querySelector('table');
+        if (table) {
+            // For each <img> in the first <td> of each row, prepend the baseURL
+            table.querySelectorAll('tr').forEach(row => {
+                const img = row.querySelector('td:first-child img');
+                if (img) {
+                    const relSrc = img.getAttribute('src');
+                    if (relSrc && !/^https?:\/\//i.test(relSrc)) {
+                        img.src = baseURL + relSrc;
+                    }
                 }
-            }
-        });
-        tableHTML = table.outerHTML;
-    }
+            });
+            tableHTML = table.outerHTML;
+        }
 
-    // Cache for future use
-    cachedGamesTableHTML = tableHTML;
-    displayGamesModal(tableHTML);
+        cachedGamesTableHTML = tableHTML;
+        displayGamesModal(tableHTML);
+    } catch (err) {
+        alert("Failed to load supported games table.");
+    }
 }
 
 function displayGamesModal(tableHTML) {
-    // Create a modal backdrop
     let backdrop = document.getElementById('games-modal-backdrop');
     if (!backdrop) {
         backdrop = document.createElement('div');
@@ -223,7 +231,6 @@ function displayGamesModal(tableHTML) {
     }
     backdrop.style.display = 'block';
 
-    // Create the modal
     let modal = document.getElementById('games-modal');
     if (!modal) {
         modal = document.createElement('div');
@@ -250,4 +257,5 @@ function displayGamesModal(tableHTML) {
 }
 
 // Attach to your button
-document.getElementById('view-supported-games-btn').onclick = showSupportedGames;
+const viewGamesBtn = document.getElementById('view-supported-games-btn');
+if (viewGamesBtn) viewGamesBtn.onclick = showSupportedGames;

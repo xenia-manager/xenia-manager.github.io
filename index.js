@@ -335,7 +335,7 @@ class SteamStyleSlideshow {
 class GamesTableManager {
     constructor() {
         this.cachedGamesTableHTML = null;
-        this.baseURL = "https://xenia-manager.github.io/Optimized-Settings/";
+        this.baseURL = "https://xenia-manager.github.io/optimized-settings/";
         this.modal = null;
         this.backdrop = null;
 

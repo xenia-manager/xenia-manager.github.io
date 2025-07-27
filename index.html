@@ -4,178 +4,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Xenia Manager: A user-friendly tool for managing Xenia Emulator, game patches, and settings.">
+    <meta property="og:title" content="Xenia Manager">
+    <meta property="og:description"
+        content="A user-friendly tool for managing Xenia Emulator, game patches, and settings.">
+    <meta property="og:image" content="https://avatars.githubusercontent.com/u/173571265?s=200&v=4">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://xenia-manager.github.io/">
     <title>Xenia Manager</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+    <div class="background-layers">
+        <div class="mica-layer"></div>
+        <div class="gradient-overlay"></div>
+    </div>
+
     <header>
         <div class="logo-container">
             <img src="https://avatars.githubusercontent.com/u/173571265?s=200&v=4" alt="Xenia Logo">
-            <h1>Xenia Manager</h1>
-            <button id="theme-toggle" aria-label="Toggle Theme">🌙</button>
+            <h1><a href="index.html">Xenia Manager</a></h1>
         </div>
+        <button id="theme-toggle" aria-label="Toggle Theme">
+            <span class="toggle-icon">🌙</span>
+        </button>
     </header>
-    <section class="section-box">
-        <h2>ℹ️ About Xenia Manager</h2>
-        <p>Xenia Manager is a tool designed to simplify the use of the Xenia Emulator. It aims to make playing games and
-            installing specific game patches more straightforward and user-friendly, while also providing an easy-to-use
-            interface for adjusting Xenia settings.</p>
-        <p>This project is not affiliated with the Xenia Team in any way.</p>
-    </section>
-    <section class="section-box">
-        <h2>🌟 Main Features</h2>
-        <ul class="features">
-            <li>✅ Easy 1-click setup for Xenia</li>
-            <li>🔄 Automatic updater for Xenia</li>
-            <li>🛠️ Support for game patches</li>
-            <li>📂 Support for managing downloadable content and game updates</li>
-            <li>🎮 Per game configuration profiles</li>
-            <li>🎯 Optimized settings for games made by the community.</li>
-            <li>💾 Import and export game saves</li>
-            <li>⚡ Low resource usage</li>
-        </ul>
-    </section>
-    <div class="grid-container">
-        <section class="section-box">
-            <h2>🚀 Latest Release</h2>
-            <p>Get the latest stable version of Xenia Manager for the best performance and reliability.</p>
-            <p><a href="https://github.com/xenia-manager/xenia-manager/releases/latest/download/xenia_manager.zip">Download
-                    Xenia Manager</a></p>
-        </section>
-        <section class="section-box">
-            <h2>🧪 Experimental Builds</h2>
-            <p>Try out the latest experimental features before they are merged into the stable release.</p>
-            <p><a href="https://github.com/xenia-manager/experimental-builds/releases/">Download Experimental Builds</a></p>
-        </section>
-    </div>
-    <div class="grid-container">
-        <section class="section-box">
-            <h2>📜 Optimized Settings Wiki</h2>
-            <p>Access a collection of optimized settings tailored by the community for the best gameplay experience.</p>
-            <p><a href="https://github.com/xenia-manager/Optimized-Settings">View Supported Games</a></p>
-            <p><a href="https://github.com/A1eNaz/Xenia-Game-Settings/wiki">AleNaz's Wiki</a></p>
-        </section>
-        <section class="section-box">
-            <h2>📌 Project</h2>
-            <p>Follow the development roadmap and track upcoming features and fixes.</p>
-            <p><a href="https://github.com/orgs/xenia-manager/projects/2">Project Details</a></p>
-        </section>
-    </div>
-    <section class="section-box">
-        <h2>🖼️ Screenshots</h2>
-        <div class="slider">
-            <button class="slider-button left">&#10094;</button>
-            <div class="slides">
-                <img src="https://raw.githubusercontent.com/xenia-manager/xenia-manager/refs/heads/xm-v2/Assets/Screenshots/2.%20Home%20with%20games.png"
-                    alt="Home with Games">
-                <img src="https://raw.githubusercontent.com/xenia-manager/xenia-manager/refs/heads/xm-v2/Assets/Screenshots/3.%20Xenia%20Settings.gif"
-                    alt="Xenia Settings">
-                <img src="https://raw.githubusercontent.com/xenia-manager/xenia-manager/refs/heads/xm-v2/Assets/Screenshots/4.%20Xenia%20Manager%20Settings.png"
-                    alt="Xenia Manager Settings">
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-content">
+                <h2>ℹ️ About Xenia Manager</h2>
+                <p>Xenia Manager is a tool designed to simplify the use of the Xenia Emulator. It aims to make playing
+                    games and
+                    installing specific game patches more straightforward and user-friendly, while also providing an
+                    easy-to-use
+                    interface for adjusting Xenia settings.</p>
+                <p class="disclaimer">This project is not affiliated with the Xenia Team in any way.</p>
             </div>
-            <button class="slider-button right">&#10095;</button>
+        </section>
+
+        <section class="features-section">
+            <h2>🌟 Main Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🔄</span>
+                    <span>Automatic updater for Xenia</span>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🛠️</span>
+                    <span>Support for game patches
+                        <p>
+                            <a href="https://github.com/xenia-canary/game-patches/tree/main/patches"
+                                class="link-button">Canary</a>
+                            <a href="https://github.com/AdrianCassar/Xenia-WebServices/tree/main/patches"
+                                class="link-button">Netplay</a>
+                        </p>
+                    </span>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📂</span>
+                    <span>Support for managing downloadable content and game updates</span>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🎮</span>
+                    <span>Per game configuration profiles</span>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🎯</span>
+                    <span>Optimized settings for games made by the community</span>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">💾</span>
+                    <span>Import and export game saves</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid-container">
+            <section class="section-box download-section">
+                <h2>🚀 Latest Release</h2>
+                <p>Get the latest stable version of Xenia Manager for the best performance and reliability.</p>
+                <a href="https://github.com/xenia-manager/xenia-manager/releases/latest/download/xenia_manager.zip"
+                    class="download-button">
+                    Download Xenia Manager
+                </a>
+            </section>
+            <section class="section-box experimental-section">
+                <h2>🧪 Experimental Builds</h2>
+                <p>Try out the latest experimental features before they are merged into the stable release.</p>
+                <a href="https://github.com/xenia-manager/experimental-builds/releases/latest/download/xenia_manager.zip"
+                    class="download-button secondary">
+                    Download Experimental Build
+                </a>
+            </section>
         </div>
-        <section class="section-box">
+
+        <div class="grid-container">
+            <section class="section-box">
+                <h2>📜 Optimized Settings Wiki</h2>
+                <p>
+                    Access a collection of optimized settings tailored by the community for the best gameplay
+                    experience. (Port of <a href="https://github.com/A1eNaz/Xenia-Game-Settings/wiki">AleNaz's Wiki</a>)
+                </p>
+                <div class="link-group">
+                    <button id="view-supported-games-btn" class="link-button" type="button">View Supported
+                        Games</button>
+                </div>
+            </section>
+        </div>
+
+        <section class="screenshots-section">
+            <h2>🖼️ Screenshots</h2>
+            <div class="steam-showcase">
+                <div class="main-display">
+                    <img class="main-image" id="main-image" src="screenshots\2. Library (Filled).png"
+                        alt="Home with Games">
+                    <div class="image-overlay">
+                        <div class="image-title" id="image-title">Home with Games</div>
+                        <div class="image-description" id="image-description">Browse your Xbox 360 game library with an
+                            intuitive interface that displays game covers, titles, and compatibility information.</div>
+                    </div>
+                </div>
+
+                <div class="thumbnail-nav">
+                    <div class="thumbnail active" data-index="0" tabindex="0">
+                        <img src="screenshots/2. Library (Filled).png" alt="Game Library (Grid)">
+                        <div class="thumbnail-indicator">Game Library</div>
+                    </div>
+                    <div class="thumbnail" data-index="1" tabindex="0">
+                        <img src="screenshots/3. Library (List).png" alt="Game Library (List)">
+                        <div class="thumbnail-indicator">Game Library</div>
+                    </div>
+                    <div class="thumbnail" data-index="2" tabindex="0">
+                        <img src="screenshots/6. Content Viewer.png" alt="Content Viewer">
+                        <div class="thumbnail-indicator">Content Viewer</div>
+                    </div>
+                    <div class="thumbnail" data-index="3" tabindex="0">
+                        <img src="screenshots/9. Patch Downloader.png" alt="Patch Downloader">
+                        <div class="thumbnail-indicator">Patch Downloader</div>
+                    </div>
+                    <div class="thumbnail" data-index="4" tabindex="0">
+                        <img src="screenshots/10. Patch Configurator.png" alt="Patch Configurator">
+                        <div class="thumbnail-indicator">Patch Configurator</div>
+                    </div>
+                    <div class="thumbnail" data-index="5" tabindex="0">
+                        <img src="screenshots/15. Xenia Settings.png" alt="Manage Xenia">
+                        <div class="thumbnail-indicator">Manage Xenia</div>
+                    </div>
+                    <div class="thumbnail" data-index="6" tabindex="0">
+                        <img src="screenshots/16. Manage Xenia.png" alt="Manage Xenia">
+                        <div class="thumbnail-indicator">Manage Xenia</div>
+                    </div>
+                </div>
+
+                <div class="progress-dots">
+                    <div class="progress-dot active" data-index="0"></div>
+                    <div class="progress-dot" data-index="1"></div>
+                    <div class="progress-dot" data-index="2"></div>
+                    <div class="progress-dot" data-index="3"></div>
+                    <div class="progress-dot" data-index="4"></div>
+                    <div class="progress-dot" data-index="5"></div>
+                    <div class="progress-dot" data-index="6"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="translation-progress-section" style="text-align:center; margin-bottom:3rem;">
+            <h2>🌐 Translation Progress</h2>
+            <img src="https://raw.githubusercontent.com/xenia-manager/xenia-manager/main/assets/translation-progress.png"
+                alt="Translation Progress for Xenia Manager"
+                style="max-width:100%; height:auto; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.2); margin-top:1rem;">
+            <p style="color:var(--text-secondary); margin-top:0.5rem;">
+                Help us translate Xenia Manager! <a
+                    href="https://github.com/xenia-manager/xenia-manager/blob/main/TRANSLATIONS.md"
+                    style="color:var(--text-accent);">Learn more</a>
+            </p>
+        </section>
+
+        <section class="quickstart-section">
             <h2>🛠 Quickstart</h2>
             <p>Get started with Xenia Manager quickly and easily. Follow the step-by-step guide to set up the emulator,
                 configure your games, and troubleshoot common issues.</p>
-            <ul>
-                <li><a href="https://github.com/xenia-manager/xenia-manager/wiki/Quickstart">View Quickstart Guide</a>
-                </li>
-                <li><a href="https://github.com/xenia-manager/xenia-manager/wiki/FAQ">Frequently Asked Questions</a>
-                </li>
-                <li><a href="https://github.com/xenia-manager/xenia-manager/wiki/Contributing">How to Contribute</a>
-                </li>
-            </ul>
+            <div class="quickstart-links">
+                <a href="https://github.com/xenia-manager/xenia-manager/wiki/Quickstart" class="quickstart-link">
+                    <span class="link-icon">📖</span>
+                    <span>View Quickstart Guide</span>
+                </a>
+                <a href="https://github.com/xenia-manager/xenia-manager/wiki/FAQ" class="quickstart-link">
+                    <span class="link-icon">❓</span>
+                    <span>Frequently Asked Questions</span>
+                </a>
+            </div>
         </section>
-    </section>
-    <footer class="section-box credits">
+    </main>
+
+    <footer class="credits-section">
         <h2>🎨 Credits</h2>
-        <div class="section-box">
-            <h3>Research & References</h3>
-            <ul>
-                <li><a href="https://icons8.com/icons">Icons8</a> (for compatibility rating icons)</li>
-                <li><a href="https://xenia.jp/">Xenia Team</a> (for creating Xenia)</li>
-                <li><a href="https://github.com/Team-Resurgent/Xbox360Toolkit">Team Resurgent</a> (for creating
-                    Xbox360Toolkit)</li>
+        <div class="credits-grid">
+            <div class="credit-category">
+                <h3>Research & References</h3>
+                <ul>
+                    <li><a href="https://xenia.jp/">Xenia Team</a> (for creating Xenia)</li>
+                    <li><a href="https://github.com/Team-Resurgent/Xbox360Toolkit">Team Resurgent</a> (for creating
+                        Xbox360Toolkit)</li>
+                    <li><a href="https://github.com/BartoszCichecki/LenovoLegionToolkit/">LenovoLegionToolkit</a>
+                        (forked his configuration/settings manager for Xenia Manager)</li>
+                </ul>
+            </div>
+            <div class="credit-category">
                 <h3>Libraries used</h3>
-                <li><a href="https://github.com/dlemstra/Magick.NET">Magick.NET</a> (for creating game icons)</li>
-                <li><a href="https://www.newtonsoft.com/json">Newtonsoft.JSON</a> (for pasring .JSON files)</li>
-                <li><a href="https://serilog.net/">Serilog</a> (for logging and diagnostics)</li>
-                <li><a href="https://github.com/xoofx/Tomlyn">Tomlyn</a> (for parsing .TOML files)</li>
-            </ul>
+                <ul>
+                    <li><a href="https://github.com/falahati/NvAPIWrapper">NvAPIWrapper</a> (NVIDIA Driver Settings)
+                    </li>
+                    <li><a href="https://github.com/dlemstra/Magick.NET">Magick.NET</a> (for creating game icons)</li>
+                    <li><a href="https://serilog.net/">Serilog</a> (for logging and diagnostics)</li>
+                    <li><a href="https://github.com/SteamRE/SteamKit">SteamKit2</a> (parsing Valve's VDF file)</li>
+                    <li><a href="https://github.com/xoofx/Tomlyn">Tomlyn</a> (for parsing .TOML files)</li>
+                    <li><a href="https://wpfui.lepo.co/">WPF UI by LepoCo</a> (powering Xenia Manager's UI)</li>
+                </ul>
+            </div>
         </div>
     </footer>
-    <script>
-        const slides = document.querySelector('.slides');
-        const images = document.querySelectorAll('.slides img');
-        let currentIndex = 0;
-        const intervalTime = 3000; // Time in milliseconds (3000ms = 3 seconds)
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const toggleButton = document.getElementById('theme-toggle');
-            const currentTheme = localStorage.getItem('theme') || 'dark';
-
-            if (currentTheme === 'light') {
-                document.body.classList.add('light-mode');
-                toggleButton.textContent = '🌙';
-            } else {
-                toggleButton.textContent = '☀️';
-            }
-
-            toggleButton.addEventListener('click', () => {
-                document.body.classList.toggle('light-mode');
-                const theme = document.body.classList.contains('light-mode') ? 'light' : 'dark';
-                localStorage.setItem('theme', theme);
-                toggleButton.textContent = theme === 'light' ? '🌙' : '☀️';
-            });
-        });
-        // Update the slider position
-        function updateSlider() {
-            slides.style.transform = `translateX(-${currentIndex * 100}%)`;
-        }
-
-        // Move to the next slide
-        function nextSlide() {
-            currentIndex = (currentIndex + 1) % images.length;
-            updateSlider();
-        }
-
-        // Move to the previous slide
-        function prevSlide() {
-            currentIndex = (currentIndex - 1 + images.length) % images.length;
-            updateSlider();
-        }
-
-        // Set up automatic sliding
-        let slideInterval = setInterval(nextSlide, intervalTime);
-
-        // Pause sliding when hovering over the slider
-        slides.addEventListener('mouseenter', () => {
-            clearInterval(slideInterval);
-        });
-
-        // Resume sliding when not hovering over the slider
-        slides.addEventListener('mouseleave', () => {
-            slideInterval = setInterval(nextSlide, intervalTime);
-        });
-
-        // Add event listeners for navigation buttons
-        document.querySelector('.slider-button.right').addEventListener('click', () => {
-            nextSlide();
-            clearInterval(slideInterval);
-            slideInterval = setInterval(nextSlide, intervalTime);
-        });
-
-        document.querySelector('.slider-button.left').addEventListener('click', () => {
-            prevSlide();
-            clearInterval(slideInterval);
-            slideInterval = setInterval(nextSlide, intervalTime);
-        });
-
-    </script>
-
+    <script src="index.js"></script>
 </body>
 
 </html>

@@ -11,6 +11,7 @@ import { Footer } from "@/components/Footer";
 import { QuickstartSection } from "@/components/QuickstartSection";
 import { ContributingSection } from "@/components/ContributingSection";
 import { CommunitySection } from "@/components/CommunitySection";
+import { OptimizedSettingsSection } from "@/components/OptimizedSettingsSection";
 
 export default function Home() {
   return (
@@ -26,6 +27,7 @@ export default function Home() {
         <ContributingSection />
         <CommunitySection />
         <TranslationProgressSection />
+        <OptimizedSettingsSection />
       </main>
       <Footer />
     </>

@@ -37,7 +37,9 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
           const dateDiff =
             new Date(b.last_modified).getTime() -
             new Date(a.last_modified).getTime();
-          if (dateDiff !== 0) return dateDiff;
+          if (dateDiff !== 0) {
+            return dateDiff;
+          }
           return a.title.localeCompare(b.title);
         });
         setGames(sorted);
@@ -335,6 +337,32 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
 export function OptimizedSettingsSection() {
   const [showPopup, setShowPopup] = useState(false);
   const [gameCount, setGameCount] = useState<number | null>(null);
+  const [isClient, setIsClient] = useState(false);
+
+  // Mark as client-side rendered
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Check URL hash on mount and when hash changes
+  useEffect(() => {
+    if (!isClient) {
+      return;
+    }
+
+    const checkHash = () => {
+      if (window.location.hash === "#optimized-settings") {
+        setShowPopup(true);
+      }
+    };
+
+    // Check on mount
+    checkHash();
+
+    // Listen for hash changes
+    window.addEventListener("hashchange", checkHash);
+    return () => window.removeEventListener("hashchange", checkHash);
+  }, [isClient]);
 
   // Fetch game count on mount
   useEffect(() => {
@@ -363,9 +391,20 @@ export function OptimizedSettingsSection() {
     fetchGameCount();
   }, []);
 
+  const handleOpenPopup = useCallback(() => {
+    setShowPopup(true);
+    window.location.hash = "optimized-settings";
+  }, []);
+
+  const handleClosePopup = useCallback(() => {
+    setShowPopup(false);
+    // Clear hash by replacing the URL without the hash
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+  }, []);
+
   return (
     <>
-      <section className="py-16 px-4">
+      <section className="py-16 px-4" id="optimized-settings-section">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4 gradient-text">
             Optimized Settings
@@ -379,7 +418,7 @@ export function OptimizedSettingsSection() {
             )}
           </p>
           <button
-            onClick={() => setShowPopup(true)}
+            onClick={handleOpenPopup}
             className="btn-xbox inline-flex items-center gap-2"
           >
             <svg
@@ -407,7 +446,7 @@ export function OptimizedSettingsSection() {
       </section>
 
       {showPopup && (
-        <OptimizedSettingsPopup onClose={() => setShowPopup(false)} />
+        <OptimizedSettingsPopup onClose={handleClosePopup} />
       )}
     </>
   );

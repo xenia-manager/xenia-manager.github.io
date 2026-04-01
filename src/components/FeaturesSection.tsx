@@ -1,10 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { OptimizedSettingsPopup } from "./OptimizedSettingsSection";
 
 export function FeaturesSection() {
   const [showOptimizedSettings, setShowOptimizedSettings] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  // Mark as client-side rendered
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Check URL hash on mount and when hash changes
+  useEffect(() => {
+    if (!isClient) {
+      return;
+    }
+
+    const checkHash = () => {
+      if (window.location.hash === "#optimized-settings") {
+        setShowOptimizedSettings(true);
+      }
+    };
+
+    // Check on mount
+    checkHash();
+
+    // Listen for hash changes
+    window.addEventListener("hashchange", checkHash);
+    return () => window.removeEventListener("hashchange", checkHash);
+  }, [isClient]);
+
+  const handleOpenPopup = () => {
+    setShowOptimizedSettings(true);
+    window.location.hash = "#optimized-settings";
+  };
+
+  const handleClosePopup = () => {
+    setShowOptimizedSettings(false);
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+  };
 
   const features = [
     {
@@ -313,7 +349,7 @@ export function FeaturesSection() {
           <div className="mt-6">
             <div
               className="glass-card rounded-2xl p-8 card-hover border border-[var(--border-color)] flex flex-col items-center text-center cursor-pointer"
-              onClick={() => setShowOptimizedSettings(true)}
+              onClick={handleOpenPopup}
             >
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[var(--color-xbox-green)] to-[var(--color-xbox-button)] flex items-center justify-center text-white mb-4">
                 {optimizedSettingsFeature.icon}
@@ -352,9 +388,7 @@ export function FeaturesSection() {
       </section>
 
       {showOptimizedSettings && (
-        <OptimizedSettingsPopup
-          onClose={() => setShowOptimizedSettings(false)}
-        />
+        <OptimizedSettingsPopup onClose={handleClosePopup} />
       )}
     </>
   );

@@ -1,0 +1,308 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+
+  /* Xbox Green Palette */
+  --color-xbox-green: #77b900;
+  --color-xbox-button: #107c10;
+  --color-xbox-hover: #0e700e;
+  --color-xbox-dark: #0b4f0b;
+  --color-xbox-accent: #8cc63e;
+
+  /* Dark Theme Colors */
+  --color-dark-primary: #0a0a0a;
+  --color-dark-secondary: rgba(31, 31, 31, 0.7);
+  --color-dark-accent: rgba(42, 42, 42, 0.6);
+  --color-dark-tertiary: rgba(20, 20, 20, 0.8);
+
+  /* Light Theme Colors */
+  --color-light-primary: #f5f5f5;
+  --color-light-secondary: rgba(255, 255, 255, 0.85);
+  --color-light-accent: rgba(245, 245, 245, 0.7);
+  --color-light-tertiary: rgba(230, 230, 230, 0.6);
+
+  /* Gradient */
+  --gradient-primary: linear-gradient(135deg, #77b900, #107c10);
+
+  /* Border Colors */
+  --border-color: rgba(255, 255, 255, 0.1);
+
+  /* Theme CSS variables - for compatibility with Game Compatibility project */
+  --bg-primary: var(--color-dark-primary);
+  --bg-secondary: var(--color-dark-secondary);
+  --bg-accent: var(--color-dark-accent);
+  --bg-tertiary: var(--color-dark-tertiary);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: #f5f5f5;
+    --foreground: #171717;
+    --border-color: rgba(0, 0, 0, 0.12);
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* Theme Classes */
+body.light-mode {
+  --background: var(--color-light-primary);
+  --color-primary: var(--color-light-primary);
+  --color-secondary: var(--color-light-secondary);
+  --color-accent: var(--color-light-accent);
+  --color-tertiary: var(--color-light-tertiary);
+  --border-color: rgba(0, 0, 0, 0.12);
+  --foreground: #171717;
+  --bg-primary: var(--color-light-primary);
+  --bg-secondary: var(--color-light-secondary);
+  --bg-accent: var(--color-light-accent);
+  --bg-tertiary: var(--color-light-tertiary);
+}
+
+body.dark-mode,
+body:not(.light-mode) {
+  --background: var(--color-dark-primary);
+  --color-primary: var(--color-dark-primary);
+  --color-secondary: var(--color-dark-secondary);
+  --color-accent: var(--color-dark-accent);
+  --color-tertiary: var(--color-dark-tertiary);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --foreground: #ededed;
+  --bg-primary: var(--color-dark-primary);
+  --bg-secondary: var(--color-dark-secondary);
+  --bg-accent: var(--color-dark-accent);
+  --bg-tertiary: var(--color-dark-tertiary);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-tertiary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-xbox-green);
+  border-radius: 10px;
+  border: 3px solid var(--color-tertiary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-xbox-button);
+}
+
+/* Glassmorphism Effects */
+.glass-card {
+  background: var(--color-secondary);
+  backdrop-filter: blur(40px) saturate(120%);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+body.light-mode .glass-card {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+.mica-layer {
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(119, 185, 0, 0.12) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(16, 124, 16, 0.1) 0%,
+      transparent 50%
+    );
+  backdrop-filter: blur(80px);
+}
+
+body.light-mode .mica-layer {
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(119, 185, 0, 0.08) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(16, 124, 16, 0.06) 0%,
+      transparent 50%
+    );
+}
+
+/* Animations */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Button Styles */
+.btn-xbox {
+  background: var(--color-xbox-button);
+  color: white;
+  border-radius: 12px;
+  padding: 14px 24px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-xbox:hover {
+  background: var(--color-xbox-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(16, 124, 16, 0.3);
+}
+
+.btn-xbox:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-xbox::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 20px;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(25deg);
+  transition: all 0.4s;
+}
+
+.btn-xbox:hover::after {
+  left: 120%;
+}
+
+.btn-xbox-secondary {
+  background: rgba(119, 185, 0, 0.15);
+  color: var(--color-xbox-button);
+  border: 1px solid var(--color-xbox-green);
+  border-radius: 12px;
+  padding: 14px 24px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+body.light-mode .btn-xbox-secondary {
+  background: rgba(119, 185, 0, 0.2);
+  color: var(--color-xbox-dark);
+}
+
+.btn-xbox-secondary:hover {
+  background: rgba(119, 185, 0, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Card Hover Effects */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(119, 185, 0, 0.2);
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Input Styles */
+.input-fluent {
+  background: var(--color-accent);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 12px 16px;
+  backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+  color: var(--foreground);
+}
+
+body.light-mode .input-fluent {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.input-fluent:focus {
+  outline: none;
+  border-color: var(--color-xbox-green);
+  box-shadow: 0 0 0 2px rgba(119, 185, 0, 0.2);
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus indicator for accessibility */
+.focus-indicator:focus {
+  outline: 2px solid var(--color-xbox-green);
+  outline-offset: 2px;
+}

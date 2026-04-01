@@ -240,12 +240,15 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
                   style={{ height: "64px" }}
                 >
                   <div className="h-full px-4 flex items-center">
-                    <div>
+                    <div className="flex-1">
                       <h3 className="text-lg font-bold text-[var(--foreground)]">
                         {selectedGame.title}
                       </h3>
-                      <div className="text-sm text-[var(--foreground)]/60">
-                        Last Updated: {formatDate(selectedGame.last_modified)}
+                      <div className="text-sm text-[var(--foreground)]/60 flex items-center justify-between">
+                        <span>
+                          <span className="font-mono">{selectedGame.id}</span>
+                        </span>
+                        <span>Last Updated: {formatDate(selectedGame.last_modified)}</span>
                       </div>
                     </div>
                   </div>

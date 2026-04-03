@@ -24,6 +24,13 @@ A modern, responsive website for Xenia Manager built with Next.js 16 and featuri
 - **Optimized Settings** - View TOML configurations directly within the table
 - **Pagination** - Configurable page sizes (25, 50, 100, 200 games per page)
 
+### Xenia Canary Releases Page
+- **Release Browser** - Browse Xenia Canary builds with direct download links
+- **Date Range Filtering** - Filter releases by custom date ranges
+- **Search & Sort** - Search by title/commit, sort by newest/oldest
+- **Infinite Scroll** - Load more releases as you scroll
+- **Platform Downloads** - Direct links for Windows and Linux builds
+
 ## Getting Started
 
 ### Prerequisites
@@ -69,6 +76,11 @@ The application fetches data from:
   - List: `https://xenia-manager.github.io/optimized-settings/data/settings.json`
   - Settings: `https://xenia-manager.github.io/optimized-settings/settings/{GAME_ID}.toml`
 
+### Xenia Canary Releases Page
+- **Xenia Releases**: [xenia-manager/database](https://github.com/xenia-manager/database)
+  - `https://xenia-manager.github.io/database/data/xenia-releases/canary.json`
+  - Backup: `https://raw.githubusercontent.com/xenia-manager/database/refs/heads/main/data/xenia-releases/canary.json`
+
 ## Project Structure
 
 ```
@@ -77,28 +89,50 @@ src/
 │   ├── globals.css       # Global styles with theme variables
 │   ├── layout.tsx        # Root layout
 │   ├── page.tsx          # Main landing page
-│   └── game-compatibility/
-│       └── page.tsx      # Game compatibility page
+│   ├── game-compatibility/
+│   │   └── page.tsx      # Game compatibility page
+│   └── xenia-canary-releases/
+│       └── page.tsx      # Xenia Canary releases page
 ├── components/
-│   ├── Landing Page
-│   │   ├── Footer.tsx                    # Site footer
+│   ├── Shared
+│   │   ├── Footer.tsx                    # Site footer (landing page)
 │   │   ├── Header.tsx                    # Site header with theme toggle
-│   │   ├── OptimizedSettingsSection.tsx  # Optimized settings popup with animations
-│   │   ├── ScreenshotsSection.tsx        # Interactive screenshot gallery with zoom
-│   │   └── TranslationProgressSection.tsx # Translation progress display
+│   │   ├── BackgroundLayers.tsx          # Animated background layers
+│   │   └── ThemeProvider.tsx             # Theme context provider
 │   │
-│   └── Game Compatibility
-│       ├── GameCompatibilityFooter.tsx   # Footer for compatibility page
-│       ├── GameCompatibilityList.tsx     # Main list component with filtering/pagination
-│       ├── GameCompatibilityTable.tsx    # Table with expandable settings
-│       ├── StateFilterBar.tsx            # Compatibility state filter buttons
-│       ├── LetterFilterBar.tsx           # A-Z letter filter
-│       ├── TomlDisplay.tsx               # TOML settings display
-│       └── CustomSelect.tsx              # Custom dropdown component
+│   ├── Landing Page
+│   │   ├── HeroSection.tsx               # Landing page hero
+│   │   ├── FeaturesSection.tsx           # Features grid
+│   │   ├── DownloadSection.tsx           # Download cards
+│   │   ├── QuickstartSection.tsx         # Quickstart guide
+│   │   ├── ScreenshotsSection.tsx        # Screenshot gallery
+│   │   ├── ContributingSection.tsx       # Contributing info
+│   │   ├── CommunitySection.tsx          # Community links
+│   │   ├── TranslationProgressSection.tsx # Translation progress
+│   │   └── OptimizedSettingsSection.tsx  # Settings popup
+│   │
+│   ├── Game Compatibility
+│   │   ├── GameCompatibilityList.tsx     # Main list with filtering/pagination
+│   │   ├── GameCompatibilityTable.tsx    # Table with expandable settings
+│   │   ├── GameCompatibilityFooter.tsx   # Footer for compatibility page
+│   │   ├── StateFilterBar.tsx            # Compatibility state filters
+│   │   ├── LetterFilterBar.tsx           # A-Z letter filter
+│   │   ├── TomlDisplay.tsx               # TOML settings display
+│   │   └── CustomSelect.tsx              # Custom dropdown
+│   │
+│   └── Xenia Canary Releases
+│       ├── XeniaCanaryReleasesList.tsx   # Main releases list with infinite scroll
+│       ├── XeniaCanaryReleaseCard.tsx    # Individual release card
+│       ├── XeniaCanaryFilterBar.tsx      # Search and date filters
+│       ├── XeniaCanaryDatePicker.tsx     # Date picker component
+│       ├── XeniaCanaryCustomSelect.tsx   # Custom select for date picker
+│       ├── XeniaCanaryHeroSection.tsx    # Hero banner
+│       └── XeniaCanaryFooter.tsx         # Footer for releases page
 └── lib/
-    ├── fetchWithFallback.ts  # Fetch utility with fallback URLs
-    ├── tomlParser.ts         # TOML file parser
-    └── types.ts              # TypeScript type definitions
+    ├── fetchWithFallback.ts              # Fetch utility with fallback URLs
+    ├── tomlParser.ts                     # TOML file parser
+    ├── types.ts                          # Game compatibility types
+    └── xeniaCanaryTypes.ts               # Xenia Canary release types
 ```
 
 ## Available Scripts

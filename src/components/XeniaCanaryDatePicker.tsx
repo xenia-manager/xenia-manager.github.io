@@ -1,0 +1,182 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
+import XeniaCanaryCustomSelect from "./XeniaCanaryCustomSelect";
+
+interface XeniaCanaryDatePickerProps {
+  value: string;
+  onChange: (value: string) => void;
+  label: string;
+  earliestDate?: string;
+}
+
+export default function XeniaCanaryDatePicker({
+  value,
+  onChange,
+  label,
+  earliestDate,
+}: XeniaCanaryDatePickerProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [tempDate, setTempDate] = useState(value);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const parseDate = (dateStr: string) => {
+    if (!dateStr) {
+      return { year: "", month: "", day: "" };
+    }
+    const [year, month, day] = dateStr.split("-");
+    return { year, month, day };
+  };
+
+  const { year, month, day } = parseDate(tempDate);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
+  const handleApply = () => {
+    if (year && month && day) {
+      const newDate = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+      if (earliestDate && newDate < earliestDate) {
+        return;
+      }
+      onChange(newDate);
+      setTempDate(newDate);
+    }
+    setIsOpen(false);
+  };
+
+  const handleClear = () => {
+    onChange("");
+    setTempDate("");
+    setIsOpen(false);
+  };
+
+  const months = [
+    { value: "01", label: "January" },
+    { value: "02", label: "February" },
+    { value: "03", label: "March" },
+    { value: "04", label: "April" },
+    { value: "05", label: "May" },
+    { value: "06", label: "June" },
+    { value: "07", label: "July" },
+    { value: "08", label: "August" },
+    { value: "09", label: "September" },
+    { value: "10", label: "October" },
+    { value: "11", label: "November" },
+    { value: "12", label: "December" },
+  ];
+
+  const days = Array.from({ length: 31 }, (_, i) =>
+    (i + 1).toString().padStart(2, "0"),
+  );
+  const currentYear = new Date().getFullYear();
+  const earliestYear = earliestDate
+    ? new Date(earliestDate).getFullYear()
+    : currentYear - 10;
+  const years = Array.from({ length: currentYear - earliestYear + 1 }, (_, i) =>
+    (currentYear - i).toString(),
+  );
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <label className="block text-sm font-medium mb-2 text-fluent-secondary">
+        {label}
+      </label>
+
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        className="input-fluent cursor-pointer flex items-center justify-between transition-all duration-200"
+      >
+        <span className={value ? "" : "opacity-50"}>
+          {value
+            ? new Date(value + "T00:00:00").toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })
+            : "Select date..."}
+        </span>
+        <svg className="w-5 h-5 text-fluent-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+          />
+        </svg>
+      </div>
+
+      {isOpen && (
+        <div className="absolute z-50 mt-2 p-4 rounded-xl shadow-2xl min-w-[320px] mica-surface backdrop-blur-xl">
+          <div className="flex gap-3 mb-4">
+            <div className="flex-1">
+              <XeniaCanaryCustomSelect
+                label="Year"
+                value={year}
+                onChange={(y) => setTempDate(`${y}-${month}-${day}`)}
+                placeholder="Year"
+                options={years.map((y) => ({
+                  value: y,
+                  label: y,
+                  disabled: earliestDate
+                    ? parseInt(y) < new Date(earliestDate).getFullYear()
+                    : false,
+                }))}
+              />
+            </div>
+            <div className="flex-1">
+              <XeniaCanaryCustomSelect
+                label="Month"
+                value={month}
+                onChange={(m) => setTempDate(`${year}-${m}-${day}`)}
+                placeholder="Month"
+                options={months}
+              />
+            </div>
+            <div className="flex-1">
+              <XeniaCanaryCustomSelect
+                label="Day"
+                value={day}
+                onChange={(d) => setTempDate(`${year}-${month}-${d}`)}
+                placeholder="Day"
+                options={days.map((d) => ({ value: d, label: d }))}
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-2">
+            <button
+              onClick={handleApply}
+              disabled={!year || !month || !day}
+              className="flex-1 btn-xbox py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Apply
+            </button>
+            <button
+              onClick={handleClear}
+              className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-[var(--bg-accent)] text-fluent-primary hover:bg-[var(--bg-accent)]/80"
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

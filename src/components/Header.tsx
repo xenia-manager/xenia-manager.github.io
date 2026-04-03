@@ -10,6 +10,8 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const isGameCompatibilityPage = pathname === "/game-compatibility";
+  const isXeniaCanaryReleasesPage = pathname === "/xenia-canary-releases";
+  const shouldHideFAQ = isGameCompatibilityPage || isXeniaCanaryReleasesPage;
 
   return (
     <header className="sticky top-0 z-50 glass-card border-b border-[var(--border-color)]">
@@ -38,20 +40,18 @@ export function Header() {
             >
               Game Compatibility
             </Link>
-            <a
-              href="https://xenia-manager.github.io/xenia-mirror/"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/xenia-canary-releases"
               className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium whitespace-nowrap"
             >
               Xenia Canary Releases
-            </a>
+            </Link>
           </nav>
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-2">
             {/* Navigation Links - Mobile (shown before theme toggle) */}
-            {!isGameCompatibilityPage && (
+            {!shouldHideFAQ && (
               <nav className="hidden lg:flex items-center gap-2 mr-2">
                 <a
                   href="https://github.com/xenia-manager/xenia-manager/wiki/FAQ"
@@ -131,15 +131,13 @@ export function Header() {
             >
               Game Compatibility
             </Link>
-            <a
-              href="https://xenia-manager.github.io/xenia-mirror/"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/xenia-canary-releases"
               className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium py-2 px-3 rounded-lg hover:bg-[var(--bg-accent)]"
             >
               Xenia Canary Releases
-            </a>
-            {!isGameCompatibilityPage && (
+            </Link>
+            {!shouldHideFAQ && (
               <a
                 href="https://github.com/xenia-manager/xenia-manager/wiki/FAQ"
                 target="_blank"

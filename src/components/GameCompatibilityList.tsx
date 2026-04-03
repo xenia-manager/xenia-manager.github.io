@@ -20,9 +20,11 @@ const PAGE_SIZE_OPTIONS = [25, 50, 100, 200];
 
 interface GameCompatibilityListProps {
   onLoadingChange?: (loading: boolean) => void;
+  onStateCountsChange?: (counts: Record<string, number>) => void;
+  onTotalCountChange?: (count: number) => void;
 }
 
-export default function GameCompatibilityList({ onLoadingChange }: GameCompatibilityListProps) {
+export default function GameCompatibilityList({ onLoadingChange, onStateCountsChange, onTotalCountChange }: GameCompatibilityListProps) {
   const [allGames, setAllGames] = useState<GameCompatibility[]>([]);
   const [optimizedGames, setOptimizedGames] = useState<OptimizedSettingGame[]>(
     [],
@@ -163,6 +165,16 @@ export default function GameCompatibilityList({ onLoadingChange }: GameCompatibi
   const optimizedCount = useMemo(() => {
     return optimizedGames.length;
   }, [optimizedGames]);
+
+  // Notify parent of state counts changes
+  useEffect(() => {
+    onStateCountsChange?.(stateCounts);
+  }, [stateCounts, onStateCountsChange]);
+
+  // Notify parent of total count changes
+  useEffect(() => {
+    onTotalCountChange?.(allGames.length);
+  }, [allGames.length, onTotalCountChange]);
 
   // Calculate pagination
   const totalPages = Math.ceil(sortedGames.length / pageSize);

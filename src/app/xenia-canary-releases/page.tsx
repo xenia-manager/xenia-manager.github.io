@@ -16,8 +16,12 @@ export default function XeniaCanaryReleasesPage() {
       <BackgroundLayers />
       <main className="flex-1">
         <div className="container mx-auto px-4 py-8 max-w-5xl">
-          <HeroSection />
-          <ReleasesList />
+          <div className="animate-fade-in-up" style={{ animationDelay: "0ms" }}>
+            <HeroSection />
+          </div>
+          <div className="animate-fade-in-up" style={{ animationDelay: "150ms" }}>
+            <ReleasesList />
+          </div>
         </div>
       </main>
       <XeniaCanaryFooter />

@@ -18,14 +18,30 @@ export default function Home() {
       <Header />
       <BackgroundLayers />
       <main className="flex-1">
-        <HeroSection />
-        <FeaturesSection />
-        <DownloadSection />
-        <QuickstartSection />
-        <ScreenshotsSection />
-        <ContributingSection />
-        <CommunitySection />
-        <TranslationProgressSection />
+        <div className="animate-fade-in-up" style={{ animationDelay: "0ms" }}>
+          <HeroSection />
+        </div>
+        <div className="animate-fade-in-up" style={{ animationDelay: "100ms" }}>
+          <FeaturesSection />
+        </div>
+        <div className="animate-fade-in-up" style={{ animationDelay: "200ms" }}>
+          <DownloadSection />
+        </div>
+        <div className="animate-fade-in-up" style={{ animationDelay: "300ms" }}>
+          <QuickstartSection />
+        </div>
+        <div className="animate-fade-in-up" style={{ animationDelay: "400ms" }}>
+          <ScreenshotsSection />
+        </div>
+        <div className="animate-fade-in-up" style={{ animationDelay: "500ms" }}>
+          <ContributingSection />
+        </div>
+        <div className="animate-fade-in-up" style={{ animationDelay: "600ms" }}>
+          <CommunitySection />
+        </div>
+        <div className="animate-fade-in-up" style={{ animationDelay: "700ms" }}>
+          <TranslationProgressSection />
+        </div>
       </main>
       <Footer />
     </>

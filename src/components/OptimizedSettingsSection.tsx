@@ -155,14 +155,25 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
               style={{ height: "64px" }}
             >
               <div className="w-full h-full px-4 flex items-center">
-                <input
-                  type="text"
-                  placeholder="Search games..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="input-fluent w-full px-4"
-                  style={{ height: "40px" }}
-                />
+                <div className="relative w-full">
+                  <input
+                    type="text"
+                    placeholder="Search games..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="input-fluent w-full px-4 pr-10"
+                    style={{ height: "40px" }}
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery("")}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full transition-colors text-fluent-secondary hover:bg-white/10"
+                      aria-label="Clear search"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
 

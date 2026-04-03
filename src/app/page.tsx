@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect, useCallback } from "react";
 import { Header } from "@/components/Header";
 import { BackgroundLayers } from "@/components/BackgroundLayers";
 import { HeroSection } from "@/components/HeroSection";
@@ -11,8 +12,42 @@ import { Footer } from "@/components/Footer";
 import { QuickstartSection } from "@/components/QuickstartSection";
 import { ContributingSection } from "@/components/ContributingSection";
 import { CommunitySection } from "@/components/CommunitySection";
+import { OptimizedSettingsPopup } from "@/components/OptimizedSettingsSection";
 
 export default function Home() {
+  const [showOptimizedSettings, setShowOptimizedSettings] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  // Mark as client-side rendered
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Check URL hash on mount and when hash changes
+  useEffect(() => {
+    if (!isClient) return;
+
+    const checkHash = () => {
+      if (window.location.hash === "#optimized-settings") {
+        setShowOptimizedSettings(true);
+      }
+    };
+
+    checkHash();
+    window.addEventListener("hashchange", checkHash);
+    return () => window.removeEventListener("hashchange", checkHash);
+  }, [isClient]);
+
+  const handleOpenOptimizedSettings = useCallback(() => {
+    setShowOptimizedSettings(true);
+    window.location.hash = "optimized-settings";
+  }, []);
+
+  const handleCloseOptimizedSettings = useCallback(() => {
+    setShowOptimizedSettings(false);
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+  }, []);
+
   return (
     <>
       <Header />
@@ -22,7 +57,7 @@ export default function Home() {
           <HeroSection />
         </div>
         <div className="animate-fade-in-up" style={{ animationDelay: "100ms" }}>
-          <FeaturesSection />
+          <FeaturesSection onOpenOptimizedSettings={handleOpenOptimizedSettings} />
         </div>
         <div className="animate-fade-in-up" style={{ animationDelay: "200ms" }}>
           <DownloadSection />
@@ -44,6 +79,9 @@ export default function Home() {
         </div>
       </main>
       <Footer />
+      {showOptimizedSettings && (
+        <OptimizedSettingsPopup onClose={handleCloseOptimizedSettings} />
+      )}
     </>
   );
 }

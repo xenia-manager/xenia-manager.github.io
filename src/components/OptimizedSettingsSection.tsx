@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { OptimizedSettingGame, SettingSection } from "@/lib/types";
 import {
   fetchWithFallback,
   FETCH_CONFIGS,
-  getSettingsConfig,
 } from "@/lib/fetchWithFallback";
 import { fetchOptimizedSettings } from "@/lib/tomlParser";
 
@@ -23,6 +22,11 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
   );
   const [settings, setSettings] = useState<SettingSection[]>([]);
   const [settingsLoading, setSettingsLoading] = useState(false);
+
+  // Handle close
+  const handleClose = () => {
+    onClose();
+  };
 
   // Fetch optimized settings list
   useEffect(() => {
@@ -58,7 +62,7 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
   }, []);
 
   // Fetch settings for selected game
-  const loadSettings = useCallback(async (game: OptimizedSettingGame) => {
+  const loadSettings = async (game: OptimizedSettingGame) => {
     setSettingsLoading(true);
     try {
       const fetchedSettings = await fetchOptimizedSettings(game.id);
@@ -73,7 +77,7 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
     } finally {
       setSettingsLoading(false);
     }
-  }, []);
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -87,16 +91,24 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
     game.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
+  // Show/hide scrollbar on mount/unmount
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
-      onClick={onClose}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-popup-overlay bg-black/70 backdrop-blur-md"
+      onClick={handleClose}
       role="dialog"
       aria-modal="true"
       aria-label="Optimized settings popup"
     >
       <div
-        className="glass-card rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden border border-[var(--border-color)]"
+        className="glass-card rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden border border-[var(--border-color)] shadow-2xl animate-popup-content"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -111,7 +123,7 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
             </p>
           </div>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="p-2 rounded-lg hover:bg-[var(--bg-accent)] transition-colors"
             aria-label="Close"
           >
@@ -338,7 +350,6 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
 }
 
 export function OptimizedSettingsSection() {
-  const [showPopup, setShowPopup] = useState(false);
   const [gameCount, setGameCount] = useState<number | null>(null);
   const [isClient, setIsClient] = useState(false);
 
@@ -346,26 +357,6 @@ export function OptimizedSettingsSection() {
   useEffect(() => {
     setIsClient(true);
   }, []);
-
-  // Check URL hash on mount and when hash changes
-  useEffect(() => {
-    if (!isClient) {
-      return;
-    }
-
-    const checkHash = () => {
-      if (window.location.hash === "#optimized-settings") {
-        setShowPopup(true);
-      }
-    };
-
-    // Check on mount
-    checkHash();
-
-    // Listen for hash changes
-    window.addEventListener("hashchange", checkHash);
-    return () => window.removeEventListener("hashchange", checkHash);
-  }, [isClient]);
 
   // Fetch game count on mount
   useEffect(() => {
@@ -375,7 +366,6 @@ export function OptimizedSettingsSection() {
           FETCH_CONFIGS.optimizedSettingsList,
         );
         const data = await response.json();
-        // Sort by last_modified (newest first), then by title (alphabetically)
         const sorted = [...data].sort((a, b) => {
           const dateDiff =
             new Date(b.last_modified).getTime() -
@@ -394,17 +384,6 @@ export function OptimizedSettingsSection() {
     fetchGameCount();
   }, []);
 
-  const handleOpenPopup = useCallback(() => {
-    setShowPopup(true);
-    window.location.hash = "optimized-settings";
-  }, []);
-
-  const handleClosePopup = useCallback(() => {
-    setShowPopup(false);
-    // Clear hash by replacing the URL without the hash
-    window.history.replaceState(null, "", window.location.pathname + window.location.search);
-  }, []);
-
   return (
     <>
       <section className="py-16 px-4" id="optimized-settings-section">
@@ -420,8 +399,8 @@ export function OptimizedSettingsSection() {
               </span>
             )}
           </p>
-          <button
-            onClick={handleOpenPopup}
+          <a
+            href="#optimized-settings"
             className="btn-xbox inline-flex items-center gap-2"
           >
             <svg
@@ -444,13 +423,9 @@ export function OptimizedSettingsSection() {
               />
             </svg>
             View Optimized Settings
-          </button>
+          </a>
         </div>
       </section>
-
-      {showPopup && (
-        <OptimizedSettingsPopup onClose={handleClosePopup} />
-      )}
     </>
   );
 }

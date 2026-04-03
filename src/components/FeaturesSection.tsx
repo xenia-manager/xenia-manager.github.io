@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { OptimizedSettingsPopup } from "./OptimizedSettingsSection";
+import { useEffect, useState } from "react";
 
-export function FeaturesSection() {
-  const [showOptimizedSettings, setShowOptimizedSettings] = useState(false);
+interface FeaturesSectionProps {
+  onOpenOptimizedSettings?: () => void;
+}
+
+export function FeaturesSection({ onOpenOptimizedSettings }: FeaturesSectionProps) {
   const [isClient, setIsClient] = useState(false);
 
   // Mark as client-side rendered
@@ -12,34 +14,11 @@ export function FeaturesSection() {
     setIsClient(true);
   }, []);
 
-  // Check URL hash on mount and when hash changes
-  useEffect(() => {
-    if (!isClient) {
-      return;
-    }
-
-    const checkHash = () => {
-      if (window.location.hash === "#optimized-settings") {
-        setShowOptimizedSettings(true);
-      }
-    };
-
-    // Check on mount
-    checkHash();
-
-    // Listen for hash changes
-    window.addEventListener("hashchange", checkHash);
-    return () => window.removeEventListener("hashchange", checkHash);
-  }, [isClient]);
-
   const handleOpenPopup = () => {
-    setShowOptimizedSettings(true);
+    if (onOpenOptimizedSettings) {
+      onOpenOptimizedSettings();
+    }
     window.location.hash = "#optimized-settings";
-  };
-
-  const handleClosePopup = () => {
-    setShowOptimizedSettings(false);
-    window.history.replaceState(null, "", window.location.pathname + window.location.search);
   };
 
   const features = [
@@ -360,36 +339,62 @@ export function FeaturesSection() {
               <p className="text-[var(--foreground)]/70 leading-relaxed max-w-2xl mb-4">
                 {optimizedSettingsFeature.description}
               </p>
-              <div className="btn-xbox inline-flex items-center gap-2">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <button
+                  className="btn-xbox inline-flex items-center gap-2 cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOpenPopup();
+                  }}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
-                </svg>
-                View Optimized Settings
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
+                  </svg>
+                  View Optimized Settings
+                </button>
+                <a
+                  href="https://github.com/xenia-manager/optimized-settings/blob/main/docs/CONTRIBUTING.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-xbox btn-xbox-secondary inline-flex items-center gap-2"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
+                  </svg>
+                  Contributing Guide
+                </a>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-      {showOptimizedSettings && (
-        <OptimizedSettingsPopup onClose={handleClosePopup} />
-      )}
     </>
   );
 }

@@ -13,10 +13,10 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("dark");
-  const [mounted, setMounted] = useState(false);
+  // Initialize as true to prevent double-render animation stutter
+  const [mounted, setMounted] = useState(true);
 
   useEffect(() => {
-    setMounted(true);
     const savedTheme = localStorage.getItem("theme") as Theme | null;
     if (savedTheme) {
       setTheme(savedTheme);
@@ -34,11 +34,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     document.body.classList.remove("light-mode", "dark-mode");
     document.body.classList.add(`${newTheme}-mode`);
   };
-
-  // Prevent hydration mismatch
-  if (!mounted) {
-    return <>{children}</>;
-  }
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>

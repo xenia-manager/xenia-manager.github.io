@@ -7,7 +7,11 @@ import XeniaCanaryFilterBar from "./XeniaCanaryFilterBar";
 
 const BATCH_SIZE = 20;
 
-export default function XeniaCanaryReleasesList() {
+interface XeniaCanaryReleasesListProps {
+  onLoadingChange?: (loading: boolean) => void;
+}
+
+export default function XeniaCanaryReleasesList({ onLoadingChange }: XeniaCanaryReleasesListProps) {
   const [allReleases, setAllReleases] = useState<XeniaCanaryRelease[]>([]);
   const [displayedReleases, setDisplayedReleases] = useState<XeniaCanaryRelease[]>([]);
   const [loading, setLoading] = useState(true);
@@ -64,6 +68,11 @@ export default function XeniaCanaryReleasesList() {
 
     fetchReleases();
   }, []);
+
+  // Notify parent of loading state changes
+  useEffect(() => {
+    onLoadingChange?.(loading);
+  }, [loading, onLoadingChange]);
 
   const filteredReleases = useMemo(() => {
     return allReleases.filter((rel) => {
@@ -199,33 +208,6 @@ export default function XeniaCanaryReleasesList() {
     setToDate("");
   };
 
-  if (loading) {
-    return (
-      <div className="text-center rounded-2xl p-12 shadow-lg mica-card">
-        <div className="flex flex-col items-center justify-center">
-          <div className="spinner mb-4"></div>
-          <div className="text-fluent-secondary text-lg">
-            Loading releases...
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="rounded-2xl p-8 shadow-lg mica-card">
-        <div className="notification notification-error">
-          <span className="text-xl">⚠️</span>
-          <div>
-            <h3 className="font-semibold">Error loading releases</h3>
-            <p>{error}</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <>
       <XeniaCanaryFilterBar
@@ -241,60 +223,93 @@ export default function XeniaCanaryReleasesList() {
         onClear={handleClear}
       />
 
-      <section className="rounded-2xl p-6 shadow-lg bg-[var(--bg-secondary)]">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold text-fluent-primary">
-            Releases
-          </h2>
-          <div className="text-sm text-fluent-secondary">
-            {sortedReleases.length}{" "}
-            {sortedReleases.length === 1 ? "release" : "releases"} found
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-6">
-          {sortedReleases.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-5xl mb-4">🔍</div>
-              <p className="text-fluent-secondary text-lg mb-2">
-                No results found
-              </p>
-              <p className="text-fluent-secondary">
-                Try adjusting your search or filter criteria
-              </p>
+      {/* Loading/error overlay wrapper - maintains stable layout */}
+      <div className="relative">
+        {/* Loading overlay - absolutely positioned, doesn't affect layout */}
+        {loading && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl shadow-lg mica-card">
+            <div className="flex flex-col items-center justify-center">
+              <div className="spinner mb-4"></div>
+              <div className="text-fluent-secondary text-lg">
+                Loading releases...
+              </div>
             </div>
-          ) : (
-            <>
-              {displayedReleases.map((release, index) => {
-                if (index === displayedReleases.length - 1) {
-                  return (
-                    <div key={release.tag_name} ref={lastReleaseRef}>
-                      <XeniaCanaryReleaseCard release={release} />
-                    </div>
-                  );
-                }
-                return <XeniaCanaryReleaseCard key={release.tag_name} release={release} />;
-              })}
+          </div>
+        )}
 
-              {loadingMore && (
-                <div className="flex justify-center py-6">
-                  <div className="spinner"></div>
+        {/* Error overlay - absolutely positioned, doesn't affect layout */}
+        {error && !loading && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl shadow-lg mica-card">
+            <div className="rounded-2xl p-8 mica-card w-full max-w-lg mx-4">
+              <div className="notification notification-error">
+                <span className="text-xl">⚠️</span>
+                <div>
+                  <h3 className="font-semibold">Error loading releases</h3>
+                  <p>{error}</p>
                 </div>
-              )}
+              </div>
+            </div>
+          </div>
+        )}
 
-              {!hasMore && displayedReleases.length > 0 && (
-                <div className="text-center py-6">
-                  <div className="inline-flex items-center gap-2 text-lg font-medium">
-                    <span className="text-fluent-secondary">
-                      You&apos;ve reached the end!
-                    </span>
+        {/* Main content - parent component handles fade-in animation */}
+        <div>
+          <section className="rounded-2xl p-6 shadow-lg bg-[var(--bg-secondary)]">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-semibold text-fluent-primary">
+              Releases
+            </h2>
+            <div className="text-sm text-fluent-secondary">
+              {sortedReleases.length}{" "}
+              {sortedReleases.length === 1 ? "release" : "releases"} found
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            {sortedReleases.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="text-5xl mb-4">🔍</div>
+                <p className="text-fluent-secondary text-lg mb-2">
+                  No results found
+                </p>
+                <p className="text-fluent-secondary">
+                  Try adjusting your search or filter criteria
+                </p>
+              </div>
+            ) : (
+              <>
+                {displayedReleases.map((release, index) => {
+                  if (index === displayedReleases.length - 1) {
+                    return (
+                      <div key={release.tag_name} ref={lastReleaseRef}>
+                        <XeniaCanaryReleaseCard release={release} />
+                      </div>
+                    );
+                  }
+                  return <XeniaCanaryReleaseCard key={release.tag_name} release={release} />;
+                })}
+
+                {loadingMore && (
+                  <div className="flex justify-center py-6">
+                    <div className="spinner"></div>
                   </div>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      </section>
+                )}
+
+                {!hasMore && displayedReleases.length > 0 && (
+                  <div className="text-center py-6">
+                    <div className="inline-flex items-center gap-2 text-lg font-medium">
+                      <span className="text-fluent-secondary">
+                        You&apos;ve reached the end!
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </section>
+      </div>
+    </div>
     </>
   );
 }

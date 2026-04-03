@@ -182,7 +182,12 @@ body {
   line-height: 1.6;
 }
 
+/* Smooth scroll behavior - disabled on load to prevent auto-scroll stutter */
 html {
+  scroll-behavior: auto;
+}
+
+html.smooth-scroll {
   scroll-behavior: smooth;
 }
 
@@ -197,9 +202,14 @@ html {
 }
 
 /* Fade in up animation for landing page sections */
-.animate-fade-in-up {
+.fade-in-up {
   opacity: 0;
   animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Only enable animations after JS loads to prevent hydration flash */
+.no-js .fade-in-up {
+  opacity: 1;
 }
 
 /* Popup overlay animation */

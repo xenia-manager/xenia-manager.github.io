@@ -18,7 +18,11 @@ type SortDirection = "asc" | "desc";
 const DEFAULT_PAGE_SIZE = 25;
 const PAGE_SIZE_OPTIONS = [25, 50, 100, 200];
 
-export default function GameCompatibilityList() {
+interface GameCompatibilityListProps {
+  onLoadingChange?: (loading: boolean) => void;
+}
+
+export default function GameCompatibilityList({ onLoadingChange }: GameCompatibilityListProps) {
   const [allGames, setAllGames] = useState<GameCompatibility[]>([]);
   const [optimizedGames, setOptimizedGames] = useState<OptimizedSettingGame[]>(
     [],
@@ -61,6 +65,11 @@ export default function GameCompatibilityList() {
 
     fetchData();
   }, []);
+
+  // Notify parent of loading state changes
+  useEffect(() => {
+    onLoadingChange?.(loading);
+  }, [loading, onLoadingChange]);
 
   // Filter games based on search and state
   const filteredGames = useMemo(() => {
@@ -219,180 +228,183 @@ export default function GameCompatibilityList() {
     return pages;
   };
 
-  if (loading) {
-    return (
-      <div className="text-center rounded-2xl p-12 mica-card">
-        <div className="flex flex-col items-center justify-center">
-          <div className="spinner mb-4"></div>
-          <div className="text-fluent-secondary text-lg">
-            Loading game compatibility data...
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="rounded-2xl p-8 mica-card">
-        <div className="notification notification-error">
-          <span className="text-xl">⚠️</span>
-          <div>
-            <h3 className="font-semibold">Error loading compatibility data</h3>
-            <p>{error}</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <>
-      <section className="rounded-2xl p-4 sm:p-6 mica-card">
-        <div className="flex flex-col gap-3">
-          {/* Search bar */}
-          <div className="flex flex-col sm:flex-row flex-wrap gap-3 items-end">
-            <div className="flex-1 min-w-[200px] w-full sm:w-auto">
-              <label className="block text-xs font-medium mb-1.5 text-fluent-secondary">
-                Search
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search by title or ID..."
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                  className="input-fluent transition-all duration-200 text-sm py-3 pr-10 min-h-[52px]"
+    <div className="relative">
+      {/* Loading overlay - absolutely positioned, doesn't affect layout */}
+      {loading && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl mica-card">
+          <div className="flex flex-col items-center justify-center">
+            <div className="spinner mb-4"></div>
+            <div className="text-fluent-secondary text-lg">
+              Loading game compatibility data...
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Error overlay - absolutely positioned, doesn't affect layout */}
+      {error && !loading && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl mica-card">
+          <div className="rounded-2xl p-8 mica-card w-full max-w-lg mx-4">
+            <div className="notification notification-error">
+              <span className="text-xl">⚠️</span>
+              <div>
+                <h3 className="font-semibold">Error loading compatibility data</h3>
+                <p>{error}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Main content - parent component handles fade-in animation */}
+      <div>
+        <section className="rounded-2xl p-4 sm:p-6 mica-card">
+          <div className="flex flex-col gap-3">
+            {/* Search bar */}
+            <div className="flex flex-col sm:flex-row flex-wrap gap-3 items-end">
+              <div className="flex-1 min-w-[200px] w-full sm:w-auto">
+                <label className="block text-xs font-medium mb-1.5 text-fluent-secondary">
+                  Search
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search by title or ID..."
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    className="input-fluent transition-all duration-200 text-sm py-3 pr-10 min-h-[52px]"
+                  />
+                  {searchValue && (
+                    <button
+                      onClick={() => setSearchValue("")}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full transition-colors text-fluent-secondary hover:bg-white/10"
+                      aria-label="Clear search"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="w-full sm:w-auto">
+                <label className="block text-xs font-medium mb-1.5 text-fluent-secondary">
+                  Results per page
+                </label>
+                <CustomSelect
+                  options={PAGE_SIZE_OPTIONS.map((size) => ({
+                    value: size,
+                    label: `${size} games`,
+                  }))}
+                  value={pageSize}
+                  onChange={(val) => setPageSize(Number(val))}
+                  className="min-w-[130px] w-full sm:w-auto"
                 />
-                {searchValue && (
-                  <button
-                    onClick={() => setSearchValue("")}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full transition-colors text-fluent-secondary hover:bg-white/10"
-                    aria-label="Clear search"
-                  >
-                    ✕
-                  </button>
-                )}
+              </div>
+
+              <div className="w-full sm:w-auto pt-[26px]">
+                <button
+                  onClick={handleClear}
+                  className="btn-xbox transition-all duration-200 min-w-[80px] w-full sm:w-auto text-sm py-3 px-3 hover:!transform-none hover:!translate-y-0 min-h-[52px]"
+                >
+                  Clear
+                </button>
               </div>
             </div>
 
-            <div className="w-full sm:w-auto">
-              <label className="block text-xs font-medium mb-1.5 text-fluent-secondary">
-                Results per page
-              </label>
-              <CustomSelect
-                options={PAGE_SIZE_OPTIONS.map((size) => ({
-                  value: size,
-                  label: `${size} games`,
-                }))}
-                value={pageSize}
-                onChange={(val) => setPageSize(Number(val))}
-                className="min-w-[130px] w-full sm:w-auto"
-              />
-            </div>
+            {/* State filter buttons */}
+            <StateFilterBar
+              stateFilter={stateFilter}
+              onStateFilterChange={setStateFilter}
+              stateCounts={stateCounts}
+              optimizedCount={optimizedCount}
+              showOptimizedOnly={showOptimizedOnly}
+              onShowOptimizedOnlyChange={setShowOptimizedOnly}
+            />
 
-            <div className="w-full sm:w-auto pt-[26px]">
+            {/* Letter filter buttons */}
+            <LetterFilterBar
+              letterFilter={letterFilter}
+              onLetterFilterChange={setLetterFilter}
+            />
+          </div>
+
+          {/* Games table */}
+          <div className="mt-6">
+            <GameCompatibilityTable
+              games={paginatedGames}
+              sortColumn={sortColumn}
+              sortDirection={sortDirection}
+              onSort={handleSort}
+              optimizedGames={optimizedGames}
+            />
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex flex-wrap items-center justify-center gap-1.5 mt-4">
               <button
-                onClick={handleClear}
-                className="btn-xbox transition-all duration-200 min-w-[80px] w-full sm:w-auto text-sm py-3 px-3 hover:!transform-none hover:!translate-y-0 min-h-[52px]"
+                onClick={() => goToPage(1)}
+                disabled={currentPage === 1}
+                className="px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:bg-gray-500 bg-white/10 hover:bg-white/15"
+                aria-label="First page"
               >
-                Clear
+                ««
+              </button>
+              <button
+                onClick={() => goToPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:bg-gray-500 bg-white/10 hover:bg-white/15"
+                aria-label="Previous page"
+              >
+                «
+              </button>
+
+              <div className="flex items-center gap-0.5">
+                {getPageNumbers().map((page, index) =>
+                  page === "..." ? (
+                    <span
+                      key={`ellipsis-${index}`}
+                      className="px-2 py-1.5 text-xs text-fluent-secondary"
+                    >
+                      ...
+                    </span>
+                  ) : (
+                    <button
+                      key={page}
+                      onClick={() => goToPage(page as number)}
+                      className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 cursor-pointer ${
+                        currentPage === page
+                          ? "btn-xbox hover:scale-105 border border-xbox-green"
+                          : "bg-white/10 hover:bg-white/15 text-fluent-primary hover:scale-105 border border-[var(--border-color)]"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ),
+                )}
+              </div>
+
+              <button
+                onClick={() => goToPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:bg-gray-500 bg-white/10 hover:bg-white/15"
+                aria-label="Next page"
+              >
+                »
+              </button>
+              <button
+                onClick={() => goToPage(totalPages)}
+                disabled={currentPage === totalPages}
+                className="px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:bg-gray-500 bg-white/10 hover:bg-white/15"
+                aria-label="Last page"
+              >
+                »»
               </button>
             </div>
-          </div>
-
-          {/* State filter buttons */}
-          <StateFilterBar
-            stateFilter={stateFilter}
-            onStateFilterChange={setStateFilter}
-            stateCounts={stateCounts}
-            optimizedCount={optimizedCount}
-            showOptimizedOnly={showOptimizedOnly}
-            onShowOptimizedOnlyChange={setShowOptimizedOnly}
-          />
-
-          {/* Letter filter buttons */}
-          <LetterFilterBar
-            letterFilter={letterFilter}
-            onLetterFilterChange={setLetterFilter}
-          />
-        </div>
-
-        {/* Games table */}
-        <div className="mt-6">
-          <GameCompatibilityTable
-            games={paginatedGames}
-            sortColumn={sortColumn}
-            sortDirection={sortDirection}
-            onSort={handleSort}
-            optimizedGames={optimizedGames}
-          />
-        </div>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex flex-wrap items-center justify-center gap-1.5 mt-4">
-            <button
-              onClick={() => goToPage(1)}
-              disabled={currentPage === 1}
-              className="px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:bg-gray-500 bg-white/10 hover:bg-white/15"
-              aria-label="First page"
-            >
-              ««
-            </button>
-            <button
-              onClick={() => goToPage(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:bg-gray-500 bg-white/10 hover:bg-white/15"
-              aria-label="Previous page"
-            >
-              «
-            </button>
-
-            <div className="flex items-center gap-0.5">
-              {getPageNumbers().map((page, index) =>
-                page === "..." ? (
-                  <span
-                    key={`ellipsis-${index}`}
-                    className="px-2 py-1.5 text-xs text-fluent-secondary"
-                  >
-                    ...
-                  </span>
-                ) : (
-                  <button
-                    key={page}
-                    onClick={() => goToPage(page as number)}
-                    className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 cursor-pointer ${
-                      currentPage === page
-                        ? "btn-xbox hover:scale-105 border border-xbox-green"
-                        : "bg-white/10 hover:bg-white/15 text-fluent-primary hover:scale-105 border border-[var(--border-color)]"
-                    }`}
-                  >
-                    {page}
-                  </button>
-                ),
-              )}
-            </div>
-
-            <button
-              onClick={() => goToPage(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:bg-gray-500 bg-white/10 hover:bg-white/15"
-              aria-label="Next page"
-            >
-              »
-            </button>
-            <button
-              onClick={() => goToPage(totalPages)}
-              disabled={currentPage === totalPages}
-              className="px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:bg-gray-500 bg-white/10 hover:bg-white/15"
-              aria-label="Last page"
-            >
-              »»
-            </button>
-          </div>
-        )}
-      </section>
-    </>
+          )}
+        </section>
+      </div>
+    </div>
   );
 }

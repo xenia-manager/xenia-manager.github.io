@@ -101,6 +101,19 @@
   --btn-secondary-bg: rgba(255, 255, 255, 0.1);
   --btn-secondary-border: rgba(255, 255, 255, 0.2);
   --badge-secondary-bg: rgba(255, 255, 255, 0.1);
+  --bg-overlay: rgba(0, 0, 0, 0.7);
+  --color-error: #ef4444;
+  --slide-bg: #0d1117;
+  --slide-overlay: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+  --slide-text: #ffffff;
+  --slide-text-secondary: rgba(255, 255, 255, 0.75);
+  --slide-badge: rgba(0, 0, 0, 0.75);
+  --slide-button: rgba(0, 0, 0, 0.5);
+  --thumbnails-bg: rgba(13, 17, 23, 0.7);
+  --dot-inactive: rgba(255, 255, 255, 0.25);
+  --modal-overlay: rgba(0, 0, 0, 0.95);
+  --modal-button: rgba(255, 255, 255, 0.1);
+  --modal-button-hover: rgba(255, 255, 255, 0.2);
 }
 
 @media (prefers-color-scheme: light) {
@@ -140,6 +153,19 @@ body.light-mode,
   --btn-secondary-bg: rgba(0, 0, 0, 0.05);
   --btn-secondary-border: rgba(0, 0, 0, 0.1);
   --badge-secondary-bg: rgba(0, 0, 0, 0.1);
+  --bg-overlay: rgba(0, 0, 0, 0.4);
+  --color-error: #dc2626;
+  --slide-bg: #e5e7eb;
+  --slide-overlay: linear-gradient(to top, rgba(0, 0, 0, 0.65), transparent);
+  --slide-text: #ffffff;
+  --slide-text-secondary: rgba(255, 255, 255, 0.8);
+  --slide-badge: rgba(0, 0, 0, 0.55);
+  --slide-button: rgba(0, 0, 0, 0.35);
+  --thumbnails-bg: rgba(229, 231, 235, 0.7);
+  --dot-inactive: rgba(0, 0, 0, 0.2);
+  --modal-overlay: rgba(0, 0, 0, 0.9);
+  --modal-button: rgba(255, 255, 255, 0.15);
+  --modal-button-hover: rgba(255, 255, 255, 0.25);
 }
 
 body.dark-mode,
@@ -316,13 +342,15 @@ div[role="dialog"] img {
 
 /* Glassmorphism Effects */
 .glass-card {
-  background: var(--color-secondary);
-  backdrop-filter: blur(40px) saturate(120%);
+  background: rgba(31, 31, 31, 0.95);
+  backdrop-filter: blur(80px) saturate(180%);
   border: 1px solid var(--border-color);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
 }
 
 body.light-mode .glass-card {
+  background: rgba(245, 245, 245, 0.97);
+  backdrop-filter: blur(80px) saturate(180%);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 

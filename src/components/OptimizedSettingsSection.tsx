@@ -101,7 +101,8 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-popup-overlay bg-black/70 backdrop-blur-md"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-popup-overlay"
+      style={{ backgroundColor: "var(--bg-overlay)" }}
       onClick={handleClose}
       role="dialog"
       aria-modal="true"
@@ -124,7 +125,7 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
           </div>
           <button
             onClick={handleClose}
-            className="p-2 rounded-lg hover:bg-[var(--bg-accent)] transition-colors"
+            className="p-2 rounded-lg hover:bg-[var(--hover-bg)] transition-colors text-[var(--foreground)]"
             aria-label="Close"
           >
             <svg
@@ -167,7 +168,7 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery("")}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full transition-colors text-fluent-secondary hover:bg-white/10"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full transition-colors text-[var(--text-secondary)] hover:bg-[var(--hover-bg)]"
                       aria-label="Clear search"
                     >
                       ✕
@@ -186,7 +187,7 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
                   </div>
                 </div>
               ) : error ? (
-                <div className="text-red-500 p-4 text-center">{error}</div>
+                <div className="text-[var(--color-error)] p-4 text-center">{error}</div>
               ) : (
                 <div className="space-y-1">
                   {filteredGames.map((game) => (

@@ -273,7 +273,7 @@ export function ScreenshotsSection({
         {/* Steam-style Slideshow Container */}
         <div className="glass-card rounded-2xl overflow-hidden border border-[var(--border-color)]">
           {/* Main Image Area */}
-          <div className="relative aspect-video bg-[#0f1922]">
+          <div className="relative aspect-video" style={{ backgroundColor: "var(--slide-bg)" }}>
             {slides.map((slide, index) => (
               <div
                 key={index}
@@ -289,7 +289,7 @@ export function ScreenshotsSection({
                 />
                 {/* Hover Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-8 pointer-events-none">
-                  <div>
+                  <div className="pointer-events-auto">
                     <h3 className="text-2xl font-bold text-white mb-2">
                       {slide.title}
                     </h3>
@@ -298,7 +298,7 @@ export function ScreenshotsSection({
                 </div>
                 {/* Zoom Indicator */}
                 <div className="absolute bottom-4 right-4 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                  <div className="bg-black/70 text-white text-xs px-3 py-1.5 rounded-lg flex items-center gap-2">
+                  <div className="text-white text-xs px-3 py-1.5 rounded-lg flex items-center gap-2" style={{ backgroundColor: "var(--slide-badge)" }}>
                     <svg
                       className="w-4 h-4"
                       fill="none"
@@ -324,7 +324,10 @@ export function ScreenshotsSection({
                 prevSlide();
                 handleUserInteraction();
               }}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/50 hover:bg-[var(--color-xbox-green)] flex items-center justify-center text-white transition-colors"
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white transition-colors"
+              style={{ backgroundColor: "var(--slide-button)", "--hover-bg": "var(--color-xbox-green)" } as React.CSSProperties}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--color-xbox-green)")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--slide-button)")}
               aria-label="Previous screenshot"
             >
               <svg
@@ -346,7 +349,10 @@ export function ScreenshotsSection({
                 nextSlide();
                 handleUserInteraction();
               }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/50 hover:bg-[var(--color-xbox-green)] flex items-center justify-center text-white transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white transition-colors"
+              style={{ backgroundColor: "var(--slide-button)" } as React.CSSProperties}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--color-xbox-green)")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--slide-button)")}
               aria-label="Next screenshot"
             >
               <svg
@@ -367,7 +373,10 @@ export function ScreenshotsSection({
             {/* Play/Pause Button */}
             <button
               onClick={() => setIsPlaying(!isPlaying)}
-              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/50 hover:bg-[var(--color-xbox-green)] flex items-center justify-center text-white transition-colors"
+              className="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center text-white transition-colors"
+              style={{ backgroundColor: "var(--slide-button)" } as React.CSSProperties}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--color-xbox-green)")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--slide-button)")}
               aria-label={isPlaying ? "Pause slideshow" : "Play slideshow"}
             >
               {isPlaying ? (
@@ -391,7 +400,7 @@ export function ScreenshotsSection({
           </div>
 
           {/* Thumbnails */}
-          <div className="p-4 bg-[#1b2838]/50">
+          <div className="p-4" style={{ backgroundColor: "var(--thumbnails-bg)" }}>
             <div
               ref={thumbnailsRef}
               className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin"
@@ -432,8 +441,9 @@ export function ScreenshotsSection({
                   className={`w-2 h-2 rounded-full transition-all ${
                     index === currentSlide
                       ? "w-8 bg-[var(--color-xbox-green)]"
-                      : "bg-white/30 hover:bg-white/50"
+                      : "hover:opacity-75"
                   }`}
+                  style={{ backgroundColor: index === currentSlide ? undefined : "var(--dot-inactive)" }}
                   aria-label={`Go to slide ${index + 1}`}
                 />
               ))}
@@ -503,7 +513,8 @@ export function ScreenshotZoomModal({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-popup-overlay bg-black/95 backdrop-blur-md"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-popup-overlay"
+      style={{ backgroundColor: "var(--modal-overlay)" }}
       onClick={onClose}
       role="dialog"
       aria-modal="true"
@@ -511,7 +522,10 @@ export function ScreenshotZoomModal({
     >
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
+        className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center text-white transition-colors"
+        style={{ backgroundColor: "var(--modal-button)" }}
+        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--modal-button-hover)")}
+        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--modal-button)")}
         aria-label="Close zoom"
       >
         <svg
@@ -540,10 +554,10 @@ export function ScreenshotZoomModal({
           className={`max-w-full max-h-[80vh] object-contain ${animationClass}`}
         />
         {title && (
-          <div className="text-center text-white mt-4 px-4">
+          <div className="text-center mt-4 px-4" style={{ color: "var(--slide-text)" }}>
             <h3 className="text-xl font-bold mb-1">{title}</h3>
             {description && (
-              <p className="text-white/70 text-sm">{description}</p>
+              <p style={{ color: "var(--slide-text-secondary)", fontSize: "0.875rem" }}>{description}</p>
             )}
           </div>
         )}
@@ -554,7 +568,10 @@ export function ScreenshotZoomModal({
           e.stopPropagation();
           onPrev();
         }}
-        className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors z-10"
+        className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white transition-colors z-10"
+        style={{ backgroundColor: "var(--modal-button)" }}
+        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--modal-button-hover)")}
+        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--modal-button)")}
         aria-label="Previous image"
       >
         <svg
@@ -576,7 +593,10 @@ export function ScreenshotZoomModal({
           e.stopPropagation();
           onNext();
         }}
-        className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors z-10"
+        className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white transition-colors z-10"
+        style={{ backgroundColor: "var(--modal-button)" }}
+        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--modal-button-hover)")}
+        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--modal-button)")}
         aria-label="Next image"
       >
         <svg

@@ -9,7 +9,7 @@ export function GameCompatibilityFooter() {
         </p>
         <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs sm:text-sm">
           <a
-            href="https://github.com/xenia-manager/game-compatibility"
+            href="https://github.com/xenia-manager/xenia-manager.github.io"
             target="_blank"
             rel="noopener noreferrer"
             className="text-xbox-green hover:text-xbox-hover transition-colors link-style"

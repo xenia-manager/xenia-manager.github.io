@@ -10,7 +10,7 @@ export function XeniaCanaryFooter() {
         <div className="flex items-center justify-center gap-8 text-sm">
           <div className="flex flex-col items-center gap-1">
             <a
-              href="https://github.com/xenia-manager/xenia-mirror"
+              href="https://github.com/xenia-manager/xenia-manager.github.io"
               target="_blank"
               rel="noopener noreferrer"
               className="text-xbox-green hover:text-xbox-hover transition-colors link-style"

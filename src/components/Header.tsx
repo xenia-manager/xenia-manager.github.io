@@ -1,19 +1,23 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTheme } from "./ThemeProvider";
 
 export function Header() {
   const { theme, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const isGameCompatibilityPage = pathname === "/game-compatibility";
 
   return (
     <header className="sticky top-0 z-50 glass-card border-b border-[var(--border-color)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo and Title */}
-          <a
-            href="https://xenia-manager.github.io/"
+          <Link
+            href="/"
             className="flex items-center gap-3 group flex-shrink-0"
           >
             <img
@@ -24,18 +28,16 @@ export function Header() {
             <span className="text-base sm:text-xl font-bold gradient-text truncate">
               Xenia Manager
             </span>
-          </a>
+          </Link>
 
           {/* Navigation Links - Desktop (Centered) */}
           <nav className="hidden lg:flex items-center gap-6 absolute left-1/2 -translate-x-1/2">
-            <a
-              href="https://xenia-manager.github.io/game-compatibility/"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/game-compatibility"
               className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium whitespace-nowrap"
             >
               Game Compatibility
-            </a>
+            </Link>
             <a
               href="https://xenia-manager.github.io/xenia-mirror/"
               target="_blank"
@@ -49,16 +51,18 @@ export function Header() {
           {/* Right Side Actions */}
           <div className="flex items-center gap-2">
             {/* Navigation Links - Mobile (shown before theme toggle) */}
-            <nav className="hidden lg:flex items-center gap-2 mr-2">
-              <a
-                href="https://github.com/xenia-manager/xenia-manager/wiki/FAQ"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium text-sm whitespace-nowrap"
-              >
-                FAQ
-              </a>
-            </nav>
+            {!isGameCompatibilityPage && (
+              <nav className="hidden lg:flex items-center gap-2 mr-2">
+                <a
+                  href="https://github.com/xenia-manager/xenia-manager/wiki/FAQ"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium text-sm whitespace-nowrap"
+                >
+                  FAQ
+                </a>
+              </nav>
+            )}
 
             {/* Theme Toggle */}
             <button
@@ -121,14 +125,12 @@ export function Header() {
           }`}
         >
           <nav className="flex flex-col gap-2 pb-4">
-            <a
-              href="https://xenia-manager.github.io/game-compatibility/"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/game-compatibility"
               className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium py-2 px-3 rounded-lg hover:bg-[var(--bg-accent)]"
             >
               Game Compatibility
-            </a>
+            </Link>
             <a
               href="https://xenia-manager.github.io/xenia-mirror/"
               target="_blank"
@@ -137,14 +139,16 @@ export function Header() {
             >
               Xenia Canary Releases
             </a>
-            <a
-              href="https://github.com/xenia-manager/xenia-manager/wiki/FAQ"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium py-2 px-3 rounded-lg hover:bg-[var(--bg-accent)]"
-            >
-              FAQ
-            </a>
+            {!isGameCompatibilityPage && (
+              <a
+                href="https://github.com/xenia-manager/xenia-manager/wiki/FAQ"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium py-2 px-3 rounded-lg hover:bg-[var(--bg-accent)]"
+              >
+                FAQ
+              </a>
+            )}
           </nav>
         </div>
       </div>

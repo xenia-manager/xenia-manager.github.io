@@ -94,11 +94,79 @@ const slides: Slide[] = [
   },
 ];
 
-export function ScreenshotsSection() {
+interface ScreenshotsSectionProps {
+  onZoomImage?: (slide: {
+    src: string;
+    title: string;
+    description: string;
+    index: number;
+  }) => void;
+  currentSlideIndex?: number;
+}
+
+export function ScreenshotsSection({
+  onZoomImage,
+  currentSlideIndex,
+}: ScreenshotsSectionProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [zoomedIn, setZoomedIn] = useState(false);
   const slideshowRef = useRef<HTMLDivElement>(null);
+  const thumbnailsRef = useRef<HTMLDivElement>(null);
+  const hasInteractedWithZoom = useRef(false);
+
+  // Scroll thumbnail into view when slide changes from zoom modal navigation
+  useEffect(() => {
+    // Only scroll thumbnails if user has interacted with zoom modal
+    if (!hasInteractedWithZoom.current || currentSlideIndex === null || currentSlideIndex === undefined) return;
+
+    if (currentSlideIndex !== currentSlide) {
+      setCurrentSlide(currentSlideIndex);
+    }
+  }, [currentSlideIndex]);
+
+  // Mark that user has interacted with zoom modal
+  useEffect(() => {
+    // Only mark as interacted if currentSlideIndex is a number (not null/undefined)
+    // and ensure this doesn't happen on initial mount
+    if (typeof currentSlideIndex === 'number' && currentSlideIndex >= 0) {
+      const timer = setTimeout(() => {
+        hasInteractedWithZoom.current = true;
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [currentSlideIndex]);
+
+  // Auto-scroll thumbnails when currentSlide changes
+  useEffect(() => {
+    if (
+      thumbnailsRef.current &&
+      currentSlide >= 0 &&
+      hasInteractedWithZoom.current
+    ) {
+      const thumbnail = thumbnailsRef.current.children[
+        currentSlide
+      ] as HTMLElement;
+      if (thumbnail) {
+        thumbnail.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      }
+    }
+  }, [currentSlide]);
+
+  const handleZoomIn = useCallback(() => {
+    if (onZoomImage) {
+      onZoomImage({
+        src: slides[currentSlide].image,
+        title: slides[currentSlide].title,
+        description: slides[currentSlide].description,
+        index: currentSlide,
+      });
+    }
+    setIsPlaying(false);
+  }, [currentSlide, onZoomImage]);
 
   const goToSlide = useCallback((index: number) => {
     setCurrentSlide(index);
@@ -120,27 +188,17 @@ export function ScreenshotsSection() {
     setCurrentSlide(slides.length - 1);
   }, []);
 
-  // Handle zoom in/out
-  const handleZoomIn = useCallback(() => {
-    setZoomedIn(true);
-    setIsPlaying(false);
-  }, []);
-
-  const handleZoomOut = useCallback(() => {
-    setZoomedIn(false);
-  }, []);
-
   // Close zoom on escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (zoomedIn && e.key === "Escape") {
-        handleZoomOut();
+      if (e.key === "Escape") {
+        // Handled by parent
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [zoomedIn, handleZoomOut]);
+  }, []);
 
   // Auto-play functionality
   useEffect(() => {
@@ -209,8 +267,7 @@ export function ScreenshotsSection() {
           Screenshots
         </h2>
         <p className="text-center text-[var(--foreground)]/60 mb-8 text-sm">
-          Use arrow keys to navigate • Space to pause/play • Home/End for
-          first/last
+          Use arrow keys to navigate • Space to pause/play
         </p>
 
         {/* Steam-style Slideshow Container */}
@@ -335,7 +392,10 @@ export function ScreenshotsSection() {
 
           {/* Thumbnails */}
           <div className="p-4 bg-[#1b2838]/50">
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin">
+            <div
+              ref={thumbnailsRef}
+              className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin"
+            >
               {slides.map((slide, index) => (
                 <button
                   key={index}
@@ -381,104 +441,158 @@ export function ScreenshotsSection() {
           </div>
         </div>
       </div>
-
-      {/* Zoom Modal */}
-      {zoomedIn && (
-        <div
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
-          onClick={handleZoomOut}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Zoomed screenshot view"
-        >
-          {/* Close button */}
-          <button
-            onClick={handleZoomOut}
-            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
-            aria-label="Close zoom"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-
-          {/* Zoomed Image */}
-          <div
-            className="max-w-full max-h-full"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <img
-              src={slides[currentSlide].image}
-              alt={slides[currentSlide].title}
-              className="max-w-full max-h-[90vh] object-contain"
-            />
-            <div className="text-center text-white mt-4">
-              <h3 className="text-xl font-bold mb-1">
-                {slides[currentSlide].title}
-              </h3>
-              <p className="text-white/70">
-                {slides[currentSlide].description}
-              </p>
-            </div>
-          </div>
-
-          {/* Navigation arrows in zoom mode */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              prevSlide();
-            }}
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
-            aria-label="Previous image"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              nextSlide();
-            }}
-            className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
-            aria-label="Next image"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
-        </div>
-      )}
     </section>
+  );
+}
+
+export function ScreenshotZoomModal({
+  imageSrc,
+  title,
+  description,
+  onClose,
+  onPrev,
+  onNext,
+}: {
+  imageSrc: string;
+  title: string;
+  description: string;
+  onClose: () => void;
+  onPrev: () => void;
+  onNext: () => void;
+}) {
+  if (!imageSrc) return null;
+
+  const [prevImageSrc, setPrevImageSrc] = useState(imageSrc);
+  const [animationClass, setAnimationClass] = useState("animate-popup-content");
+  const [isFirstRender, setIsFirstRender] = useState(true);
+
+  // Hide scrollbar when modal is open and handle keyboard navigation
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft") onPrev();
+      if (e.key === "ArrowRight") onNext();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onClose, onPrev, onNext]);
+
+  // Update animation based on navigation direction
+  useEffect(() => {
+    if (isFirstRender) {
+      setIsFirstRender(false);
+      setPrevImageSrc(imageSrc);
+      return;
+    }
+
+    if (imageSrc !== prevImageSrc) {
+      setAnimationClass(
+        imageSrc > prevImageSrc
+          ? "animate-slide-in-right"
+          : "animate-slide-in-left",
+      );
+      setPrevImageSrc(imageSrc);
+    }
+  }, [imageSrc, prevImageSrc, isFirstRender]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-popup-overlay bg-black/95 backdrop-blur-md"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Zoomed screenshot view"
+    >
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
+        aria-label="Close zoom"
+      >
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+
+      <div
+        className="flex flex-col items-center justify-center max-w-full max-h-full"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <img
+          key={imageSrc}
+          src={imageSrc}
+          alt={title}
+          className={`max-w-full max-h-[80vh] object-contain ${animationClass}`}
+        />
+        {title && (
+          <div className="text-center text-white mt-4 px-4">
+            <h3 className="text-xl font-bold mb-1">{title}</h3>
+            {description && (
+              <p className="text-white/70 text-sm">{description}</p>
+            )}
+          </div>
+        )}
+      </div>
+
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onPrev();
+        }}
+        className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors z-10"
+        aria-label="Previous image"
+      >
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+      </button>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onNext();
+        }}
+        className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors z-10"
+        aria-label="Next image"
+      >
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 5l7 7-7 7"
+          />
+        </svg>
+      </button>
+    </div>
   );
 }

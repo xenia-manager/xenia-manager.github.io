@@ -231,6 +231,59 @@ html {
   animation: popupContentIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Slide transition for zoom modal images */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Hide ALL focus outlines/borders in zoom modal */
+div[role="dialog"],
+div[role="dialog"] *,
+div[role="dialog"] *:focus,
+div[role="dialog"] *:focus-visible,
+div[role="dialog"] *:active,
+div[role="dialog"] img:focus,
+div[role="dialog"] img:focus-visible,
+div[role="dialog"] button:focus,
+div[role="dialog"] button:focus-visible {
+  outline: none !important;
+  outline-width: 0 !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+
+/* Remove any potential border/outline from zoomed image */
+div[role="dialog"] img {
+  border: none !important;
+  outline: none !important;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 12px;

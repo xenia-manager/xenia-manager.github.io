@@ -9,9 +9,9 @@ export function Header() {
   const { theme, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const isGameCompatibilityPage = pathname === "/game-compatibility";
+  const isCompatibilityPage = pathname === "/compatibility";
   const isXeniaCanaryReleasesPage = pathname === "/xenia-canary-releases";
-  const shouldHideFAQ = isGameCompatibilityPage || isXeniaCanaryReleasesPage;
+  const shouldHideFAQ = isCompatibilityPage || isXeniaCanaryReleasesPage;
 
   return (
     <header className="sticky top-0 z-50 glass-card border-b border-[var(--border-color)]">
@@ -35,10 +35,10 @@ export function Header() {
           {/* Navigation Links - Desktop (Centered) */}
           <nav className="hidden lg:flex items-center gap-6 absolute left-1/2 -translate-x-1/2">
             <Link
-              href="/game-compatibility"
+              href="/compatibility"
               className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium whitespace-nowrap"
             >
-              Game Compatibility
+              Compatibility
             </Link>
             <Link
               href="/xenia-canary-releases"
@@ -126,10 +126,10 @@ export function Header() {
         >
           <nav className="flex flex-col gap-2 pb-4">
             <Link
-              href="/game-compatibility"
+              href="/compatibility"
               className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium py-2 px-3 rounded-lg hover:bg-[var(--bg-accent)]"
             >
-              Game Compatibility
+              Compatibility
             </Link>
             <Link
               href="/xenia-canary-releases"

@@ -89,7 +89,7 @@ src/
 │   ├── globals.css       # Global styles with theme variables
 │   ├── layout.tsx        # Root layout
 │   ├── page.tsx          # Main landing page
-│   ├── game-compatibility/
+│   ├── compatibility/
 │   │   └── page.tsx      # Game compatibility page
 │   └── xenia-canary-releases/
 │       └── page.tsx      # Xenia Canary releases page

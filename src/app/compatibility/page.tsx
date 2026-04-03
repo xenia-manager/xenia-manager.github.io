@@ -5,7 +5,7 @@ import GameCompatibilityList from "@/components/GameCompatibilityList";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Xenia - Compatibility List",
+  title: "Xenia Canary - Compatibility",
 };
 
 export default function GameCompatibilityPage() {

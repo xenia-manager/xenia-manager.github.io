@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
+
 interface StateInfo {
   value: string;
   label: string;
@@ -50,6 +52,41 @@ export default function StateProgressBar({
   stateCounts,
   totalCount,
 }: StateProgressBarProps) {
+  const [progress, setProgress] = useState(0);
+  const animationRef = useRef<number | null>(null);
+  const startTimeRef = useRef<number | null>(null);
+
+  const duration = 1200;
+
+  useEffect(() => {
+    // Wait for the initial paint/transition to complete
+    const paintFrame = requestAnimationFrame(() => {
+      startTimeRef.current = null;
+
+      const animate = (timestamp: number) => {
+        if (!startTimeRef.current) startTimeRef.current = timestamp;
+        const elapsed = timestamp - startTimeRef.current;
+        const rawProgress = Math.min(elapsed / duration, 1);
+
+        // Ease out cubic for smooth deceleration
+        setProgress(1 - Math.pow(1 - rawProgress, 3));
+
+        if (rawProgress < 1) {
+          animationRef.current = requestAnimationFrame(animate);
+        }
+      };
+
+      animationRef.current = requestAnimationFrame(animate);
+    });
+
+    return () => {
+      cancelAnimationFrame(paintFrame);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [stateCounts, totalCount]);
+
   if (totalCount === 0) return null;
 
   return (
@@ -57,7 +94,8 @@ export default function StateProgressBar({
       <div className="flex flex-col gap-2.5">
         {states.map((state) => {
           const count = stateCounts[state.value] ?? 0;
-          const percentage = ((count / totalCount) * 100).toFixed(1);
+          const animatedCount = Math.round(count * progress);
+          const animatedPercentage = (count / totalCount) * 100 * progress;
 
           return (
             <div key={state.value} className="flex flex-col gap-1">
@@ -70,11 +108,12 @@ export default function StateProgressBar({
                     {state.label}
                   </span>
                   <span className="text-xs text-fluent-secondary whitespace-nowrap">
-                    ({percentage}%)
+                    ({animatedPercentage.toFixed(1)}%)
                   </span>
                 </div>
                 <span className="text-xs text-fluent-secondary whitespace-nowrap">
-                  {count.toLocaleString()} / {totalCount.toLocaleString()}
+                  {animatedCount.toLocaleString()} /{" "}
+                  {totalCount.toLocaleString()}
                 </span>
               </div>
               <div
@@ -83,9 +122,9 @@ export default function StateProgressBar({
                 title={state.description}
               >
                 <div
-                  className="h-full rounded-full transition-all duration-500 ease-out"
+                  className="h-full rounded-full"
                   style={{
-                    width: `${percentage}%`,
+                    width: `${animatedPercentage}%`,
                     backgroundColor: state.color,
                   }}
                 />

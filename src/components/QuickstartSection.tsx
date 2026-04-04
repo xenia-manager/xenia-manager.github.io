@@ -67,7 +67,7 @@ export function QuickstartSection() {
             href="https://github.com/xenia-manager/xenia-manager/wiki/Quickstart"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-xbox inline-flex items-center justify-center gap-2"
+            className="btn-xbox btn-xbox-secondary inline-flex items-center justify-center gap-2"
           >
             <svg
               className="w-5 h-5"

@@ -117,7 +117,12 @@ export function ScreenshotsSection({
   // Scroll thumbnail into view when slide changes from zoom modal navigation
   useEffect(() => {
     // Only scroll thumbnails if user has interacted with zoom modal
-    if (!hasInteractedWithZoom.current || currentSlideIndex === null || currentSlideIndex === undefined) return;
+    if (
+      !hasInteractedWithZoom.current ||
+      currentSlideIndex === null ||
+      currentSlideIndex === undefined
+    )
+      return;
 
     if (currentSlideIndex !== currentSlide) {
       setCurrentSlide(currentSlideIndex);
@@ -128,7 +133,7 @@ export function ScreenshotsSection({
   useEffect(() => {
     // Only mark as interacted if currentSlideIndex is a number (not null/undefined)
     // and ensure this doesn't happen on initial mount
-    if (typeof currentSlideIndex === 'number' && currentSlideIndex >= 0) {
+    if (typeof currentSlideIndex === "number" && currentSlideIndex >= 0) {
       const timer = setTimeout(() => {
         hasInteractedWithZoom.current = true;
       }, 100);
@@ -147,10 +152,16 @@ export function ScreenshotsSection({
         currentSlide
       ] as HTMLElement;
       if (thumbnail) {
-        thumbnail.scrollIntoView({
+        // Use scrollLeft to scroll only the thumbnail container without affecting page scroll
+        const container = thumbnailsRef.current;
+        const thumbnailLeft = thumbnail.offsetLeft;
+        const containerWidth = container.offsetWidth;
+        const scrollTarget =
+          thumbnailLeft - containerWidth / 2 + thumbnail.offsetWidth / 2;
+
+        container.scrollTo({
+          left: scrollTarget,
           behavior: "smooth",
-          block: "nearest",
-          inline: "center",
         });
       }
     }
@@ -273,7 +284,10 @@ export function ScreenshotsSection({
         {/* Steam-style Slideshow Container */}
         <div className="glass-card rounded-2xl overflow-hidden border border-[var(--border-color)]">
           {/* Main Image Area */}
-          <div className="relative aspect-video" style={{ backgroundColor: "var(--slide-bg)" }}>
+          <div
+            className="relative aspect-video"
+            style={{ backgroundColor: "var(--slide-bg)" }}
+          >
             {slides.map((slide, index) => (
               <div
                 key={index}
@@ -298,7 +312,10 @@ export function ScreenshotsSection({
                 </div>
                 {/* Zoom Indicator */}
                 <div className="absolute bottom-4 right-4 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                  <div className="text-white text-xs px-3 py-1.5 rounded-lg flex items-center gap-2" style={{ backgroundColor: "var(--slide-badge)" }}>
+                  <div
+                    className="text-white text-xs px-3 py-1.5 rounded-lg flex items-center gap-2"
+                    style={{ backgroundColor: "var(--slide-badge)" }}
+                  >
                     <svg
                       className="w-4 h-4"
                       fill="none"
@@ -325,9 +342,19 @@ export function ScreenshotsSection({
                 handleUserInteraction();
               }}
               className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white transition-colors"
-              style={{ backgroundColor: "var(--slide-button)", "--hover-bg": "var(--color-xbox-green)" } as React.CSSProperties}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--color-xbox-green)")}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--slide-button)")}
+              style={
+                {
+                  backgroundColor: "var(--slide-button)",
+                  "--hover-bg": "var(--color-xbox-green)",
+                } as React.CSSProperties
+              }
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor =
+                  "var(--color-xbox-green)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor = "var(--slide-button)")
+              }
               aria-label="Previous screenshot"
             >
               <svg
@@ -350,9 +377,18 @@ export function ScreenshotsSection({
                 handleUserInteraction();
               }}
               className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white transition-colors"
-              style={{ backgroundColor: "var(--slide-button)" } as React.CSSProperties}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--color-xbox-green)")}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--slide-button)")}
+              style={
+                {
+                  backgroundColor: "var(--slide-button)",
+                } as React.CSSProperties
+              }
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor =
+                  "var(--color-xbox-green)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor = "var(--slide-button)")
+              }
               aria-label="Next screenshot"
             >
               <svg
@@ -374,9 +410,18 @@ export function ScreenshotsSection({
             <button
               onClick={() => setIsPlaying(!isPlaying)}
               className="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center text-white transition-colors"
-              style={{ backgroundColor: "var(--slide-button)" } as React.CSSProperties}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--color-xbox-green)")}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--slide-button)")}
+              style={
+                {
+                  backgroundColor: "var(--slide-button)",
+                } as React.CSSProperties
+              }
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor =
+                  "var(--color-xbox-green)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor = "var(--slide-button)")
+              }
               aria-label={isPlaying ? "Pause slideshow" : "Play slideshow"}
             >
               {isPlaying ? (
@@ -400,7 +445,10 @@ export function ScreenshotsSection({
           </div>
 
           {/* Thumbnails */}
-          <div className="p-4" style={{ backgroundColor: "var(--thumbnails-bg)" }}>
+          <div
+            className="p-4"
+            style={{ backgroundColor: "var(--thumbnails-bg)" }}
+          >
             <div
               ref={thumbnailsRef}
               className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin"
@@ -443,7 +491,12 @@ export function ScreenshotsSection({
                       ? "w-8 bg-[var(--color-xbox-green)]"
                       : "hover:opacity-75"
                   }`}
-                  style={{ backgroundColor: index === currentSlide ? undefined : "var(--dot-inactive)" }}
+                  style={{
+                    backgroundColor:
+                      index === currentSlide
+                        ? undefined
+                        : "var(--dot-inactive)",
+                  }}
                   aria-label={`Go to slide ${index + 1}`}
                 />
               ))}
@@ -524,8 +577,12 @@ export function ScreenshotZoomModal({
         onClick={onClose}
         className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center text-white transition-colors"
         style={{ backgroundColor: "var(--modal-button)" }}
-        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--modal-button-hover)")}
-        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--modal-button)")}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.backgroundColor = "var(--modal-button-hover)")
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.backgroundColor = "var(--modal-button)")
+        }
         aria-label="Close zoom"
       >
         <svg
@@ -554,10 +611,20 @@ export function ScreenshotZoomModal({
           className={`max-w-full max-h-[80vh] object-contain ${animationClass}`}
         />
         {title && (
-          <div className="text-center mt-4 px-4" style={{ color: "var(--slide-text)" }}>
+          <div
+            className="text-center mt-4 px-4"
+            style={{ color: "var(--slide-text)" }}
+          >
             <h3 className="text-xl font-bold mb-1">{title}</h3>
             {description && (
-              <p style={{ color: "var(--slide-text-secondary)", fontSize: "0.875rem" }}>{description}</p>
+              <p
+                style={{
+                  color: "var(--slide-text-secondary)",
+                  fontSize: "0.875rem",
+                }}
+              >
+                {description}
+              </p>
             )}
           </div>
         )}
@@ -570,8 +637,12 @@ export function ScreenshotZoomModal({
         }}
         className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white transition-colors z-10"
         style={{ backgroundColor: "var(--modal-button)" }}
-        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--modal-button-hover)")}
-        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--modal-button)")}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.backgroundColor = "var(--modal-button-hover)")
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.backgroundColor = "var(--modal-button)")
+        }
         aria-label="Previous image"
       >
         <svg
@@ -595,8 +666,12 @@ export function ScreenshotZoomModal({
         }}
         className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white transition-colors z-10"
         style={{ backgroundColor: "var(--modal-button)" }}
-        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--modal-button-hover)")}
-        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--modal-button)")}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.backgroundColor = "var(--modal-button-hover)")
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.backgroundColor = "var(--modal-button)")
+        }
         aria-label="Next image"
       >
         <svg

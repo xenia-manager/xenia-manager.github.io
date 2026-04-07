@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, Fragment } from "react";
-import { GameCompatibility, OptimizedSettingGame, SettingSection } from "@/lib/types";
+import { GameCompatibility, OptimizedSettingGame, SettingSection, getStateColor, getStateLabel, getStateDescription, getStateIcon } from "@/lib/types";
 import { fetchOptimizedSettings } from "@/lib/tomlParser";
 import TomlDisplay from "./TomlDisplay";
 
@@ -14,54 +14,6 @@ interface GameCompatibilityTableProps {
   sortDirection: SortDirection;
   onSort: (column: SortColumn) => void;
   optimizedGames: OptimizedSettingGame[];
-}
-
-function getStateColor(state: string): string {
-  switch (state) {
-    case "Unplayable":
-      return "#DC2626";
-    case "Loads":
-      return "#CA8A04";
-    case "Gameplay":
-      return "#65A30D";
-    case "Playable":
-      return "#166534";
-    case "Unknown":
-    default:
-      return "#737373";
-  }
-}
-
-function getStateLabel(state: string): string {
-  switch (state) {
-    case "Unplayable":
-      return "Unplayable";
-    case "Loads":
-      return "Loads";
-    case "Gameplay":
-      return "Gameplay";
-    case "Playable":
-      return "Playable";
-    case "Unknown":
-    default:
-      return "Unknown";
-  }
-}
-
-function getStateDescription(state: string): string {
-  switch (state) {
-    case "Playable":
-      return "Game working from start to finish with minor issues";
-    case "Gameplay":
-      return "You can get into the game, but it's not known to have been finished but possibly could be";
-    case "Loads":
-      return "Games that boot but don't reach gameplay";
-    case "Unplayable":
-      return "Games that crash or have major issues";
-    case "Unknown":
-    default:
-      return "Games that haven't been tested yet";
-  }
 }
 
 function formatDate(dateString: string): string {
@@ -263,15 +215,7 @@ export default function GameCompatibilityTable({
                       title={getStateDescription(game.state)}
                     >
                       <span className={`text-[10px] sm:text-xs ${game.state === "Gameplay" ? "text-sm sm:text-base" : ""}`} style={{ fontFamily: "inherit" }}>
-                        {game.state === "Playable"
-                          ? "✓"
-                          : game.state === "Gameplay"
-                            ? "\u25B6\uFE0E"
-                            : game.state === "Loads"
-                              ? "⏻"
-                              : game.state === "Unplayable"
-                                ? "✕"
-                                : "?"}
+                        {getStateIcon(game.state)}
                       </span>
                       <span className="hidden sm:inline text-xs sm:text-sm">{getStateLabel(game.state)}</span>
                     </span>

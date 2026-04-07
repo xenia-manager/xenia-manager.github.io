@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { STATE_METADATA, getStateMetadata } from "@/lib/types";
 
 interface StateInfo {
   value: string;
@@ -9,39 +10,12 @@ interface StateInfo {
   description: string;
 }
 
-const states: StateInfo[] = [
-  {
-    value: "Playable",
-    label: "Playable",
-    color: "#166534",
-    description: "Game working from start to finish with minor issues",
-  },
-  {
-    value: "Gameplay",
-    label: "Gameplay",
-    color: "#65A30D",
-    description:
-      "You can get into the game, but it's not known to have been finished but possibly could be",
-  },
-  {
-    value: "Loads",
-    label: "Loads",
-    color: "#CA8A04",
-    description: "Games that boot but don't reach gameplay",
-  },
-  {
-    value: "Unplayable",
-    label: "Unplayable",
-    color: "#DC2626",
-    description: "Games that crash or have major issues",
-  },
-  {
-    value: "Unknown",
-    label: "Unknown",
-    color: "#737373",
-    description: "Games that haven't been tested yet",
-  },
-];
+const states: StateInfo[] = STATE_METADATA.map(({ value, label, color, description }) => ({
+  value,
+  label,
+  color,
+  description,
+}));
 
 interface StateProgressBarProps {
   stateCounts: Record<string, number>;

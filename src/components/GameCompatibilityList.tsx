@@ -5,6 +5,7 @@ import {
   GameCompatibility,
   OptimizedSettingGame,
   getStateSortValue,
+  STATE_ORDER,
 } from "@/lib/types";
 import GameCompatibilityTable from "./GameCompatibilityTable";
 import StateFilterBar from "./StateFilterBar";
@@ -145,12 +146,10 @@ export default function GameCompatibilityList({ onLoadingChange, onStateCountsCh
   const stateCounts = useMemo(() => {
     const counts: Record<string, number> = {
       "": allGames.length, // All states
-      Playable: 0,
-      Gameplay: 0,
-      Loads: 0,
-      Unplayable: 0,
-      Unknown: 0,
     };
+    for (const state of STATE_ORDER) {
+      counts[state] = 0;
+    }
 
     allGames.forEach((game) => {
       if (game.state in counts) {

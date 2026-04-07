@@ -37,19 +37,19 @@ export default function XeniaCanaryReleaseCard({
                   transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-[var(--color-xbox-green)]/10
                   border border-[var(--border-color)]"
     >
-      <div className="text-lg font-semibold mb-3">
+      <div className="text-lg font-semibold mb-3 break-words">
         <a
           href={release.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:text-xbox-hover hover:underline transition-colors link-style text-fluent-primary"
+          className="hover:text-xbox-hover hover:underline transition-colors link-style text-fluent-primary break-words"
         >
           {release.changelog.title || release.tag_name}
         </a>
       </div>
 
       {release.changelog.changes && (
-        <div className="text-sm mb-4 whitespace-pre-wrap p-3 rounded-lg bg-[var(--bg-accent)] text-fluent-secondary">
+        <div className="text-sm mb-4 whitespace-pre-wrap p-3 rounded-lg bg-[var(--bg-accent)] text-fluent-secondary break-words overflow-wrap-anywhere">
           {release.changelog.changes}
         </div>
       )}

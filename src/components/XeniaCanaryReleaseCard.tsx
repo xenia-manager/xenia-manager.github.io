@@ -33,9 +33,9 @@ export default function XeniaCanaryReleaseCard({
 
   return (
     <div
-      className="rounded-xl p-6 shadow-lg
-                  transition-all duration-300 hover:-translate-y-1 hover:shadow-xl
-                  card-bg"
+      className="glass-card rounded-xl p-6 shadow-md
+                  transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-[var(--color-xbox-green)]/10
+                  border border-[var(--border-color)]"
     >
       <div className="text-lg font-semibold mb-3">
         <a

@@ -25,7 +25,7 @@ const stateFilters: StateFilter[] = [
     label: "Gameplay",
     color: "#65A30D",
     description:
-      "You can get into the game, but expect major issues/not be able to finish without workaround",
+      "You can get into the game, but it's not known to have been finished but possibly could be",
   },
   {
     value: "Loads",

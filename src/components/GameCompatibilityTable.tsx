@@ -53,7 +53,7 @@ function getStateDescription(state: string): string {
     case "Playable":
       return "Game working from start to finish with minor issues";
     case "Gameplay":
-      return "You can get into the game, but expect major issues/not be able to finish without workaround";
+      return "You can get into the game, but it's not known to have been finished but possibly could be";
     case "Loads":
       return "Games that boot but don't reach gameplay";
     case "Unplayable":

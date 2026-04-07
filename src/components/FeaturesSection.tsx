@@ -1,23 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 interface FeaturesSectionProps {
   onOpenOptimizedSettings?: () => void;
 }
 
-export function FeaturesSection({ onOpenOptimizedSettings }: FeaturesSectionProps) {
-  const [isClient, setIsClient] = useState(false);
-
-  // Mark as client-side rendered
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
+export function FeaturesSection({
+  onOpenOptimizedSettings,
+}: FeaturesSectionProps) {
   const handleOpenPopup = () => {
-    if (onOpenOptimizedSettings) {
-      onOpenOptimizedSettings();
-    }
+    onOpenOptimizedSettings?.();
     window.location.hash = "#optimized-settings";
   };
 

@@ -59,7 +59,7 @@ export default function LetterFilterBar({
         {/* Letter buttons - wrap on mobile */}
         {letters
           .filter((l) => l !== "")
-          .map((letter, index) => {
+          .map((letter) => {
             const isSelected = letterFilter === letter;
 
             return (

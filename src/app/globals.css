@@ -44,11 +44,12 @@
   }
 
   @keyframes pulse {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 1;
     }
     50% {
-      opacity: .5;
+      opacity: 0.5;
     }
   }
 
@@ -204,7 +205,9 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
   line-height: 1.6;
 }
 
@@ -224,7 +227,10 @@ html.smooth-scroll {
 .mica-surface-dark,
 .mica-surface-light,
 .input-fluent {
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
 }
 
 /* Fade in up animation for landing page sections */
@@ -572,7 +578,9 @@ body.light-mode .input-fluent {
   backdrop-filter: blur(40px) saturate(120%);
   border: 1px solid var(--border-color);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .dark .mica-card,
@@ -589,7 +597,9 @@ body.light-mode .mica-card {
 .mica-surface {
   backdrop-filter: blur(30px);
   border: 1px solid var(--border-color);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .dark .mica-surface,
@@ -627,7 +637,12 @@ body.light-mode .mica-surface {
 }
 
 /* Better typography */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 700;
   line-height: 1.2;
 }
@@ -646,7 +661,11 @@ h3 {
 
 /* Theme transitions */
 .theme-transition {
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 /* Better focus styles for accessibility */
@@ -712,7 +731,7 @@ h3 {
 }
 
 .link-style::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -762,4 +781,24 @@ h3 {
   background: rgba(52, 152, 219, 0.15);
   border: 1px solid rgba(52, 152, 219, 0.3);
   color: #3498db;
+}
+
+/* Slideshow navigation buttons */
+.slide-nav-button {
+  background-color: var(--slide-button);
+  transition: background-color 0.2s ease;
+}
+
+.slide-nav-button:hover {
+  background-color: var(--color-xbox-green);
+}
+
+/* Modal button hover effects */
+.modal-button {
+  background-color: var(--modal-button);
+  transition: background-color 0.2s ease;
+}
+
+.modal-button:hover {
+  background-color: var(--modal-button-hover);
 }

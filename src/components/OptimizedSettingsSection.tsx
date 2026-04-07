@@ -2,11 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { OptimizedSettingGame, SettingSection } from "@/lib/types";
-import {
-  fetchWithFallback,
-  FETCH_CONFIGS,
-} from "@/lib/fetchWithFallback";
+import { fetchWithFallback, FETCH_CONFIGS } from "@/lib/fetchWithFallback";
 import { fetchOptimizedSettings } from "@/lib/tomlParser";
+import { formatDate } from "@/lib/dateUtils";
 
 interface OptimizedSettingsPopupProps {
   onClose: () => void;
@@ -77,14 +75,6 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
     } finally {
       setSettingsLoading(false);
     }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
   };
 
   const filteredGames = games.filter((game) =>
@@ -187,7 +177,9 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
                   </div>
                 </div>
               ) : error ? (
-                <div className="text-[var(--color-error)] p-4 text-center">{error}</div>
+                <div className="text-[var(--color-error)] p-4 text-center">
+                  {error}
+                </div>
               ) : (
                 <div className="space-y-1">
                   {filteredGames.map((game) => (
@@ -272,7 +264,9 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
                         <span>
                           <span className="font-mono">{selectedGame.id}</span>
                         </span>
-                        <span>Last Updated: {formatDate(selectedGame.last_modified)}</span>
+                        <span>
+                          Last Updated: {formatDate(selectedGame.last_modified)}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -363,12 +357,6 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
 
 export function OptimizedSettingsSection() {
   const [gameCount, setGameCount] = useState<number | null>(null);
-  const [isClient, setIsClient] = useState(false);
-
-  // Mark as client-side rendered
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   // Fetch game count on mount
   useEffect(() => {

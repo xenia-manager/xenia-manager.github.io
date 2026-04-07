@@ -1,8 +1,17 @@
 "use client";
 
 import { useState, Fragment } from "react";
-import { GameCompatibility, OptimizedSettingGame, SettingSection, getStateColor, getStateLabel, getStateDescription, getStateIcon } from "@/lib/types";
+import {
+  GameCompatibility,
+  OptimizedSettingGame,
+  SettingSection,
+  getStateColor,
+  getStateLabel,
+  getStateDescription,
+  getStateIcon,
+} from "@/lib/types";
 import { fetchOptimizedSettings } from "@/lib/tomlParser";
+import { formatDate } from "@/lib/dateUtils";
 import TomlDisplay from "./TomlDisplay";
 
 type SortColumn = "title" | "state" | "updated" | null;
@@ -14,15 +23,6 @@ interface GameCompatibilityTableProps {
   sortDirection: SortDirection;
   onSort: (column: SortColumn) => void;
   optimizedGames: OptimizedSettingGame[];
-}
-
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
 }
 
 interface SortableHeaderProps {
@@ -71,7 +71,9 @@ export default function GameCompatibilityTable({
 }: GameCompatibilityTableProps) {
   const [expandedIssues, setExpandedIssues] = useState<Set<number>>(new Set());
   const [loadingSettings, setLoadingSettings] = useState<number | null>(null);
-  const [settingsCache, setSettingsCache] = useState<Record<string, SettingSection[]>>({});
+  const [settingsCache, setSettingsCache] = useState<
+    Record<string, SettingSection[]>
+  >({});
 
   const hasOptimizedSettings = (gameId: string) => {
     return optimizedGames.some((g) => g.id === gameId);
@@ -131,7 +133,10 @@ export default function GameCompatibilityTable({
       <table className="w-full min-w-[350px]">
         <thead>
           <tr className="border-b border-[var(--table-border)]">
-            <th className="text-left py-3 px-2 sm:px-4 font-semibold text-fluent-secondary text-xs sm:text-sm whitespace-nowrap" style={{ width: "60px" }}>
+            <th
+              className="text-left py-3 px-2 sm:px-4 font-semibold text-fluent-secondary text-xs sm:text-sm whitespace-nowrap"
+              style={{ width: "60px" }}
+            >
               ID
             </th>
             <SortableHeader
@@ -164,7 +169,10 @@ export default function GameCompatibilityTable({
             >
               Updated
             </SortableHeader>
-            <th className="text-left py-3 px-2 sm:px-4 font-semibold text-fluent-primary text-xs sm:text-sm whitespace-nowrap" style={{ width: "45px" }}></th>
+            <th
+              className="text-left py-3 px-2 sm:px-4 font-semibold text-fluent-primary text-xs sm:text-sm whitespace-nowrap"
+              style={{ width: "45px" }}
+            ></th>
           </tr>
         </thead>
         <tbody>
@@ -178,7 +186,9 @@ export default function GameCompatibilityTable({
               <Fragment key={game.issue}>
                 <tr
                   className={`border-b transition-colors duration-200 border-[var(--table-border)] ${
-                    isExpanded ? "bg-[var(--table-hover)]" : "hover:bg-[var(--table-hover)]"
+                    isExpanded
+                      ? "bg-[var(--table-hover)]"
+                      : "hover:bg-[var(--table-hover)]"
                   }`}
                 >
                   <td className="py-3 px-2 sm:px-4 align-middle">
@@ -214,10 +224,15 @@ export default function GameCompatibilityTable({
                       }}
                       title={getStateDescription(game.state)}
                     >
-                      <span className={`text-[10px] sm:text-xs ${game.state === "Gameplay" ? "text-sm sm:text-base" : ""}`} style={{ fontFamily: "inherit" }}>
+                      <span
+                        className={`text-[10px] sm:text-xs ${game.state === "Gameplay" ? "text-sm sm:text-base" : ""}`}
+                        style={{ fontFamily: "inherit" }}
+                      >
                         {getStateIcon(game.state)}
                       </span>
-                      <span className="hidden sm:inline text-xs sm:text-sm">{getStateLabel(game.state)}</span>
+                      <span className="hidden sm:inline text-xs sm:text-sm">
+                        {getStateLabel(game.state)}
+                      </span>
                     </span>
                   </td>
                   <td className="py-3 px-3 sm:px-4 hidden sm:table-cell align-middle">
@@ -279,7 +294,9 @@ function ExpandedContent({
           <TomlDisplay sections={sections} lastModified={lastModified} />
         </div>
       ) : (
-        <p className="text-fluent-secondary text-sm pb-4">Failed to load settings</p>
+        <p className="text-fluent-secondary text-sm pb-4">
+          Failed to load settings
+        </p>
       )}
     </div>
   );

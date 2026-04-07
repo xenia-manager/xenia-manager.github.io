@@ -1,98 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-
-interface Slide {
-  image: string;
-  title: string;
-  description: string;
-}
-
-const GITHUB_RAW_BASE =
-  "https://raw.githubusercontent.com/xenia-manager/xenia-manager/refs/heads/main/assets/Screenshots";
-
-const slides: Slide[] = [
-  {
-    image: `${GITHUB_RAW_BASE}/1.%20Library.png`,
-    title: "Game Library",
-    description: "Browse and manage your Xbox 360 game collection",
-  },
-  {
-    image: `${GITHUB_RAW_BASE}/2.%20Library%20Options.png`,
-    title: "Library Options",
-    description: "Customize your library view and settings",
-  },
-  {
-    image: `${GITHUB_RAW_BASE}/3.%20Library%20Game%20Right%20Click.png`,
-    title: "Game Context Menu",
-    description: "Quick access to game-specific actions and settings",
-  },
-  {
-    image: `${GITHUB_RAW_BASE}/4.%20Content%20Viewer.png`,
-    title: "Content Viewer",
-    description: "Manage DLC, game updates, and save data",
-  },
-  {
-    image: `${GITHUB_RAW_BASE}/5.%20Patch%20Downloader.png`,
-    title: "Patch Downloader",
-    description: "Download and install game patches easily",
-  },
-  {
-    image: `${GITHUB_RAW_BASE}/6.%20Patch%20Configurator.png`,
-    title: "Patch Configurator",
-    description: "Configure and customize game patches",
-  },
-  {
-    image: `${GITHUB_RAW_BASE}/7.%20Game%20Details%20Editor.png`,
-    title: "Game Details Editor",
-    description: "Edit game metadata and information",
-  },
-  {
-    image: `${GITHUB_RAW_BASE}/8.%20Game%20Settings%20Editor.png`,
-    title: "Game Settings Editor",
-    description: "Fine-tune per-game configuration settings",
-  },
-  {
-    image: `${GITHUB_RAW_BASE}/9.%20Mousehook%20Controls%20Editor.png`,
-    title: "Mousehook Controls",
-    description: "Configure mouse and keyboard controls",
-  },
-  {
-    image: `${GITHUB_RAW_BASE}/10.%20Xenia%20Settings.png`,
-    title: "Xenia Settings",
-    description: "Comprehensive emulator configuration options",
-  },
-  {
-    image: `${GITHUB_RAW_BASE}/11.%20Xenia%20Settings%20-%20Optimized%20Settings.png`,
-    title: "Optimized Settings",
-    description: "Community-driven performance optimizations",
-  },
-  {
-    image: `${GITHUB_RAW_BASE}/12.%20Manage%20Xenia.png`,
-    title: "Manage Xenia",
-    description: "Switch between Xenia builds and versions",
-  },
-  {
-    image: `${GITHUB_RAW_BASE}/13.%20Install%20Content.png`,
-    title: "Install Content",
-    description: "Install DLC and game updates seamlessly",
-  },
-  {
-    image: `${GITHUB_RAW_BASE}/14.%20Manage%20Profiles.png`,
-    title: "Manage Profiles",
-    description: "Import, export, and edit Xenia profiles",
-  },
-  {
-    image: `${GITHUB_RAW_BASE}/15.%20Manager%20Settings.png`,
-    title: "Manager Settings",
-    description: "Configure Xenia Manager preferences",
-  },
-  {
-    image: `${GITHUB_RAW_BASE}/16.%20About%20Page.png`,
-    title: "About Page",
-    description: "Learn about Xenia Manager and contributors",
-  },
-];
+import { slides } from "@/lib/slides";
 
 interface ScreenshotsSectionProps {
   onZoomImage?: (slide: {
@@ -127,7 +36,7 @@ export function ScreenshotsSection({
     if (currentSlideIndex !== currentSlide) {
       setCurrentSlide(currentSlideIndex);
     }
-  }, [currentSlideIndex]);
+  }, [currentSlideIndex, currentSlide]);
 
   // Mark that user has interacted with zoom modal
   useEffect(() => {
@@ -170,7 +79,7 @@ export function ScreenshotsSection({
   const handleZoomIn = useCallback(() => {
     if (onZoomImage) {
       onZoomImage({
-        src: slides[currentSlide].image,
+        src: slides[currentSlide].src,
         title: slides[currentSlide].title,
         description: slides[currentSlide].description,
         index: currentSlide,
@@ -197,18 +106,6 @@ export function ScreenshotsSection({
 
   const goToLast = useCallback(() => {
     setCurrentSlide(slides.length - 1);
-  }, []);
-
-  // Close zoom on escape key
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        // Handled by parent
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   // Auto-play functionality
@@ -296,7 +193,7 @@ export function ScreenshotsSection({
                 }`}
               >
                 <img
-                  src={slide.image}
+                  src={slide.src}
                   alt={slide.title}
                   onClick={handleZoomIn}
                   className="w-full h-full object-contain p-4 cursor-zoom-in hover:brightness-110 transition-all duration-300"
@@ -341,20 +238,7 @@ export function ScreenshotsSection({
                 prevSlide();
                 handleUserInteraction();
               }}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white transition-colors"
-              style={
-                {
-                  backgroundColor: "var(--slide-button)",
-                  "--hover-bg": "var(--color-xbox-green)",
-                } as React.CSSProperties
-              }
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor =
-                  "var(--color-xbox-green)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "var(--slide-button)")
-              }
+              className="slide-nav-button absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white"
               aria-label="Previous screenshot"
             >
               <svg
@@ -376,19 +260,7 @@ export function ScreenshotsSection({
                 nextSlide();
                 handleUserInteraction();
               }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white transition-colors"
-              style={
-                {
-                  backgroundColor: "var(--slide-button)",
-                } as React.CSSProperties
-              }
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor =
-                  "var(--color-xbox-green)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "var(--slide-button)")
-              }
+              className="slide-nav-button absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white"
               aria-label="Next screenshot"
             >
               <svg
@@ -409,19 +281,7 @@ export function ScreenshotsSection({
             {/* Play/Pause Button */}
             <button
               onClick={() => setIsPlaying(!isPlaying)}
-              className="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center text-white transition-colors"
-              style={
-                {
-                  backgroundColor: "var(--slide-button)",
-                } as React.CSSProperties
-              }
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor =
-                  "var(--color-xbox-green)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "var(--slide-button)")
-              }
+              className="slide-nav-button absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center text-white"
               aria-label={isPlaying ? "Pause slideshow" : "Play slideshow"}
             >
               {isPlaying ? (
@@ -469,7 +329,7 @@ export function ScreenshotsSection({
                   aria-current={index === currentSlide ? "true" : "false"}
                 >
                   <img
-                    src={slide.image}
+                    src={slide.src}
                     alt={slide.title}
                     className="w-full h-full object-cover"
                   />
@@ -523,8 +383,6 @@ export function ScreenshotZoomModal({
   onPrev: () => void;
   onNext: () => void;
 }) {
-  if (!imageSrc) return null;
-
   const [prevImageSrc, setPrevImageSrc] = useState(imageSrc);
   const [animationClass, setAnimationClass] = useState("animate-popup-content");
   const [isFirstRender, setIsFirstRender] = useState(true);
@@ -564,6 +422,10 @@ export function ScreenshotZoomModal({
     }
   }, [imageSrc, prevImageSrc, isFirstRender]);
 
+  if (!imageSrc) {
+    return null;
+  }
+
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-popup-overlay"
@@ -575,14 +437,7 @@ export function ScreenshotZoomModal({
     >
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center text-white transition-colors"
-        style={{ backgroundColor: "var(--modal-button)" }}
-        onMouseEnter={(e) =>
-          (e.currentTarget.style.backgroundColor = "var(--modal-button-hover)")
-        }
-        onMouseLeave={(e) =>
-          (e.currentTarget.style.backgroundColor = "var(--modal-button)")
-        }
+        className="modal-button absolute top-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center text-white"
         aria-label="Close zoom"
       >
         <svg
@@ -635,14 +490,7 @@ export function ScreenshotZoomModal({
           e.stopPropagation();
           onPrev();
         }}
-        className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white transition-colors z-10"
-        style={{ backgroundColor: "var(--modal-button)" }}
-        onMouseEnter={(e) =>
-          (e.currentTarget.style.backgroundColor = "var(--modal-button-hover)")
-        }
-        onMouseLeave={(e) =>
-          (e.currentTarget.style.backgroundColor = "var(--modal-button)")
-        }
+        className="modal-button absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white z-10"
         aria-label="Previous image"
       >
         <svg
@@ -664,14 +512,7 @@ export function ScreenshotZoomModal({
           e.stopPropagation();
           onNext();
         }}
-        className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white transition-colors z-10"
-        style={{ backgroundColor: "var(--modal-button)" }}
-        onMouseEnter={(e) =>
-          (e.currentTarget.style.backgroundColor = "var(--modal-button-hover)")
-        }
-        onMouseLeave={(e) =>
-          (e.currentTarget.style.backgroundColor = "var(--modal-button)")
-        }
+        className="modal-button absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white z-10"
         aria-label="Next image"
       >
         <svg

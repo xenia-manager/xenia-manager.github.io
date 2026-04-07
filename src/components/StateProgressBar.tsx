@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { STATE_METADATA, getStateMetadata } from "@/lib/types";
+import { STATE_METADATA } from "@/lib/types";
 
 interface StateInfo {
   value: string;
@@ -10,12 +10,14 @@ interface StateInfo {
   description: string;
 }
 
-const states: StateInfo[] = STATE_METADATA.map(({ value, label, color, description }) => ({
-  value,
-  label,
-  color,
-  description,
-}));
+const states: StateInfo[] = STATE_METADATA.map(
+  ({ value, label, color, description }) => ({
+    value,
+    label,
+    color,
+    description,
+  }),
+);
 
 interface StateProgressBarProps {
   stateCounts: Record<string, number>;
@@ -61,7 +63,9 @@ export default function StateProgressBar({
     };
   }, [stateCounts, totalCount]);
 
-  if (totalCount === 0) return null;
+  if (totalCount === 0) {
+    return null;
+  }
 
   return (
     <section className="rounded-2xl p-3 sm:p-4 mica-card mt-4">

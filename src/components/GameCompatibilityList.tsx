@@ -11,6 +11,8 @@ import GameCompatibilityTable from "./GameCompatibilityTable";
 import StateFilterBar from "./StateFilterBar";
 import CustomSelect from "./CustomSelect";
 import LetterFilterBar from "./LetterFilterBar";
+import Pagination from "./Pagination";
+import LoadingErrorOverlay from "./LoadingErrorOverlay";
 import { fetchWithFallback, FETCH_CONFIGS } from "@/lib/fetchWithFallback";
 
 type SortColumn = "title" | "state" | "updated" | null;
@@ -25,7 +27,11 @@ interface GameCompatibilityListProps {
   onTotalCountChange?: (count: number) => void;
 }
 
-export default function GameCompatibilityList({ onLoadingChange, onStateCountsChange, onTotalCountChange }: GameCompatibilityListProps) {
+export default function GameCompatibilityList({
+  onLoadingChange,
+  onStateCountsChange,
+  onTotalCountChange,
+}: GameCompatibilityListProps) {
   const [allGames, setAllGames] = useState<GameCompatibility[]>([]);
   const [optimizedGames, setOptimizedGames] = useState<OptimizedSettingGame[]>(
     [],
@@ -206,67 +212,13 @@ export default function GameCompatibilityList({ onLoadingChange, onStateCountsCh
     }
   };
 
-  const goToPage = (page: number) => {
-    setCurrentPage(Math.max(1, Math.min(page, totalPages)));
-  };
-
-  const getPageNumbers = () => {
-    const pages: (number | string)[] = [];
-    const maxVisible = 5;
-
-    if (totalPages <= maxVisible) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      if (currentPage <= 3) {
-        for (let i = 1; i <= 4; i++) pages.push(i);
-        pages.push("...");
-        pages.push(totalPages);
-      } else if (currentPage >= totalPages - 2) {
-        pages.push(1);
-        pages.push("...");
-        for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i);
-      } else {
-        pages.push(1);
-        pages.push("...");
-        for (let i = currentPage - 1; i <= currentPage + 1; i++) pages.push(i);
-        pages.push("...");
-        pages.push(totalPages);
-      }
-    }
-
-    return pages;
-  };
-
   return (
     <div className="relative">
-      {/* Loading overlay - absolutely positioned, doesn't affect layout */}
-      {loading && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl mica-card">
-          <div className="flex flex-col items-center justify-center">
-            <div className="spinner mb-4"></div>
-            <div className="text-fluent-secondary text-lg">
-              Loading game compatibility data...
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Error overlay - absolutely positioned, doesn't affect layout */}
-      {error && !loading && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl mica-card">
-          <div className="rounded-2xl p-8 mica-card w-full max-w-lg mx-4">
-            <div className="notification notification-error">
-              <span className="text-xl">⚠️</span>
-              <div>
-                <h3 className="font-semibold">Error loading compatibility data</h3>
-                <p>{error}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <LoadingErrorOverlay
+        loading={loading}
+        error={error}
+        loadingMessage="Loading game compatibility data..."
+      />
 
       {/* Main content - parent component handles fade-in animation */}
       <div>
@@ -353,65 +305,12 @@ export default function GameCompatibilityList({ onLoadingChange, onStateCountsCh
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex flex-wrap items-center justify-center gap-1.5 mt-4">
-              <button
-                onClick={() => goToPage(1)}
-                disabled={currentPage === 1}
-                className="px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:bg-gray-500 bg-white/10 hover:bg-white/15"
-                aria-label="First page"
-              >
-                ««
-              </button>
-              <button
-                onClick={() => goToPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:bg-gray-500 bg-white/10 hover:bg-white/15"
-                aria-label="Previous page"
-              >
-                «
-              </button>
-
-              <div className="flex items-center gap-0.5">
-                {getPageNumbers().map((page, index) =>
-                  page === "..." ? (
-                    <span
-                      key={`ellipsis-${index}`}
-                      className="px-2 py-1.5 text-xs text-fluent-secondary"
-                    >
-                      ...
-                    </span>
-                  ) : (
-                    <button
-                      key={page}
-                      onClick={() => goToPage(page as number)}
-                      className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 cursor-pointer ${
-                        currentPage === page
-                          ? "btn-xbox hover:scale-105 border border-xbox-green"
-                          : "bg-white/10 hover:bg-white/15 text-fluent-primary hover:scale-105 border border-[var(--border-color)]"
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  ),
-                )}
-              </div>
-
-              <button
-                onClick={() => goToPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:bg-gray-500 bg-white/10 hover:bg-white/15"
-                aria-label="Next page"
-              >
-                »
-              </button>
-              <button
-                onClick={() => goToPage(totalPages)}
-                disabled={currentPage === totalPages}
-                className="px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:bg-gray-500 bg-white/10 hover:bg-white/15"
-                aria-label="Last page"
-              >
-                »»
-              </button>
+            <div className="mt-4">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
             </div>
           )}
         </section>

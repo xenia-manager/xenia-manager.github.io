@@ -55,14 +55,17 @@ export default function XeniaCanaryReleaseCard({
       )}
 
       <div className="flex justify-between items-center mb-5 flex-wrap gap-2">
-        <div className="text-xbox-green font-medium">
+        <div className="text-xbox-green font-medium min-w-0 flex items-center">
           <a
             href={release.commit_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-xbox-hover hover:underline transition-colors link-style"
+            className="hover:text-xbox-hover hover:underline transition-colors link-style truncate"
           >
-            <code className="px-3 py-1 rounded-md text-sm font-mono bg-[var(--bg-accent)] text-fluent-primary">
+            <code
+              className="px-3 py-1 rounded-md text-sm font-mono bg-[var(--bg-accent)] text-fluent-primary block truncate max-w-[468px]"
+              title={release.target_commitish}
+            >
               {release.target_commitish}
             </code>
           </a>

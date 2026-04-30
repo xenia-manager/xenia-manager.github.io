@@ -98,7 +98,7 @@ export default function Home() {
     <>
       <Header />
       <BackgroundLayers />
-      <main className="flex-1">
+      <main className="flex-1" role="main">
         <div className="fade-in-up" style={{ animationDelay: "0ms" }}>
           <HeroSection />
         </div>

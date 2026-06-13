@@ -175,17 +175,17 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://github.com/xoofx/Tomlyn"
+                  href="https://github.com/oleg-st/ZstdSharp"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[var(--foreground)]/70 hover:text-[var(--color-xbox-green)] transition-colors block"
                 >
                   <span className="text-[var(--color-xbox-green)] font-medium">
-                    Tomlyn
+                    ZstdSharp
                   </span>
                   <span className="hidden sm:inline">
                     {" "}
-                    – TOML parser/writer
+                    – Zstandard compression for .NET
                   </span>
                 </a>
               </li>
@@ -253,7 +253,7 @@ export function Footer() {
               className="w-8 h-8 rounded-lg"
             />
             <span className="text-[var(--foreground)]/60 text-sm">
-              © 2025 Xenia Manager. Not affiliated with the Xenia Team.
+              © 2026 Xenia Manager. Not affiliated with the Xenia Team.
             </span>
           </div>
           <div className="flex items-center gap-4">

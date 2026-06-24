@@ -5,6 +5,7 @@ import { OptimizedSettingGame, SettingSection } from "@/lib/types";
 import { fetchWithFallback, FETCH_CONFIGS } from "@/lib/fetchWithFallback";
 import { fetchOptimizedSettings } from "@/lib/tomlParser";
 import { formatDate } from "@/lib/dateUtils";
+import { getOutdatedSettingsIssueUrl } from "@/lib/github";
 
 interface OptimizedSettingsPopupProps {
   onClose: () => void;
@@ -88,6 +89,10 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
       document.body.style.overflow = "";
     };
   }, []);
+
+  const issueUrl = selectedGame
+    ? getOutdatedSettingsIssueUrl(selectedGame.id, selectedGame.title)
+    : "#";
 
   return (
     <div
@@ -320,6 +325,31 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
                       </div>
                     ))}
                   </div>
+                </div>
+
+                {/* Report outdated settings */}
+                <div className="border-t border-[var(--border-color)] p-3 flex items-center justify-center shrink-0 text-[var(--foreground)]/50">
+                  <a
+                    href={issueUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 hover:text-[var(--color-xbox-green)] transition-colors"
+                  >
+                    <svg
+                      className="w-3.5 h-3.5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Report outdated settings
+                  </a>
                 </div>
               </>
             ) : (

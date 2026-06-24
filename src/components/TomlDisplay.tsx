@@ -1,15 +1,20 @@
 "use client";
 
 import { SettingSection } from "@/lib/types";
+import { getOutdatedSettingsIssueUrl } from "@/lib/github";
 
 interface TomlDisplayProps {
   sections: SettingSection[];
   lastModified?: string;
+  gameId?: string;
+  gameTitle?: string;
 }
 
 export default function TomlDisplay({
   sections,
   lastModified,
+  gameId,
+  gameTitle,
 }: TomlDisplayProps) {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -68,8 +73,23 @@ export default function TomlDisplay({
           </div>
         ))}
         {lastModified && (
-          <div className="flex justify-end text-xs pt-2 mt-2 border-t border-[var(--border-color)] text-fluent-secondary">
-            Last Updated: {formatDate(lastModified)}
+          <div className="flex items-center justify-between text-xs pt-2 mt-2 border-t border-[var(--border-color)] text-fluent-secondary">
+            <span>
+              {gameId && gameTitle && (
+                <a
+                  href={getOutdatedSettingsIssueUrl(gameId, gameTitle)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 hover:text-[var(--color-xbox-green)] transition-colors"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Report outdated settings
+                </a>
+              )}
+            </span>
+            <span>Last Updated: {formatDate(lastModified)}</span>
           </div>
         )}
       </div>

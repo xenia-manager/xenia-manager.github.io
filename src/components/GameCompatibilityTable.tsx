@@ -258,6 +258,8 @@ export default function GameCompatibilityTable({
                         isLoading={isLoading}
                         sections={sections}
                         lastModified={getOptimizedGame(game.id)?.last_modified}
+                        gameId={game.id}
+                        gameTitle={game.title}
                       />
                     </td>
                   </tr>
@@ -275,10 +277,14 @@ function ExpandedContent({
   isLoading,
   sections,
   lastModified,
+  gameId,
+  gameTitle,
 }: {
   isLoading: boolean;
   sections?: SettingSection[];
   lastModified?: string;
+  gameId?: string;
+  gameTitle?: string;
 }) {
   return (
     <div className="overflow-x-auto pr-2 sm:pr-4 pt-4 pb-2">
@@ -291,7 +297,12 @@ function ExpandedContent({
         </div>
       ) : sections ? (
         <div className="mb-4">
-          <TomlDisplay sections={sections} lastModified={lastModified} />
+          <TomlDisplay
+            sections={sections}
+            lastModified={lastModified}
+            gameId={gameId}
+            gameTitle={gameTitle}
+          />
         </div>
       ) : (
         <p className="text-fluent-secondary text-sm pb-4">

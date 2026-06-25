@@ -11,7 +11,9 @@ export function Header() {
   const pathname = usePathname();
   const isCompatibilityPage = pathname === "/compatibility";
   const isXeniaCanaryReleasesPage = pathname === "/xenia-canary-releases";
-  const shouldHideFAQ = isCompatibilityPage || isXeniaCanaryReleasesPage;
+  const isX360dbPage = pathname === "/x360db";
+  const shouldHideFAQ =
+    isCompatibilityPage || isXeniaCanaryReleasesPage || isX360dbPage;
 
   return (
     <header className="sticky top-0 z-50 glass-card border-b border-[var(--border-color)]">
@@ -45,6 +47,16 @@ export function Header() {
               className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium whitespace-nowrap"
             >
               Xenia Canary Releases
+            </Link>
+            <Link
+              href="/x360db"
+              className={`transition-colors font-medium whitespace-nowrap ${
+                isX360dbPage
+                  ? "text-[var(--color-xbox-green)]"
+                  : "text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)]"
+              }`}
+            >
+              Game Database
             </Link>
           </nav>
 
@@ -201,6 +213,12 @@ export function Header() {
               className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium py-2 px-3 rounded-lg hover:bg-[var(--bg-accent)]"
             >
               Xenia Canary Releases
+            </Link>
+            <Link
+              href="/x360db"
+              className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium py-2 px-3 rounded-lg hover:bg-[var(--bg-accent)]"
+            >
+              Game Database
             </Link>
             {!shouldHideFAQ && (
               <a

@@ -26,5 +26,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily",
       priority: 0.8,
     },
+    {
+      url: `${baseUrl}/x360db`,
+      lastModified: today,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
   ];
 }

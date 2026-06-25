@@ -11,9 +11,9 @@ export function Header() {
   const pathname = usePathname();
   const isCompatibilityPage = pathname === "/compatibility";
   const isXeniaCanaryReleasesPage = pathname === "/xenia-canary-releases";
-  const isX360dbPage = pathname === "/x360db";
+  const isGamesDatabasePage = pathname === "/gamesdatabase";
   const shouldHideFAQ =
-    isCompatibilityPage || isXeniaCanaryReleasesPage || isX360dbPage;
+    isCompatibilityPage || isXeniaCanaryReleasesPage || isGamesDatabasePage;
 
   return (
     <header className="sticky top-0 z-50 glass-card border-b border-[var(--border-color)]">
@@ -43,20 +43,21 @@ export function Header() {
               Compatibility
             </Link>
             <Link
-              href="/xenia-canary-releases"
-              className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium whitespace-nowrap"
-            >
-              Xenia Canary Releases
-            </Link>
-            <Link
-              href="/x360db"
+              href="/gamesdatabase"
+              title="Games Database"
               className={`transition-colors font-medium whitespace-nowrap ${
-                isX360dbPage
+                isGamesDatabasePage
                   ? "text-[var(--color-xbox-green)]"
                   : "text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)]"
               }`}
             >
-              Game Database
+              x360db
+            </Link>
+            <Link
+              href="/xenia-canary-releases"
+              className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium whitespace-nowrap"
+            >
+              Xenia Canary Releases
             </Link>
           </nav>
 
@@ -209,16 +210,17 @@ export function Header() {
               Compatibility
             </Link>
             <Link
+              href="/gamesdatabase"
+              title="Games Database"
+              className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium py-2 px-3 rounded-lg hover:bg-[var(--bg-accent)]"
+            >
+              x360db
+            </Link>
+            <Link
               href="/xenia-canary-releases"
               className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium py-2 px-3 rounded-lg hover:bg-[var(--bg-accent)]"
             >
               Xenia Canary Releases
-            </Link>
-            <Link
-              href="/x360db"
-              className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium py-2 px-3 rounded-lg hover:bg-[var(--bg-accent)]"
-            >
-              Game Database
             </Link>
             {!shouldHideFAQ && (
               <a

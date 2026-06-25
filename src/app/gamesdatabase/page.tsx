@@ -61,7 +61,7 @@ function saveCachedGames(games: GamesEntry[]) {
   } catch {}
 }
 
-export default function X360dbPage() {
+export default function GamesDatabasePage() {
   const [games, setGames] = useState<GamesEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

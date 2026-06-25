@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: "Xbox 360 Database - Game Library",
     description:
       "Browse the complete Xbox 360 game library from the x360db project.",
-    url: "https://xenia-manager.github.io/x360db",
+      url: "https://xenia-manager.github.io/gamesdatabase",
     siteName: "Xenia Manager",
     type: "website",
     locale: "en_US",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
       "Browse the complete Xbox 360 game library from the x360db project.",
   },
   alternates: {
-    canonical: "https://xenia-manager.github.io/x360db",
+    canonical: "https://xenia-manager.github.io/gamesdatabase",
   },
   robots: {
     index: true,
@@ -52,7 +52,7 @@ const jsonLd = {
       name: "Xbox 360 Database - Game Library",
       description:
         "Browse the complete Xbox 360 game library from the x360db project. Search through thousands of games with artwork, metadata, and screenshots.",
-      url: "https://xenia-manager.github.io/x360db",
+    url: "https://xenia-manager.github.io/gamesdatabase",
       isPartOf: {
         "@type": "WebSite",
         name: "Xenia Manager",
@@ -72,14 +72,14 @@ const jsonLd = {
           "@type": "ListItem",
           position: 2,
           name: "Xbox 360 Database",
-          item: "https://xenia-manager.github.io/x360db",
+          item: "https://xenia-manager.github.io/gamesdatabase",
         },
       ],
     },
   ],
 };
 
-export default function X360dbLayout({
+export default function GamesDatabaseLayout({
   children,
 }: {
   children: React.ReactNode;

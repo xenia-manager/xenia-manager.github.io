@@ -1,6 +1,8 @@
 "use client";
 
 import { SettingSection } from "@/lib/types";
+import { formatDate } from "@/lib/dateUtils";
+import { getValueColor } from "@/lib/tomlParser";
 import { getOutdatedSettingsIssueUrl } from "@/lib/github";
 
 interface TomlDisplayProps {
@@ -16,31 +18,6 @@ export default function TomlDisplay({
   gameId,
   gameTitle,
 }: TomlDisplayProps) {
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
-  const getValueColor = (value: string) => {
-    // Boolean values
-    if (value === "true" || value === "false") {
-      return "var(--color-fluent-accent)";
-    }
-    // Numeric values
-    if (/^\d+$/.test(value)) {
-      return "var(--color-xbox-hover)";
-    }
-    // String values (quoted)
-    if (value.startsWith('"') && value.endsWith('"')) {
-      return "var(--color-xbox-green)";
-    }
-    // Default for other values (like "new", "full", etc.)
-    return "var(--color-fluent-accent)";
-  };
-
   return (
     <div className="font-mono text-sm rounded-xl overflow-hidden border backdrop-blur-xl mica-surface border-[var(--border-color)]">
       <div className="p-4 pt-3">

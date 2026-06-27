@@ -166,3 +166,11 @@ export function getStateSortValue(state: string): number {
   const index = STATE_ORDER.indexOf(state as CompatibilityState);
   return index === -1 ? STATE_ORDER.length : index;
 }
+
+export function sortOptimizedSettings(games: OptimizedSettingGame[]): OptimizedSettingGame[] {
+  return [...games].sort((a, b) => {
+    const dateDiff = new Date(b.last_modified).getTime() - new Date(a.last_modified).getTime();
+    if (dateDiff !== 0) return dateDiff;
+    return a.title.localeCompare(b.title);
+  });
+}

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { OptimizedSettingGame, SettingSection } from "@/lib/types";
+import { OptimizedSettingGame, SettingSection, sortOptimizedSettings } from "@/lib/types";
 import { fetchWithFallback, FETCH_CONFIGS } from "@/lib/fetchWithFallback";
-import { fetchOptimizedSettings } from "@/lib/tomlParser";
+import { fetchOptimizedSettings, getValueColor } from "@/lib/tomlParser";
 import { formatDate } from "@/lib/dateUtils";
 import { getOutdatedSettingsIssueUrl } from "@/lib/github";
 
@@ -35,16 +35,7 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
           FETCH_CONFIGS.optimizedSettingsList,
         );
         const data = await response.json();
-        // Sort by last_modified (newest first), then by title (alphabetically)
-        const sorted = [...data].sort((a, b) => {
-          const dateDiff =
-            new Date(b.last_modified).getTime() -
-            new Date(a.last_modified).getTime();
-          if (dateDiff !== 0) {
-            return dateDiff;
-          }
-          return a.title.localeCompare(b.title);
-        });
+        const sorted = sortOptimizedSettings(data);
         setGames(sorted);
       } catch (err) {
         setError(
@@ -299,17 +290,7 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
                                 {entry.key} ={" "}
                                 <span
                                   className="font-semibold"
-                                  style={{
-                                    color:
-                                      entry.value === "true" ||
-                                      entry.value === "false"
-                                        ? "var(--color-fluent-accent)"
-                                        : /^\d+$/.test(entry.value)
-                                          ? "var(--color-xbox-hover)"
-                                          : entry.value.startsWith('"')
-                                            ? "var(--color-xbox-green)"
-                                            : "var(--color-fluent-accent)",
-                                  }}
+                                  style={{ color: getValueColor(entry.value) }}
                                 >
                                   {entry.value}
                                 </span>
@@ -396,15 +377,7 @@ export function OptimizedSettingsSection() {
           FETCH_CONFIGS.optimizedSettingsList,
         );
         const data = await response.json();
-        const sorted = [...data].sort((a, b) => {
-          const dateDiff =
-            new Date(b.last_modified).getTime() -
-            new Date(a.last_modified).getTime();
-          if (dateDiff !== 0) {
-            return dateDiff;
-          }
-          return a.title.localeCompare(b.title);
-        });
+        const sorted = sortOptimizedSettings(data);
         setGameCount(sorted.length);
       } catch (err) {
         console.error("Failed to fetch game count:", err);

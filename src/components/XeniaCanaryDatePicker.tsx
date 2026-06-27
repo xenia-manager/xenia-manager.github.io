@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { formatDate, parseDate } from "@/lib/dateUtils";
 import XeniaCanaryCustomSelect from "./XeniaCanaryCustomSelect";
 
 interface XeniaCanaryDatePickerProps {
@@ -19,14 +20,6 @@ export default function XeniaCanaryDatePicker({
   const [isOpen, setIsOpen] = useState(false);
   const [tempDate, setTempDate] = useState(value);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const parseDate = (dateStr: string) => {
-    if (!dateStr) {
-      return { year: "", month: "", day: "" };
-    }
-    const [year, month, day] = dateStr.split("-");
-    return { year, month, day };
-  };
 
   const { year, month, day } = parseDate(tempDate);
 
@@ -105,11 +98,7 @@ export default function XeniaCanaryDatePicker({
       >
         <span className={value ? "" : "opacity-50"}>
           {value
-            ? new Date(value + "T00:00:00").toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              })
+            ? formatDate(value + "T00:00:00")
             : "Select date..."}
         </span>
         <svg className="w-5 h-5 text-fluent-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">

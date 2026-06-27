@@ -73,6 +73,13 @@ export function parseToml(tomlContent: string): SettingSection[] {
   return sections;
 }
 
+export function getValueColor(value: string): string {
+  if (value === "true" || value === "false") return "var(--color-fluent-accent)";
+  if (/^\d+$/.test(value)) return "var(--color-xbox-hover)";
+  if (value.startsWith('"')) return "var(--color-xbox-green)";
+  return "var(--color-fluent-accent)";
+}
+
 /**
  * Fetch optimized settings for a specific game from GitHub
  * @param gameId - Game title ID (e.g., "415407D2")

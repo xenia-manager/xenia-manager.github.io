@@ -1,6 +1,7 @@
 "use client";
 
 import { XeniaCanaryRelease } from "@/lib/xeniaCanaryTypes";
+import { formatDate } from "@/lib/dateUtils";
 
 interface XeniaCanaryReleaseCardProps {
   release: XeniaCanaryRelease;
@@ -9,21 +10,7 @@ interface XeniaCanaryReleaseCardProps {
 export default function XeniaCanaryReleaseCard({
   release,
 }: XeniaCanaryReleaseCardProps) {
-  const dateFormatted = (() => {
-    try {
-      const date = new Date(release.published_at);
-      if (isNaN(date.getTime())) {
-        return "Unknown date";
-      }
-      return date.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
-    } catch {
-      return "Unknown date";
-    }
-  })();
+  const dateFormatted = formatDate(release.published_at);
 
   const getAssetLabel = (name: string) => {
     const lower = name.toLowerCase();

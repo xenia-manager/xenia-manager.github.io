@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_URL, PAGE_COMPATIBILITY } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Game Compatibility - Xenia Canary",
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
     title: "Game Compatibility - Xenia Canary",
     description:
       "Browse the compatibility status of Xbox 360 games on Xenia Canary. Search and filter games by their emulation status.",
-    url: "https://xenia-manager.github.io/compatibility",
+    url: PAGE_COMPATIBILITY,
     siteName: "Xenia Manager",
     type: "website",
     locale: "en_US",
@@ -35,7 +36,7 @@ export const metadata: Metadata = {
       "Browse the compatibility status of Xbox 360 games on Xenia Canary.",
   },
   alternates: {
-    canonical: "https://xenia-manager.github.io/compatibility",
+    canonical: PAGE_COMPATIBILITY,
   },
   robots: {
     index: true,
@@ -51,11 +52,11 @@ const jsonLd = {
       name: "Game Compatibility - Xenia Canary",
       description:
         "Browse the compatibility status of Xbox 360 games on Xenia Canary. Search and filter games by their emulation status.",
-      url: "https://xenia-manager.github.io/compatibility",
+      url: PAGE_COMPATIBILITY,
       isPartOf: {
         "@type": "WebSite",
         name: "Xenia Manager",
-        url: "https://xenia-manager.github.io/",
+        url: `${SITE_URL}/`,
       },
     },
     {
@@ -65,13 +66,13 @@ const jsonLd = {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: "https://xenia-manager.github.io/",
+          item: `${SITE_URL}/`,
         },
         {
           "@type": "ListItem",
           position: 2,
           name: "Game Compatibility",
-          item: "https://xenia-manager.github.io/compatibility",
+          item: PAGE_COMPATIBILITY,
         },
       ],
     },

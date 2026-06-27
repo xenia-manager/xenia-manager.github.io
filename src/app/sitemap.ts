@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
-
-const baseUrl = "https://xenia-manager.github.io";
+import { SITE_URL as baseUrl } from "@/lib/constants";
 
 export const revalidate = 86400;
 

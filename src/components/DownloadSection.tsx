@@ -1,3 +1,5 @@
+import { RELEASES_URL, EXPERIMENTAL_RELEASES_URL } from "@/lib/constants";
+
 export function DownloadSection() {
   return (
     <section className="py-16 px-4">
@@ -30,7 +32,7 @@ export function DownloadSection() {
               The most stable and tested version for everyday use.
             </p>
             <a
-              href="https://github.com/xenia-manager/xenia-manager/releases"
+              href={RELEASES_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-xbox inline-block w-full"
@@ -63,7 +65,7 @@ export function DownloadSection() {
               Latest features and improvements for early adopters.
             </p>
             <a
-              href="https://github.com/xenia-manager/experimental-builds/releases"
+              href={EXPERIMENTAL_RELEASES_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-xbox inline-block w-full text-center"

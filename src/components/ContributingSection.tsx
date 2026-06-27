@@ -1,3 +1,5 @@
+import { ISSUES_URL, PROJECTS_URL, CONTRIBUTING_URL } from "@/lib/constants";
+
 export function ContributingSection() {
   return (
     <section className="py-16 px-4">
@@ -10,7 +12,7 @@ export function ContributingSection() {
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
           <a
-            href="https://github.com/xenia-manager/xenia-manager/issues"
+            href={ISSUES_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="glass-card rounded-2xl p-6 border border-[var(--border-color)] card-hover text-left"
@@ -40,7 +42,7 @@ export function ContributingSection() {
             </p>
           </a>
           <a
-            href="https://github.com/orgs/xenia-manager/projects/2/"
+            href={PROJECTS_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="glass-card rounded-2xl p-6 border border-[var(--border-color)] card-hover text-left"
@@ -71,7 +73,7 @@ export function ContributingSection() {
           </a>
         </div>
         <a
-          href="https://github.com/xenia-manager/xenia-manager/blob/main/CONTRIBUTING.md"
+          href={CONTRIBUTING_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="btn-xbox btn-xbox-secondary inline-flex items-center gap-2"

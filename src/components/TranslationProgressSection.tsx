@@ -1,3 +1,5 @@
+import { TRANSLATION_PROGRESS_IMG, TRANSLATIONS_URL } from "@/lib/constants";
+
 export function TranslationProgressSection() {
   return (
     <section className="py-16 px-4">
@@ -13,14 +15,14 @@ export function TranslationProgressSection() {
         {/* Translation Progress Image from GitHub */}
         <div className="glass-card rounded-2xl p-6 border border-[var(--border-color)] mb-8">
           <img
-            src="https://raw.githubusercontent.com/xenia-manager/xenia-manager/refs/heads/main/assets/translation-progress.png"
+            src={TRANSLATION_PROGRESS_IMG}
             alt="Translation progress chart showing completion percentage for each supported language"
             className="w-full h-auto rounded-xl"
           />
         </div>
 
         <a
-          href="https://github.com/xenia-manager/xenia-manager/blob/main/TRANSLATIONS.md"
+          href={TRANSLATIONS_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="btn-xbox btn-xbox-secondary inline-flex items-center gap-2"

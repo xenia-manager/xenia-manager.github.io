@@ -11,24 +11,20 @@ export interface FetchConfig {
 /**
  * Predefined fetch configurations for Xenia Manager data sources
  */
+import { PAGES_DATABASE, RAW_DATABASE, PAGES_OPTIMIZED_SETTINGS, RAW_OPTIMIZED_SETTINGS, PAGES_X360DB, RAW_X360DB } from "@/lib/constants";
+
 export const FETCH_CONFIGS = {
   gameCompatibility: {
-    primary:
-      "https://xenia-manager.github.io/database/data/game-compatibility/canary.json",
-    backup:
-      "https://raw.githubusercontent.com/xenia-manager/database/refs/heads/main/data/game-compatibility/canary.json",
+    primary: `${PAGES_DATABASE}/data/game-compatibility/canary.json`,
+    backup: `${RAW_DATABASE}/data/game-compatibility/canary.json`,
   },
   optimizedSettingsList: {
-    primary:
-      "https://xenia-manager.github.io/optimized-settings/data/settings.json",
-    backup:
-      "https://raw.githubusercontent.com/xenia-manager/optimized-settings/refs/heads/main/data/settings.json",
+    primary: `${PAGES_OPTIMIZED_SETTINGS}/data/settings.json`,
+    backup: `${RAW_OPTIMIZED_SETTINGS}/data/settings.json`,
   },
   xeniaCanaryReleases: {
-    primary:
-      "https://xenia-manager.github.io/database/data/xenia-releases/canary.json",
-    backup:
-      "https://raw.githubusercontent.com/xenia-manager/database/refs/heads/main/data/xenia-releases/canary.json",
+    primary: `${PAGES_DATABASE}/data/xenia-releases/canary.json`,
+    backup: `${RAW_DATABASE}/data/xenia-releases/canary.json`,
   },
 } as const;
 
@@ -77,15 +73,12 @@ export async function fetchWithFallback(
 export function getSettingsConfig(gameId: string): FetchConfig {
   const upperGameId = gameId.toUpperCase();
   return {
-    primary: `https://xenia-manager.github.io/optimized-settings/settings/${upperGameId}.toml`,
-    backup: `https://raw.githubusercontent.com/xenia-manager/optimized-settings/refs/heads/main/settings/${upperGameId}.toml`,
+    primary: `${PAGES_OPTIMIZED_SETTINGS}/settings/${upperGameId}.toml`,
+    backup: `${RAW_OPTIMIZED_SETTINGS}/settings/${upperGameId}.toml`,
   };
 }
 
-const X360DB_BASE = "https://xenia-manager.github.io/x360db";
-const X360DB_RAW = "https://raw.githubusercontent.com/xenia-manager/x360db/refs/heads/main";
-
 export function getX360dbInfoConfig(id: string): FetchConfig {
   const path = `/titles/${id}/info.json`;
-  return { primary: `${X360DB_BASE}${path}`, backup: `${X360DB_RAW}${path}` };
+  return { primary: `${PAGES_X360DB}${path}`, backup: `${RAW_X360DB}${path}` };
 }

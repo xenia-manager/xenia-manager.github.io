@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { getInvalidGameEntryUrl } from "@/lib/github";
 import { fetchWithFallback, getX360dbInfoConfig } from "@/lib/fetchWithFallback";
 import { useBodyScrollLock } from "@/lib/hooks";
+import { PAGES_X360DB } from "@/lib/constants";
 
 interface GameInfo {
   id: string;
@@ -100,7 +101,7 @@ function ArtworkImage({
   alt: string;
   className?: string;
 }) {
-  const [src, setSrc] = useState(`https://xenia-manager.github.io/x360db${localPath}`);
+  const [src, setSrc] = useState(`${PAGES_X360DB}${localPath}`);
   const [fallbackTried, setFallbackTried] = useState(false);
   const [errored, setErrored] = useState(false);
 
@@ -171,12 +172,12 @@ export function GameDetailModal({
     setImagesReady(false);
 
     const urls: string[] = [];
-    urls.push(`https://xenia-manager.github.io/x360db/titles/${gameId}/artwork/background.jpg`);
+    urls.push(`${PAGES_X360DB}/titles/${gameId}/artwork/background.jpg`);
     if (info.artwork.background) {
       urls.push(toHttps(info.artwork.background));
     }
 
-    urls.push(`https://xenia-manager.github.io/x360db/titles/${gameId}/artwork/boxart.jpg`);
+    urls.push(`${PAGES_X360DB}/titles/${gameId}/artwork/boxart.jpg`);
     if (info.artwork.boxart) {
       urls.push(toHttps(info.artwork.boxart));
     }

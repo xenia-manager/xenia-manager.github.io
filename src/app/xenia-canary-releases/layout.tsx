@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_URL, PAGE_XENIA_RELEASES } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Xenia Canary Releases - Latest Builds",
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
     title: "Xenia Canary Releases - Latest Builds",
     description:
       "Download the latest Xenia Canary builds and experimental releases for Xbox 360 emulation.",
-    url: "https://xenia-manager.github.io/xenia-canary-releases",
+    url: PAGE_XENIA_RELEASES,
     siteName: "Xenia Manager",
     type: "website",
     locale: "en_US",
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
       "Download the latest Xenia Canary builds and experimental releases.",
   },
   alternates: {
-    canonical: "https://xenia-manager.github.io/xenia-canary-releases",
+    canonical: PAGE_XENIA_RELEASES,
   },
   robots: {
     index: true,
@@ -54,7 +55,7 @@ const jsonLd = {
       operatingSystem: "Windows",
       description:
         "Xenia Canary - Experimental builds of the Xenia Xbox 360 emulator with the latest features and fixes.",
-      url: "https://xenia-manager.github.io/xenia-canary-releases",
+      url: PAGE_XENIA_RELEASES,
       author: {
         "@type": "Organization",
         name: "Xenia Canary Team",
@@ -67,7 +68,7 @@ const jsonLd = {
       isPartOf: {
         "@type": "WebSite",
         name: "Xenia Manager",
-        url: "https://xenia-manager.github.io/",
+        url: `${SITE_URL}/`,
       },
     },
     {
@@ -77,13 +78,13 @@ const jsonLd = {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: "https://xenia-manager.github.io/",
+          item: `${SITE_URL}/`,
         },
         {
           "@type": "ListItem",
           position: 2,
           name: "Xenia Canary Releases",
-          item: "https://xenia-manager.github.io/xenia-canary-releases",
+          item: PAGE_XENIA_RELEASES,
         },
       ],
     },

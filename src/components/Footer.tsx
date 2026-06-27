@@ -1,3 +1,5 @@
+import { XENIA_OFFICIAL_URL, FREE60_URL, REPO_MANAGER, LIB_TEAM_RESURGENT, LIB_LENOVO_LEGION, LIB_AVALONIA_UI, LIB_FLUENT_AVALONIA, LIB_FLUENT_ICONS, LIB_NLOG, LIB_ZSTD_SHARP, LIB_SHARP_COMPRESS } from "@/lib/constants";
+
 export function Footer() {
   return (
     <footer className="glass-card border-t border-[var(--border-color)] mt-16">
@@ -25,7 +27,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li>
                 <a
-                  href="https://xenia.jp/"
+                  href={XENIA_OFFICIAL_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[var(--foreground)]/70 hover:text-[var(--color-xbox-green)] transition-colors block"
@@ -41,7 +43,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://github.com/Team-Resurgent"
+                  href={LIB_TEAM_RESURGENT}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[var(--foreground)]/70 hover:text-[var(--color-xbox-green)] transition-colors block"
@@ -57,7 +59,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://free60.org/"
+                  href={FREE60_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[var(--foreground)]/70 hover:text-[var(--color-xbox-green)] transition-colors block"
@@ -73,7 +75,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://github.com/BartoszCichecki/LenovoLegionToolkit/"
+                  href={LIB_LENOVO_LEGION}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[var(--foreground)]/70 hover:text-[var(--color-xbox-green)] transition-colors block"
@@ -111,7 +113,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li>
                 <a
-                  href="https://www.avaloniaui.net/"
+                  href={LIB_AVALONIA_UI}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[var(--foreground)]/70 hover:text-[var(--color-xbox-green)] transition-colors block"
@@ -127,7 +129,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://github.com/amwx/FluentAvalonia"
+                  href={LIB_FLUENT_AVALONIA}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[var(--foreground)]/70 hover:text-[var(--color-xbox-green)] transition-colors block"
@@ -143,7 +145,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://github.com/davidxuang/FluentIcons"
+                  href={LIB_FLUENT_ICONS}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[var(--foreground)]/70 hover:text-[var(--color-xbox-green)] transition-colors block"
@@ -159,7 +161,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://nlog-project.org/"
+                  href={LIB_NLOG}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[var(--foreground)]/70 hover:text-[var(--color-xbox-green)] transition-colors block"
@@ -175,7 +177,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://github.com/oleg-st/ZstdSharp"
+                  href={LIB_ZSTD_SHARP}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[var(--foreground)]/70 hover:text-[var(--color-xbox-green)] transition-colors block"
@@ -191,7 +193,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://github.com/adamhathcock/sharpcompress"
+                  href={LIB_SHARP_COMPRESS}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[var(--foreground)]/70 hover:text-[var(--color-xbox-green)] transition-colors block"
@@ -231,7 +233,7 @@ export function Footer() {
               multiple languages.
             </p>
             <a
-              href="https://github.com/xenia-manager/xenia-manager#translators"
+              href={`${REPO_MANAGER}#translators`}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-xbox inline-flex items-center gap-2 text-sm"
@@ -258,7 +260,7 @@ export function Footer() {
           </div>
           <div className="flex items-center gap-4">
             <a
-              href="https://github.com/xenia-manager/xenia-manager"
+              href={REPO_MANAGER}
               target="_blank"
               rel="noopener noreferrer"
               className="text-[var(--foreground)]/60 hover:text-[var(--color-xbox-green)] transition-colors p-2 rounded-lg hover:bg-[var(--bg-accent)]"

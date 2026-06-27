@@ -1,3 +1,5 @@
+import { LATEST_DOWNLOAD_URL, QUICKSTART_URL } from "@/lib/constants";
+
 export function QuickstartSection() {
   return (
     <section className="py-16 px-4">
@@ -43,7 +45,7 @@ export function QuickstartSection() {
         </div>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a
-            href="https://github.com/xenia-manager/xenia-manager/releases/latest/download/xenia_manager.zip"
+            href={LATEST_DOWNLOAD_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-xbox inline-flex items-center justify-center gap-2"
@@ -64,7 +66,7 @@ export function QuickstartSection() {
             Download Latest
           </a>
           <a
-            href="https://github.com/xenia-manager/xenia-manager/wiki/Quickstart"
+            href={QUICKSTART_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-xbox btn-xbox-secondary inline-flex items-center justify-center gap-2"

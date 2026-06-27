@@ -1,3 +1,5 @@
+import { ISSUES_URL, PROJECTS_URL, WIKI_URL } from "@/lib/constants";
+
 export function CommunitySection() {
   return (
     <section className="py-16 px-4">
@@ -11,7 +13,7 @@ export function CommunitySection() {
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <a
-            href="https://github.com/xenia-manager/xenia-manager/issues"
+            href={ISSUES_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="glass-card rounded-2xl p-6 border border-[var(--border-color)] card-hover"
@@ -39,7 +41,7 @@ export function CommunitySection() {
             </p>
           </a>
           <a
-            href="https://github.com/orgs/xenia-manager/projects/2/"
+            href={PROJECTS_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="glass-card rounded-2xl p-6 border border-[var(--border-color)] card-hover"
@@ -67,7 +69,7 @@ export function CommunitySection() {
             </p>
           </a>
           <a
-            href="https://github.com/xenia-manager/xenia-manager/wiki"
+            href={WIKI_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="glass-card rounded-2xl p-6 border border-[var(--border-color)] card-hover"

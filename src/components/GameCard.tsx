@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, memo } from "react";
-
-const X360DB_BASE = "https://xenia-manager.github.io/x360db";
+import { PAGES_X360DB as X360DB_BASE } from "@/lib/constants";
 
 interface GameCardProps {
   id: string;

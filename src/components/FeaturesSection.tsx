@@ -1,5 +1,7 @@
 "use client";
 
+import { REPO_GAME_PATCHES, WEBSERVICES_URL, OPTIMIZED_SETTINGS_CONTRIB_URL } from "@/lib/constants";
+
 interface FeaturesSectionProps {
   onOpenOptimizedSettings?: () => void;
 }
@@ -79,7 +81,7 @@ export function FeaturesSection({
         <>
           Support for{" "}
           <a
-            href="https://github.com/xenia-canary/game-patches"
+            href={REPO_GAME_PATCHES}
             className="text-[var(--color-xbox-green)] hover:underline"
             target="_blank"
             rel="noopener noreferrer"
@@ -88,7 +90,7 @@ export function FeaturesSection({
           </a>{" "}
           &{" "}
           <a
-            href="https://github.com/AdrianCassar/Xenia-WebServices"
+            href={WEBSERVICES_URL}
             className="text-[var(--color-xbox-green)] hover:underline"
             target="_blank"
             rel="noopener noreferrer"
@@ -360,7 +362,7 @@ export function FeaturesSection({
                   View Optimized Settings
                 </button>
                 <a
-                  href="https://github.com/xenia-manager/optimized-settings/blob/main/docs/CONTRIBUTING.md"
+                  href={OPTIMIZED_SETTINGS_CONTRIB_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-xbox btn-xbox-secondary inline-flex items-center gap-2"

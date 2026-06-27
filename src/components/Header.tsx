@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "./ThemeProvider";
+import { FAQ_URL, KOFI_URL } from "@/lib/constants";
 
 export function Header() {
   const { theme, toggleTheme } = useTheme();
@@ -67,7 +68,7 @@ export function Header() {
             {!shouldHideFAQ && (
               <nav className="hidden lg:flex items-center gap-2 mr-2">
                 <a
-                  href="https://github.com/xenia-manager/xenia-manager/wiki/FAQ"
+                  href={FAQ_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium text-sm whitespace-nowrap"
@@ -129,7 +130,7 @@ export function Header() {
 
             {/* Ko-fi Link */}
             <a
-              href="https://ko-fi.com/shazzaam"
+              href={KOFI_URL}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Support on Ko-fi"
@@ -224,7 +225,7 @@ export function Header() {
             </Link>
             {!shouldHideFAQ && (
               <a
-                href="https://github.com/xenia-manager/xenia-manager/wiki/FAQ"
+                href={FAQ_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium py-2 px-3 rounded-lg hover:bg-[var(--bg-accent)]"

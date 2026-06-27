@@ -1,5 +1,7 @@
 "use client";
 
+import { REPO_SITE, XENIA_CANARY_RELEASES_URL, XENIA_RELEASES_RELEASES_URL } from "@/lib/constants";
+
 export function XeniaCanaryFooter() {
   return (
     <footer className="w-full py-6 px-4 mica-surface backdrop-blur-xl border-t border-[var(--border-color)] border-b-0 border-l-0 border-r-0">
@@ -10,7 +12,7 @@ export function XeniaCanaryFooter() {
         <div className="flex items-center justify-center gap-8 text-sm">
           <div className="flex flex-col items-center gap-1">
             <a
-              href="https://github.com/xenia-manager/xenia-manager.github.io"
+              href={REPO_SITE}
               target="_blank"
               rel="noopener noreferrer"
               className="text-xbox-green hover:text-xbox-hover transition-colors link-style"
@@ -21,7 +23,7 @@ export function XeniaCanaryFooter() {
           </div>
           <div className="flex flex-col items-center gap-1">
             <a
-              href="https://github.com/xenia-canary/xenia-canary/releases"
+              href={XENIA_CANARY_RELEASES_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="text-xbox-green hover:text-xbox-hover transition-colors link-style"
@@ -29,7 +31,7 @@ export function XeniaCanaryFooter() {
               Xenia Canary Main Repository
             </a>
             <a
-              href="https://github.com/xenia-canary/xenia-canary-releases/releases"
+              href={XENIA_RELEASES_RELEASES_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="text-xbox-green hover:text-xbox-hover transition-colors link-style"

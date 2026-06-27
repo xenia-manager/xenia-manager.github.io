@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { SmoothScrollEnabler } from "@/components/SmoothScrollEnabler";
+import { SITE_URL, REPO_MANAGER } from "@/lib/constants";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://xenia-manager.github.io"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Xenia Manager - Xbox 360 Emulator Management Tool",
     template: "%s | Xenia Manager",
@@ -35,13 +36,13 @@ export const metadata: Metadata = {
   creator: "Xenia Manager Team",
   publisher: "Xenia Manager Team",
   alternates: {
-    canonical: "https://xenia-manager.github.io/",
+    canonical: `${SITE_URL}/`,
   },
   openGraph: {
     title: "Xenia Manager",
     description:
       "A comprehensive management tool for the Xenia Xbox 360 emulator",
-    url: "https://xenia-manager.github.io/",
+    url: `${SITE_URL}/`,
     siteName: "Xenia Manager",
     type: "website",
     locale: "en_US",
@@ -84,7 +85,7 @@ const jsonLd = {
       operatingSystem: ["Windows", "Linux"],
       description:
         "A comprehensive management tool for the Xenia Xbox 360 emulator. Automatic updates, patch management, per-game configurations, and more.",
-      url: "https://xenia-manager.github.io/",
+      url: `${SITE_URL}/`,
       author: {
         "@type": "Organization",
         name: "Xenia Manager Team",
@@ -98,18 +99,18 @@ const jsonLd = {
     {
       "@type": "Organization",
       name: "Xenia Manager Team",
-      url: "https://xenia-manager.github.io/",
+      url: `${SITE_URL}/`,
       sameAs: [
-        "https://github.com/xenia-manager/xenia-manager",
+        REPO_MANAGER,
       ],
     },
     {
       "@type": "WebSite",
       name: "Xenia Manager",
-      url: "https://xenia-manager.github.io/",
+      url: `${SITE_URL}/`,
       potentialAction: {
         "@type": "SearchAction",
-        target: "https://xenia-manager.github.io/compatibility?q={search_term_string}",
+        target: `${SITE_URL}/compatibility?q={search_term_string}`,
         "query-input": "required name=search_term_string",
       },
     },

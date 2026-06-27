@@ -16,11 +16,11 @@ import { GameDetailModal } from "@/components/GameDetailModal";
 import { fetchWithFallback, type FetchConfig } from "@/lib/fetchWithFallback";
 import { normalizeForSearch } from "@/lib/searchUtils";
 import { getMissingGameEntryUrl } from "@/lib/github";
+import { PAGES_X360DB, RAW_X360DB } from "@/lib/constants";
 
 const X360DB_GAMES_CONFIG: FetchConfig = {
-  primary: "https://xenia-manager.github.io/x360db/games.json",
-  backup:
-    "https://raw.githubusercontent.com/xenia-manager/x360db/refs/heads/main/games.json",
+  primary: `${PAGES_X360DB}/games.json`,
+  backup: `${RAW_X360DB}/games.json`,
 };
 
 interface GamesEntry {

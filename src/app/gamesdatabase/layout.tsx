@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_URL, PAGE_GAMES_DATABASE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Xbox 360 Database - Game Library",
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
     title: "Xbox 360 Database - Game Library",
     description:
       "Browse the complete Xbox 360 game library from the x360db project.",
-      url: "https://xenia-manager.github.io/gamesdatabase",
+      url: PAGE_GAMES_DATABASE,
     siteName: "Xenia Manager",
     type: "website",
     locale: "en_US",
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
       "Browse the complete Xbox 360 game library from the x360db project.",
   },
   alternates: {
-    canonical: "https://xenia-manager.github.io/gamesdatabase",
+    canonical: PAGE_GAMES_DATABASE,
   },
   robots: {
     index: true,
@@ -52,11 +53,11 @@ const jsonLd = {
       name: "Xbox 360 Database - Game Library",
       description:
         "Browse the complete Xbox 360 game library from the x360db project. Search through thousands of games with artwork, metadata, and screenshots.",
-    url: "https://xenia-manager.github.io/gamesdatabase",
+    url: PAGE_GAMES_DATABASE,
       isPartOf: {
         "@type": "WebSite",
         name: "Xenia Manager",
-        url: "https://xenia-manager.github.io/",
+        url: `${SITE_URL}/`,
       },
     },
     {
@@ -66,13 +67,13 @@ const jsonLd = {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: "https://xenia-manager.github.io/",
+          item: `${SITE_URL}/`,
         },
         {
           "@type": "ListItem",
           position: 2,
           name: "Xbox 360 Database",
-          item: "https://xenia-manager.github.io/gamesdatabase",
+          item: PAGE_GAMES_DATABASE,
         },
       ],
     },

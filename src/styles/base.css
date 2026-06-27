@@ -1,0 +1,140 @@
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+  line-height: 1.6;
+}
+
+/* Smooth scroll behavior - disabled on load to prevent auto-scroll stutter */
+html {
+  scroll-behavior: auto;
+}
+
+html.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+/* Smooth theme transitions for mica elements */
+.mica-layer,
+.mica-card-dark,
+.mica-card-light,
+.mica-surface-dark,
+.mica-surface-light,
+.input-fluent {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Fade in up animation for landing page sections */
+.fade-in-up {
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Only enable animations after JS loads to prevent hydration flash */
+.no-js .fade-in-up {
+  opacity: 1;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-tertiary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-xbox-green);
+  border-radius: 10px;
+  border: 3px solid var(--color-tertiary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-xbox-button);
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus indicator for accessibility */
+.focus-indicator:focus {
+  outline: 2px solid var(--color-xbox-green);
+  outline-offset: 2px;
+}
+
+/* Better typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.75rem;
+}
+
+/* Theme transitions */
+.theme-transition {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* Better focus styles for accessibility */
+.focus-ring {
+  outline: 2px solid var(--color-xbox-green) !important;
+  outline-offset: 2px !important;
+}
+
+/* Hide ALL focus outlines/borders in zoom modal */
+div[role="dialog"],
+div[role="dialog"] *,
+div[role="dialog"] *:focus,
+div[role="dialog"] *:focus-visible,
+div[role="dialog"] *:active,
+div[role="dialog"] img:focus,
+div[role="dialog"] img:focus-visible,
+div[role="dialog"] button:focus,
+div[role="dialog"] button:focus-visible {
+  outline: none !important;
+  outline-width: 0 !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+
+/* Remove any potential border/outline from zoomed image */
+div[role="dialog"] img {
+  border: none !important;
+  outline: none !important;
+}

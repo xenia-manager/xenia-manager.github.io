@@ -100,7 +100,7 @@ function ArtworkImage({
   alt: string;
   className?: string;
 }) {
-  const [src, setSrc] = useState(`${X360DB_BASE}${localPath}`);
+  const [src, setSrc] = useState(`https://xenia-manager.github.io/x360db${localPath}`);
   const [fallbackTried, setFallbackTried] = useState(false);
   const [errored, setErrored] = useState(false);
 
@@ -171,14 +171,12 @@ export function GameDetailModal({
     setImagesReady(false);
 
     const urls: string[] = [];
-    const base = X360DB_BASE;
-
-    urls.push(`${base}/titles/${gameId}/artwork/background.jpg`);
+    urls.push(`https://xenia-manager.github.io/x360db/titles/${gameId}/artwork/background.jpg`);
     if (info.artwork.background) {
       urls.push(toHttps(info.artwork.background));
     }
 
-    urls.push(`${base}/titles/${gameId}/artwork/boxart.jpg`);
+    urls.push(`https://xenia-manager.github.io/x360db/titles/${gameId}/artwork/boxart.jpg`);
     if (info.artwork.boxart) {
       urls.push(toHttps(info.artwork.boxart));
     }

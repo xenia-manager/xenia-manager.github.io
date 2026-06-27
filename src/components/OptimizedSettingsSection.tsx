@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { OptimizedSettingGame, SettingSection, sortOptimizedSettings } from "@/lib/types";
 import { fetchWithFallback, FETCH_CONFIGS } from "@/lib/fetchWithFallback";
 import { fetchOptimizedSettings, getValueColor } from "@/lib/tomlParser";
+import { useBodyScrollLock } from "@/lib/hooks";
 import { formatDate } from "@/lib/dateUtils";
 import { getOutdatedSettingsIssueUrl } from "@/lib/github";
 
@@ -73,13 +74,7 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
     game.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  // Show/hide scrollbar on mount/unmount
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, []);
+  useBodyScrollLock();
 
   const issueUrl = selectedGame
     ? getOutdatedSettingsIssueUrl(selectedGame.id, selectedGame.title)

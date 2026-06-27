@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { formatDate, parseDate } from "@/lib/dateUtils";
+import { useClickOutside } from "@/lib/hooks";
 import XeniaCanaryCustomSelect from "./XeniaCanaryCustomSelect";
 
 interface XeniaCanaryDatePickerProps {
@@ -19,28 +20,9 @@ export default function XeniaCanaryDatePicker({
 }: XeniaCanaryDatePickerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [tempDate, setTempDate] = useState(value);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false), isOpen);
 
   const { year, month, day } = parseDate(tempDate);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isOpen]);
 
   const handleApply = () => {
     if (year && month && day) {

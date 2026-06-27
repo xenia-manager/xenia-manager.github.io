@@ -2,10 +2,8 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { getInvalidGameEntryUrl } from "@/lib/github";
-
-const X360DB_BASE = "https://xenia-manager.github.io/x360db";
-const X360DB_RAW =
-  "https://raw.githubusercontent.com/xenia-manager/x360db/refs/heads/main";
+import { fetchWithFallback, getX360dbInfoConfig } from "@/lib/fetchWithFallback";
+import { useBodyScrollLock } from "@/lib/hooks";
 
 interface GameInfo {
   id: string;
@@ -38,23 +36,9 @@ interface GameDetailModalProps {
   onSelectId?: (id: string) => void;
 }
 
-function getInfoUrl(id: string) {
-  const path = `/titles/${id}/info.json`;
-  return {
-    primary: `${X360DB_BASE}${path}`,
-    backup: `${X360DB_RAW}${path}`,
-  };
-}
-
 async function fetchInfo(id: string): Promise<GameInfo> {
-  const { primary, backup } = getInfoUrl(id);
-  try {
-    const res = await fetch(primary);
-    if (res.ok) return res.json();
-  } catch {}
-  const res = await fetch(backup);
-  if (!res.ok) throw new Error("Failed to load game info");
-  return res.json();
+  const response = await fetchWithFallback(getX360dbInfoConfig(id));
+  return response.json();
 }
 
 function toHttps(url: string): string {
@@ -163,12 +147,7 @@ export function GameDetailModal({
   const [imagesReady, setImagesReady] = useState(false);
   const [expandedMedia, setExpandedMedia] = useState(false);
 
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, []);
+  useBodyScrollLock();
 
   useEffect(() => {
     async function load() {

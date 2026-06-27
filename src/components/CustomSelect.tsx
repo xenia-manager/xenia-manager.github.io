@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
+import { useClickOutside } from "@/lib/hooks";
 
 interface SelectOption {
   value: number | string;
@@ -21,20 +22,9 @@ export default function CustomSelect({
   className = "",
 }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
 
   const selectedLabel = options.find((opt) => opt.value === value)?.label || "";
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const handleSelect = (optionValue: number | string) => {
     onChange(optionValue);

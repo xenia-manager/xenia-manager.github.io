@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { slides } from "@/lib/slides";
+import { useBodyScrollLock } from "@/lib/hooks";
 
 interface ScreenshotsSectionProps {
   onZoomImage?: (slide: {
@@ -387,10 +388,9 @@ export function ScreenshotZoomModal({
   const [animationClass, setAnimationClass] = useState("animate-popup-content");
   const [isFirstRender, setIsFirstRender] = useState(true);
 
-  // Hide scrollbar when modal is open and handle keyboard navigation
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
+  useBodyScrollLock();
 
+  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
       if (e.key === "ArrowLeft") onPrev();
@@ -398,10 +398,7 @@ export function ScreenshotZoomModal({
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose, onPrev, onNext]);
 
   // Update animation based on navigation direction

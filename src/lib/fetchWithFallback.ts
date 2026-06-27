@@ -24,6 +24,12 @@ export const FETCH_CONFIGS = {
     backup:
       "https://raw.githubusercontent.com/xenia-manager/optimized-settings/refs/heads/main/data/settings.json",
   },
+  xeniaCanaryReleases: {
+    primary:
+      "https://xenia-manager.github.io/database/data/xenia-releases/canary.json",
+    backup:
+      "https://raw.githubusercontent.com/xenia-manager/database/refs/heads/main/data/xenia-releases/canary.json",
+  },
 } as const;
 
 /**
@@ -74,4 +80,12 @@ export function getSettingsConfig(gameId: string): FetchConfig {
     primary: `https://xenia-manager.github.io/optimized-settings/settings/${upperGameId}.toml`,
     backup: `https://raw.githubusercontent.com/xenia-manager/optimized-settings/refs/heads/main/settings/${upperGameId}.toml`,
   };
+}
+
+const X360DB_BASE = "https://xenia-manager.github.io/x360db";
+const X360DB_RAW = "https://raw.githubusercontent.com/xenia-manager/x360db/refs/heads/main";
+
+export function getX360dbInfoConfig(id: string): FetchConfig {
+  const path = `/titles/${id}/info.json`;
+  return { primary: `${X360DB_BASE}${path}`, backup: `${X360DB_RAW}${path}` };
 }

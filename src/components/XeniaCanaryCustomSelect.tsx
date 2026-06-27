@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
+import { useClickOutside } from "@/lib/hooks";
 
 interface XeniaCanaryCustomSelectProps {
   value: string;
@@ -18,26 +19,7 @@ export default function XeniaCanaryCustomSelect({
   label,
 }: XeniaCanaryCustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isOpen]);
+  const dropdownRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false), isOpen);
 
   const selectedLabel = options.find((o) => o.value === value)?.label;
 

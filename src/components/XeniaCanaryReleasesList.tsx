@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { XeniaCanaryRelease } from "@/lib/xeniaCanaryTypes";
+import { fetchWithFallback, FETCH_CONFIGS } from "@/lib/fetchWithFallback";
 import XeniaCanaryReleaseCard from "./XeniaCanaryReleaseCard";
 import XeniaCanaryFilterBar from "./XeniaCanaryFilterBar";
 import LoadingErrorOverlay from "./LoadingErrorOverlay";
@@ -35,20 +36,10 @@ export default function XeniaCanaryReleasesList({
 
   useEffect(() => {
     async function fetchReleases() {
-      const primaryUrl =
-        "https://xenia-manager.github.io/database/data/xenia-releases/canary.json";
-      const fallbackUrl =
-        "https://raw.githubusercontent.com/xenia-manager/database/refs/heads/main/data/xenia-releases/canary.json";
-
       try {
-        let response = await fetch(primaryUrl);
-        if (!response.ok) {
-          console.warn("Primary URL failed, trying fallback...");
-          response = await fetch(fallbackUrl);
-          if (!response.ok) {
-            throw new Error("Failed to fetch releases");
-          }
-        }
+        const response = await fetchWithFallback(
+          FETCH_CONFIGS.xeniaCanaryReleases,
+        );
         const data = await response.json();
         setAllReleases(data);
         setDisplayedReleases(data.slice(0, BATCH_SIZE));

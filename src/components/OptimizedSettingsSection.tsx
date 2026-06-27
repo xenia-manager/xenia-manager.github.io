@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { OptimizedSettingGame, SettingSection, sortOptimizedSettings } from "@/lib/types";
 import { fetchWithFallback, FETCH_CONFIGS } from "@/lib/fetchWithFallback";
 import { fetchOptimizedSettings, getValueColor } from "@/lib/tomlParser";
+import { normalizeForSearch } from "@/lib/searchUtils";
 import { useBodyScrollLock } from "@/lib/hooks";
 import { formatDate } from "@/lib/dateUtils";
 import { getOutdatedSettingsIssueUrl } from "@/lib/github";
@@ -71,7 +72,7 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
   };
 
   const filteredGames = games.filter((game) =>
-    game.title.toLowerCase().includes(searchQuery.toLowerCase()),
+    normalizeForSearch(game.title).includes(normalizeForSearch(searchQuery)),
   );
 
   useBodyScrollLock();

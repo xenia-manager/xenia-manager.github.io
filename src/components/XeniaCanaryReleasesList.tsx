@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { XeniaCanaryRelease } from "@/lib/xeniaCanaryTypes";
 import { fetchWithFallback, FETCH_CONFIGS } from "@/lib/fetchWithFallback";
+import { normalizeForSearch } from "@/lib/searchUtils";
 import XeniaCanaryReleaseCard from "./XeniaCanaryReleaseCard";
 import XeniaCanaryFilterBar from "./XeniaCanaryFilterBar";
 import LoadingErrorOverlay from "./LoadingErrorOverlay";
@@ -76,10 +77,10 @@ export default function XeniaCanaryReleasesList({
         return false;
       }
 
-      const searchLower = searchValue.toLowerCase();
-      const inTitle = rel.changelog.title.toLowerCase().includes(searchLower);
-      const inCommit = rel.target_commitish.toLowerCase().includes(searchLower);
-      const matchesSearch = searchValue === "" || inTitle || inCommit;
+      const searchLower = normalizeForSearch(searchValue);
+      const inTitle = normalizeForSearch(rel.changelog.title).includes(searchLower);
+      const inCommit = normalizeForSearch(rel.target_commitish).includes(searchLower);
+      const matchesSearch = !searchValue || inTitle || inCommit;
 
       let matchesDate = true;
 

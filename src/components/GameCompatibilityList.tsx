@@ -14,6 +14,7 @@ import LetterFilterBar from "./LetterFilterBar";
 import Pagination from "./Pagination";
 import LoadingErrorOverlay from "./LoadingErrorOverlay";
 import { fetchWithFallback, FETCH_CONFIGS } from "@/lib/fetchWithFallback";
+import { normalizeForSearch } from "@/lib/searchUtils";
 
 type SortColumn = "title" | "state" | "updated" | null;
 type SortDirection = "asc" | "desc";
@@ -95,10 +96,10 @@ export default function GameCompatibilityList({
       }
 
       // Search filter
-      const searchLower = searchValue.toLowerCase().trim();
-      const inTitle = game.title.toLowerCase().includes(searchLower);
-      const inId = game.id.toLowerCase().includes(searchLower);
-      const matchesSearch = searchValue === "" || inTitle || inId;
+      const searchLower = normalizeForSearch(searchValue);
+      const inTitle = normalizeForSearch(game.title).includes(searchLower);
+      const inId = normalizeForSearch(game.id).includes(searchLower);
+      const matchesSearch = !searchValue || inTitle || inId;
 
       // State filter
       const matchesState = stateFilter === "" || game.state === stateFilter;

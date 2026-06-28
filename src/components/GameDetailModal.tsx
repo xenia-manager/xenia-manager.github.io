@@ -147,6 +147,7 @@ export function GameDetailModal({
   const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
   const [imagesReady, setImagesReady] = useState(false);
   const [expandedMedia, setExpandedMedia] = useState(false);
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
 
   useBodyScrollLock();
 
@@ -515,8 +516,52 @@ export function GameDetailModal({
                     Description
                   </h3>
                   <p className="text-sm text-[var(--foreground)]/80 leading-relaxed">
-                    {info.description.full}
+                    {info.description.short && info.description.short !== info.description.full && !descriptionExpanded
+                      ? info.description.short
+                      : info.description.full}
                   </p>
+                  {info.description.short && info.description.short !== info.description.full && (
+                    <button
+                      onClick={() => setDescriptionExpanded(!descriptionExpanded)}
+                      className="mt-1 text-xs text-[var(--color-xbox-green)] hover:underline"
+                    >
+                      {descriptionExpanded ? "Show less" : "Show more"}
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {info.products.related.length > 0 && (
+                <div className="pb-6">
+                  <h3 className="text-sm font-semibold text-[var(--foreground)]/70 uppercase tracking-wider mb-3">
+                    Products ({info.products.related.length})
+                  </h3>
+                  <div className="space-y-1.5">
+                    {info.products.related.map((url, i) => (
+                      <a
+                        key={i}
+                        href={toHttps(url)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm text-[var(--foreground)]/50 hover:text-[var(--color-xbox-green)] transition-colors"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                          />
+                        </svg>
+                        Product {i + 1}
+                      </a>
+                    ))}
+                  </div>
                 </div>
               )}
 

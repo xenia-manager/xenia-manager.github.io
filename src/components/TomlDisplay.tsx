@@ -29,9 +29,9 @@ export default function TomlDisplay({
             {section.entries.map((entry) => (
               <div
                 key={`${section.name}.${entry.key}`}
-                className="flex items-center gap-2"
+                className="flex items-start gap-2"
               >
-                <span className="text-fluent-primary">
+                <span className="text-fluent-primary whitespace-nowrap">
                   {entry.key} ={" "}
                   <span
                     className="font-semibold"
@@ -41,7 +41,7 @@ export default function TomlDisplay({
                   </span>
                 </span>
                 {entry.comment && (
-                  <span className="text-xs italic text-fluent-secondary">
+                  <span className="italic text-fluent-secondary">
                     # {entry.comment}
                   </span>
                 )}

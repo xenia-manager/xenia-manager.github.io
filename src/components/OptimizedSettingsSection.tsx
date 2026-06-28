@@ -278,11 +278,11 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
                         </h4>
                         <div className="space-y-1.5">
                           {section.entries.map((entry) => (
-                            <div
-                              key={`${section.name}.${entry.key}`}
-                              className="flex items-center gap-2"
-                            >
-                              <span className="text-[var(--foreground)]">
+                              <div
+                                key={`${section.name}.${entry.key}`}
+                                className="flex items-start gap-2"
+                              >
+                              <span className="text-[var(--foreground)] whitespace-nowrap">
                                 {entry.key} ={" "}
                                 <span
                                   className="font-semibold"
@@ -292,7 +292,7 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
                                 </span>
                               </span>
                               {entry.comment && (
-                                <span className="text-xs italic text-[var(--foreground)]/50">
+                                <span className="italic text-[var(--foreground)]/50">
                                   # {entry.comment}
                                 </span>
                               )}

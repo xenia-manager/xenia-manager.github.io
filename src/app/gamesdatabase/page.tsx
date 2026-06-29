@@ -6,13 +6,15 @@ import {
   useMemo,
   useCallback,
   useDeferredValue,
-  useRef,
 } from "react";
 import { Header } from "@/components/Header";
 import { BackgroundLayers } from "@/components/BackgroundLayers";
 import { X360dbFooter } from "@/components/X360dbFooter";
 import { GameCard } from "@/components/GameCard";
 import { GameDetailModal } from "@/components/GameDetailModal";
+import { Pagination } from "@/components/Pagination";
+import { CustomSelect } from "@/components/CustomSelect";
+import { LetterFilterBar } from "@/components/LetterFilterBar";
 import { fetchWithFallback, type FetchConfig } from "@/lib/fetchWithFallback";
 import { normalizeForSearch } from "@/lib/searchUtils";
 import { getMissingGameEntryUrl } from "@/lib/github";
@@ -61,20 +63,25 @@ function saveCachedGames(games: GamesEntry[]) {
   } catch {}
 }
 
+const DEFAULT_PAGE_SIZE = 25;
+const PAGE_SIZE_OPTIONS = [25, 50, 100, 200];
+
 export default function GamesDatabasePage() {
   const [games, setGames] = useState<GamesEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const deferredQuery = useDeferredValue(searchQuery);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [selectedGame, setSelectedGame] = useState<{
     id: string;
     title: string;
     alternativeId: string[];
   } | null>(null);
 
-  const searchContainerRef = useRef<HTMLDivElement>(null);
-  const [searchStuck, setSearchStuck] = useState(false);
+  const [letterFilter, setLetterFilter] = useState("");
+  const [hideIndieGames, setHideIndieGames] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
@@ -123,21 +130,25 @@ export default function GamesDatabasePage() {
     [games],
   );
 
-  useEffect(() => {
-    const el = searchContainerRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setSearchStuck(!entry.isIntersecting),
-      { rootMargin: "-65px 0px 0px 0px", threshold: 0 },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  const indieCount = useMemo(
+    () => games.filter((g) => g.id.startsWith("5855")).length,
+    [games],
+  );
 
   const filteredGames = useMemo(() => {
-    const normalizedQuery = normalizeForSearch(deferredQuery);
-    if (!normalizedQuery) return games;
     return games.filter((g) => {
+      const matchesLetter =
+        letterFilter === "" ||
+        (letterFilter === "!" && !/^[a-zA-Z0-9]/.test(g.title)) ||
+        (letterFilter === "0-9" && /^[0-9]/.test(g.title)) ||
+        (letterFilter.length === 1 &&
+          g.title.toUpperCase().startsWith(letterFilter));
+      if (!matchesLetter) return false;
+
+      if (hideIndieGames && g.id.startsWith("5855")) return false;
+
+      const normalizedQuery = normalizeForSearch(deferredQuery);
+      if (!normalizedQuery) return true;
       if (normalizeForSearch(g.title).includes(normalizedQuery)) return true;
       if (normalizeForSearch(g.id).includes(normalizedQuery)) return true;
       for (const altId of g.alternative_id) {
@@ -145,7 +156,18 @@ export default function GamesDatabasePage() {
       }
       return false;
     });
-  }, [games, deferredQuery]);
+  }, [games, deferredQuery, letterFilter, hideIndieGames]);
+
+  const totalPages = Math.ceil(filteredGames.length / pageSize);
+  const paginatedGames = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return filteredGames.slice(startIndex, endIndex);
+  }, [filteredGames, currentPage, pageSize]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [deferredQuery, pageSize, letterFilter, hideIndieGames]);
 
   return (
     <>
@@ -189,16 +211,36 @@ export default function GamesDatabasePage() {
             )}
           </div>
 
-          {/* Search */}
-          <div
-            ref={searchContainerRef}
-            className={`sticky top-16 z-40 mb-6 ${
-              searchStuck
-                ? "glass-card border-b border-[var(--border-color)]"
-                : ""
-            }`}
-          >
-            <div className="relative max-w-md">
+          {/* Letter filter */}
+          <LetterFilterBar
+            letterFilter={letterFilter}
+            onLetterFilterChange={setLetterFilter}
+          />
+
+          {/* Indie games toggle */}
+          <div className="mb-3">
+            <button
+              onClick={() => setHideIndieGames(!hideIndieGames)}
+              className={`px-3 sm:px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold transition-all duration-200 border flex items-center gap-1.5 whitespace-nowrap ${
+                hideIndieGames
+                  ? "bg-[var(--bg-secondary)] text-fluent-secondary border-[var(--border-color)] hover:bg-[var(--hover-bg)]"
+                  : "bg-xbox-button text-white border-[var(--color-xbox-button)] shadow-lg scale-105"
+              }`}
+            >
+              <span>Indie Games</span>
+              <span
+                className={`px-1.5 py-0.5 rounded-full text-[10px] ${
+                  hideIndieGames ? "bg-black/10" : "bg-white/20"
+                }`}
+              >
+                {indieCount}
+              </span>
+            </button>
+          </div>
+
+          {/* Search + Results per page */}
+          <div className="flex flex-col sm:flex-row gap-3 sm:items-end mb-3">
+            <div className="relative flex-1">
               <svg
                 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-secondary)]"
                 fill="none"
@@ -228,6 +270,17 @@ export default function GamesDatabasePage() {
                   ✕
                 </button>
               )}
+            </div>
+            <div className="flex-shrink-0">
+              <CustomSelect
+                options={PAGE_SIZE_OPTIONS.map((size) => ({
+                  value: size,
+                  label: `${size} games`,
+                }))}
+                value={pageSize}
+                onChange={(val) => setPageSize(Number(val))}
+                className="min-w-[130px] w-full sm:w-auto"
+              />
             </div>
           </div>
 
@@ -276,7 +329,7 @@ export default function GamesDatabasePage() {
           ) : (
             <>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
-                {filteredGames.map((game) => (
+                {paginatedGames.map((game) => (
                   <GameCard
                     key={game.id}
                     id={game.id}
@@ -289,6 +342,15 @@ export default function GamesDatabasePage() {
               <p className="text-sm text-center text-[var(--foreground)]/50 mt-6">
                 Showing {filteredGames.length} of {games.length} games
               </p>
+              {totalPages > 1 && (
+                <div className="mt-4">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                  />
+                </div>
+              )}
             </>
           )}
         </div>

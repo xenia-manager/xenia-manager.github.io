@@ -3,12 +3,11 @@
 import { useState, useEffect } from "react";
 import { type OptimizedSettingGame, type SettingSection, sortOptimizedSettings } from "@/lib/types";
 import { fetchWithFallback, FETCH_CONFIGS } from "@/lib/fetchWithFallback";
-import { fetchOptimizedSettings, getValueColor } from "@/lib/tomlParser";
+import { fetchOptimizedSettings } from "@/lib/tomlParser";
+import TomlDisplay from "./TomlDisplay";
 import { normalizeForSearch } from "@/lib/searchUtils";
 import { useBodyScrollLock } from "@/lib/hooks";
 import { formatDate } from "@/lib/dateUtils";
-import { getOutdatedSettingsIssueUrl } from "@/lib/github";
-
 interface OptimizedSettingsPopupProps {
   onClose: () => void;
 }
@@ -76,10 +75,6 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
   );
 
   useBodyScrollLock();
-
-  const issueUrl = selectedGame
-    ? getOutdatedSettingsIssueUrl(selectedGame.id, selectedGame.title)
-    : "#";
 
   return (
     <div
@@ -266,67 +261,12 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
 
                 {/* Settings Content */}
                 <div className="flex-1 overflow-y-auto p-4">
-                  <div className="font-mono text-sm space-y-4">
-                    {settings.map((section, sectionIndex) => (
-                      <div key={section.name}>
-                        <h4
-                          className={`font-bold text-[var(--color-xbox-green)] mb-2 ${
-                            sectionIndex === 0 ? "" : "mt-4"
-                          }`}
-                        >
-                          [{section.name}]
-                        </h4>
-                        <div className="space-y-1.5">
-                          {section.entries.map((entry) => (
-                              <div
-                                key={`${section.name}.${entry.key}`}
-                                className="flex items-start gap-2"
-                              >
-                              <span className="text-[var(--foreground)] whitespace-nowrap">
-                                {entry.key} ={" "}
-                                <span
-                                  className="font-semibold"
-                                  style={{ color: getValueColor(entry.value) }}
-                                >
-                                  {entry.value}
-                                </span>
-                              </span>
-                              {entry.comment && (
-                                <span className="italic text-[var(--foreground)]/50">
-                                  # {entry.comment}
-                                </span>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Report outdated settings */}
-                <div className="border-t border-[var(--border-color)] p-3 flex items-center justify-center shrink-0 text-[var(--foreground)]/50">
-                  <a
-                    href={issueUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 hover:text-[var(--color-xbox-green)] transition-colors"
-                  >
-                    <svg
-                      className="w-3.5 h-3.5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    Report outdated settings
-                  </a>
+                  <TomlDisplay
+                    sections={settings}
+                    lastModified={selectedGame.last_modified}
+                    gameId={selectedGame.id}
+                    gameTitle={selectedGame.title}
+                  />
                 </div>
               </>
             ) : (

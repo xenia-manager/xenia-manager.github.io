@@ -4,7 +4,7 @@ interface LoadingErrorOverlayProps {
   loadingMessage?: string;
 }
 
-export default function LoadingErrorOverlay({
+export function LoadingErrorOverlay({
   loading,
   error,
   loadingMessage = "Loading...",

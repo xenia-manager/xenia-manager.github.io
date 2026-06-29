@@ -33,7 +33,7 @@ interface StateFilterBarProps {
   onShowOptimizedOnlyChange: (value: boolean) => void;
 }
 
-export default function StateFilterBar({
+export function StateFilterBar({
   stateFilter,
   onStateFilterChange,
   stateCounts,

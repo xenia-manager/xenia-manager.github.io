@@ -12,7 +12,7 @@ interface TomlDisplayProps {
   gameTitle?: string;
 }
 
-export default function TomlDisplay({
+export function TomlDisplay({
   sections,
   lastModified,
   gameId,

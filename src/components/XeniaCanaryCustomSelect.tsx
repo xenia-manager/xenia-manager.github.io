@@ -11,7 +11,7 @@ interface XeniaCanaryCustomSelectProps {
   label: string;
 }
 
-export default function XeniaCanaryCustomSelect({
+export function XeniaCanaryCustomSelect({
   value,
   onChange,
   options,

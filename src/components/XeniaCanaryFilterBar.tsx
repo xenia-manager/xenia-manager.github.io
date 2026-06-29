@@ -1,6 +1,6 @@
 "use client";
 
-import XeniaCanaryDatePicker from "./XeniaCanaryDatePicker";
+import { XeniaCanaryDatePicker } from "./XeniaCanaryDatePicker";
 
 interface XeniaCanaryFilterBarProps {
   searchValue: string;
@@ -15,7 +15,7 @@ interface XeniaCanaryFilterBarProps {
   onClear: () => void;
 }
 
-export default function XeniaCanaryFilterBar({
+export function XeniaCanaryFilterBar({
   searchValue,
   fromDate,
   toDate,

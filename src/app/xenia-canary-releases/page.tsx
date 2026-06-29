@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Header } from "@/components/Header";
 import { BackgroundLayers } from "@/components/BackgroundLayers";
 import { XeniaCanaryFooter } from "@/components/XeniaCanaryFooter";
-import HeroSection from "@/components/XeniaCanaryHeroSection";
-import ReleasesList from "@/components/XeniaCanaryReleasesList";
+import { XeniaCanaryHeroSection as HeroSection } from "@/components/XeniaCanaryHeroSection";
+import { XeniaCanaryReleasesList as ReleasesList } from "@/components/XeniaCanaryReleasesList";
 
 export default function XeniaCanaryReleasesPage() {
   const [isLoading, setIsLoading] = useState(true);

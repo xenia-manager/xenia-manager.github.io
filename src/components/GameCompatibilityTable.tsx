@@ -12,7 +12,7 @@ import {
 } from "@/lib/types";
 import { fetchOptimizedSettings } from "@/lib/tomlParser";
 import { formatDate } from "@/lib/dateUtils";
-import TomlDisplay from "./TomlDisplay";
+import { TomlDisplay } from "./TomlDisplay";
 
 type SortColumn = "title" | "state" | "updated" | null;
 type SortDirection = "asc" | "desc";
@@ -62,7 +62,7 @@ function SortableHeader({
   );
 }
 
-export default function GameCompatibilityTable({
+export function GameCompatibilityTable({
   games,
   sortColumn,
   sortDirection,

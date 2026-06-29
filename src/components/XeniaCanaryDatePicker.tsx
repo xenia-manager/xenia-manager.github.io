@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { formatDate, parseDate } from "@/lib/dateUtils";
 import { useClickOutside } from "@/lib/hooks";
-import XeniaCanaryCustomSelect from "./XeniaCanaryCustomSelect";
+import { XeniaCanaryCustomSelect } from "./XeniaCanaryCustomSelect";
 
 interface XeniaCanaryDatePickerProps {
   value: string;
@@ -12,7 +12,7 @@ interface XeniaCanaryDatePickerProps {
   earliestDate?: string;
 }
 
-export default function XeniaCanaryDatePicker({
+export function XeniaCanaryDatePicker({
   value,
   onChange,
   label,

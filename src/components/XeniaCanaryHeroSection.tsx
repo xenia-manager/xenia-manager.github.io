@@ -1,6 +1,6 @@
 "use client";
 
-export default function XeniaCanaryHeroSection() {
+export function XeniaCanaryHeroSection() {
   return (
     <section className="text-center mb-8 rounded-2xl p-8 shadow-lg bg-[var(--bg-secondary)]">
       <div className="max-w-3xl mx-auto">

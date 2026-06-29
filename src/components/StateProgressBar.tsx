@@ -17,7 +17,7 @@ interface StateProgressBarProps {
   totalCount: number;
 }
 
-export default function StateProgressBar({
+export function StateProgressBar({
   stateCounts,
   totalCount,
 }: StateProgressBarProps) {

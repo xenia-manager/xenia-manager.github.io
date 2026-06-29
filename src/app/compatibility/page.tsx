@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Header } from "@/components/Header";
 import { BackgroundLayers } from "@/components/BackgroundLayers";
 import { GameCompatibilityFooter } from "@/components/GameCompatibilityFooter";
-import GameCompatibilityList from "@/components/GameCompatibilityList";
-import StateProgressBar from "@/components/StateProgressBar";
+import { GameCompatibilityList } from "@/components/GameCompatibilityList";
+import { StateProgressBar } from "@/components/StateProgressBar";
 
 export default function GameCompatibilityPage() {
   const [isLoading, setIsLoading] = useState(true);

@@ -7,7 +7,7 @@ interface XeniaCanaryReleaseCardProps {
   release: XeniaCanaryRelease;
 }
 
-export default function XeniaCanaryReleaseCard({
+export function XeniaCanaryReleaseCard({
   release,
 }: XeniaCanaryReleaseCardProps) {
   const dateFormatted = formatDate(release.published_at);

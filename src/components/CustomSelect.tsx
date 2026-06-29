@@ -15,7 +15,7 @@ interface CustomSelectProps {
   className?: string;
 }
 
-export default function CustomSelect({
+export function CustomSelect({
   options,
   value,
   onChange,

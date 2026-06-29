@@ -37,7 +37,7 @@ const letters = [
   "Z",
 ];
 
-export default function LetterFilterBar({
+export function LetterFilterBar({
   letterFilter,
   onLetterFilterChange,
 }: LetterFilterBarProps) {

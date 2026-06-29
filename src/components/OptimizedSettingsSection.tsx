@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { type OptimizedSettingGame, type SettingSection, sortOptimizedSettings } from "@/lib/types";
 import { fetchWithFallback, FETCH_CONFIGS } from "@/lib/fetchWithFallback";
 import { fetchOptimizedSettings } from "@/lib/tomlParser";
-import TomlDisplay from "./TomlDisplay";
+import { TomlDisplay } from "./TomlDisplay";
 import { normalizeForSearch } from "@/lib/searchUtils";
 import { useBodyScrollLock } from "@/lib/hooks";
 import { formatDate } from "@/lib/dateUtils";

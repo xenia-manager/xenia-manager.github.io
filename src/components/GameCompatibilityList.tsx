@@ -7,12 +7,12 @@ import {
   getStateSortValue,
   STATE_ORDER,
 } from "@/lib/types";
-import GameCompatibilityTable from "./GameCompatibilityTable";
-import StateFilterBar from "./StateFilterBar";
-import CustomSelect from "./CustomSelect";
-import LetterFilterBar from "./LetterFilterBar";
-import Pagination from "./Pagination";
-import LoadingErrorOverlay from "./LoadingErrorOverlay";
+import { GameCompatibilityTable } from "./GameCompatibilityTable";
+import { StateFilterBar } from "./StateFilterBar";
+import { CustomSelect } from "./CustomSelect";
+import { LetterFilterBar } from "./LetterFilterBar";
+import { Pagination } from "./Pagination";
+import { LoadingErrorOverlay } from "./LoadingErrorOverlay";
 import { fetchWithFallback, FETCH_CONFIGS } from "@/lib/fetchWithFallback";
 import { normalizeForSearch } from "@/lib/searchUtils";
 
@@ -28,7 +28,7 @@ interface GameCompatibilityListProps {
   onTotalCountChange?: (count: number) => void;
 }
 
-export default function GameCompatibilityList({
+export function GameCompatibilityList({
   onLoadingChange,
   onStateCountsChange,
   onTotalCountChange,

@@ -4,9 +4,9 @@ import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { XeniaCanaryRelease } from "@/lib/xeniaCanaryTypes";
 import { fetchWithFallback, FETCH_CONFIGS } from "@/lib/fetchWithFallback";
 import { normalizeForSearch } from "@/lib/searchUtils";
-import XeniaCanaryReleaseCard from "./XeniaCanaryReleaseCard";
-import XeniaCanaryFilterBar from "./XeniaCanaryFilterBar";
-import LoadingErrorOverlay from "./LoadingErrorOverlay";
+import { XeniaCanaryReleaseCard } from "./XeniaCanaryReleaseCard";
+import { XeniaCanaryFilterBar } from "./XeniaCanaryFilterBar";
+import { LoadingErrorOverlay } from "./LoadingErrorOverlay";
 
 const BATCH_SIZE = 20;
 
@@ -14,7 +14,7 @@ interface XeniaCanaryReleasesListProps {
   onLoadingChange?: (loading: boolean) => void;
 }
 
-export default function XeniaCanaryReleasesList({
+export function XeniaCanaryReleasesList({
   onLoadingChange,
 }: XeniaCanaryReleasesListProps) {
   const [allReleases, setAllReleases] = useState<XeniaCanaryRelease[]>([]);

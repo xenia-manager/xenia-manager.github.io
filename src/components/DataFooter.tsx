@@ -1,0 +1,45 @@
+"use client";
+
+interface DataFooterLink {
+  href: string;
+  label: string;
+  title?: string;
+}
+
+interface DataFooterProps {
+  links?: DataFooterLink[];
+}
+
+export function DataFooter({ links }: DataFooterProps) {
+  return (
+    <footer className="w-full py-4 px-4 mica-surface backdrop-blur-xl border-t border-[var(--border-color)] border-b-0 border-l-0 border-r-0">
+      <div className="max-w-5xl mx-auto space-y-3 text-center">
+        <p className="text-fluent-secondary text-xs sm:text-sm">
+          Powered by Xenia Manager • Not affiliated with Xenia Team
+        </p>
+        {links && links.length > 0 && (
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs sm:text-sm">
+            {links.map((link, index) => (
+              <span key={link.href}>
+                {index > 0 && (
+                  <span className="text-fluent-secondary hidden sm:inline mx-4">
+                    •
+                  </span>
+                )}
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xbox-green hover:text-xbox-hover transition-colors link-style"
+                  title={link.title}
+                >
+                  {link.label}
+                </a>
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+    </footer>
+  );
+}

@@ -100,7 +100,4 @@
   animation: spin 1s linear infinite;
 }
 
-/* Pulse animation for loading states */
-.pulse {
-  animation: var(--animate-pulse);
-}
+

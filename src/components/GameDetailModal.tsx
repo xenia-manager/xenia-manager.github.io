@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getInvalidGameEntryUrl } from "@/lib/github";
 import { fetchWithFallback, getX360dbInfoConfig } from "@/lib/fetchWithFallback";
 import { useBodyScrollLock } from "@/lib/hooks";
@@ -59,14 +59,12 @@ function GalleryImage({
   const [src, setSrc] = useState(() => toHttps(url));
   const [fallbackTried, setFallbackTried] = useState(false);
   const [failed, setFailed] = useState(false);
-  const prevUrl = useRef(url);
 
-  if (url !== prevUrl.current) {
-    prevUrl.current = url;
+  useEffect(() => {
     setSrc(toHttps(url));
     setFallbackTried(false);
     setFailed(false);
-  }
+  }, [url]);
 
   const handleError = () => {
     if (!fallbackTried && url !== src) {
@@ -428,9 +426,9 @@ export function GameDetailModal({
                       </button>
                       {expandedMedia && (
                         <div className="mt-2 space-y-2">
-                          {info.media.map((m, i) => (
+                          {info.media.map((m) => (
                             <div
-                              key={i}
+                              key={m.media_id}
                               className="text-xs text-[var(--foreground)]/70 space-y-0.5 p-2 rounded bg-[var(--bg-secondary)]/50"
                             >
                               <p className="font-mono text-[var(--foreground)]/40">
@@ -537,9 +535,9 @@ export function GameDetailModal({
                     Products ({info.products.related.length})
                   </h3>
                   <div className="space-y-1.5">
-                    {info.products.related.map((url, i) => (
+                    {info.products.related.map((url) => (
                       <a
-                        key={i}
+                        key={url}
                         href={toHttps(url)}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -573,7 +571,7 @@ export function GameDetailModal({
                   <div className="flex gap-3 overflow-x-auto items-start pb-3">
                     {galleryUrls.map((url, i) => (
                       <button
-                        key={i}
+                        key={url}
                         onClick={() => setGalleryIndex(i)}
                         className="flex-shrink-0 focus-indicator rounded-lg overflow-hidden border-2 border-transparent hover:border-[var(--color-xbox-green)] transition-colors"
                       >

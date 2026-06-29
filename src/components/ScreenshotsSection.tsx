@@ -369,6 +369,8 @@ export function ScreenshotsSection({
   );
 }
 
+let _animationCounter = 0;
+
 export function ScreenshotZoomModal({
   imageSrc,
   title,
@@ -384,9 +386,7 @@ export function ScreenshotZoomModal({
   onPrev: () => void;
   onNext: () => void;
 }) {
-  const [prevImageSrc, setPrevImageSrc] = useState(imageSrc);
   const [animationClass, setAnimationClass] = useState("animate-popup-content");
-  const [isFirstRender, setIsFirstRender] = useState(true);
 
   useBodyScrollLock();
 
@@ -401,23 +401,15 @@ export function ScreenshotZoomModal({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose, onPrev, onNext]);
 
-  // Update animation based on navigation direction
   useEffect(() => {
-    if (isFirstRender) {
-      setIsFirstRender(false);
-      setPrevImageSrc(imageSrc);
-      return;
-    }
-
-    if (imageSrc !== prevImageSrc) {
-      setAnimationClass(
-        imageSrc > prevImageSrc
-          ? "animate-slide-in-right"
-          : "animate-slide-in-left",
-      );
-      setPrevImageSrc(imageSrc);
-    }
-  }, [imageSrc, prevImageSrc, isFirstRender]);
+    const prev = _animationCounter;
+    _animationCounter++;
+    setAnimationClass(
+      _animationCounter > prev
+        ? "animate-slide-in-right"
+        : "animate-slide-in-left",
+    );
+  }, [imageSrc]);
 
   if (!imageSrc) {
     return null;

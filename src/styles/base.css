@@ -111,12 +111,6 @@ h3 {
     box-shadow 0.3s ease;
 }
 
-/* Better focus styles for accessibility */
-.focus-ring {
-  outline: 2px solid var(--color-xbox-green) !important;
-  outline-offset: 2px !important;
-}
-
 /* Hide ALL focus outlines/borders in zoom modal */
 div[role="dialog"],
 div[role="dialog"] *,

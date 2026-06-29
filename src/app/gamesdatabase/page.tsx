@@ -89,7 +89,7 @@ export default function GamesDatabasePage() {
       try {
         const response = await fetchWithFallback(X360DB_GAMES_CONFIG);
         const data: GamesEntry[] = await response.json();
-        const sorted = data.sort((a, b) => a.title.localeCompare(b.title));
+        const sorted = [...data].sort((a, b) => a.title.localeCompare(b.title));
         if (!cancelled) {
           setGames(sorted);
           saveCachedGames(sorted);

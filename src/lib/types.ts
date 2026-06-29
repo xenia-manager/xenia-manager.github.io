@@ -117,7 +117,7 @@ export const STATE_METADATA: StateMetadata[] = [
  * @returns StateMetadata object or default (Unknown) if not found
  */
 export function getStateMetadata(state: string): StateMetadata {
-  return STATE_METADATA.find((s) => s.value === state) ?? STATE_METADATA[4];
+  return STATE_METADATA.find((s) => s.value === state) ?? STATE_METADATA.find((s) => s.value === "Unknown")!;
 }
 
 /**

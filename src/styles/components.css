@@ -224,18 +224,6 @@ body.light-mode .mica-surface {
   animation: spin 1s linear infinite;
 }
 
-/* Improved button variants */
-.btn-secondary {
-  background: var(--btn-secondary-bg);
-  color: var(--text-primary);
-  border: 1px solid var(--btn-secondary-border);
-}
-
-.btn-secondary:hover {
-  background: var(--hover-bg);
-  color: var(--text-primary);
-}
-
 /* Tag styles */
 .tag {
   display: inline-block;
@@ -246,29 +234,6 @@ body.light-mode .mica-surface {
   background: rgba(119, 185, 0, 0.15);
   color: var(--color-xbox-green);
   border: 1px solid rgba(119, 185, 0, 0.2);
-}
-
-/* Badge styles */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  min-width: 20px;
-  height: 20px;
-}
-
-.badge-primary {
-  background: var(--color-xbox-green);
-  color: white;
-}
-
-.badge-secondary {
-  background: var(--badge-secondary-bg);
-  color: var(--text-primary);
 }
 
 /* Improved link styles */
@@ -307,30 +272,6 @@ body.light-mode .mica-surface {
   align-items: center;
   gap: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.notification-success {
-  background: rgba(46, 204, 113, 0.15);
-  border: 1px solid rgba(46, 204, 113, 0.3);
-  color: #2ecc71;
-}
-
-.notification-error {
-  background: rgba(231, 76, 60, 0.15);
-  border: 1px solid rgba(231, 76, 60, 0.3);
-  color: #e74c3c;
-}
-
-.notification-warning {
-  background: rgba(241, 196, 15, 0.15);
-  border: 1px solid rgba(241, 196, 15, 0.3);
-  color: #f1c40f;
-}
-
-.notification-info {
-  background: rgba(52, 152, 219, 0.15);
-  border: 1px solid rgba(52, 152, 219, 0.3);
-  color: #3498db;
 }
 
 /* Slideshow navigation buttons */

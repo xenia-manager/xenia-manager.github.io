@@ -3,14 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { STATE_METADATA } from "@/lib/types";
 
-interface StateInfo {
-  value: string;
-  label: string;
-  color: string;
-  description: string;
-}
-
-const states: StateInfo[] = STATE_METADATA.map(
+const states = STATE_METADATA.map(
   ({ value, label, color, description }) => ({
     value,
     label,

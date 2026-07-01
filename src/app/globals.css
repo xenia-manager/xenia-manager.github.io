@@ -315,26 +315,17 @@ h3 {
     box-shadow 0.3s ease;
 }
 
-/* Hide ALL focus outlines/borders in zoom modal */
-div[role="dialog"],
-div[role="dialog"] *,
-div[role="dialog"] *:focus,
-div[role="dialog"] *:focus-visible,
-div[role="dialog"] *:active,
-div[role="dialog"] img:focus,
-div[role="dialog"] img:focus-visible,
-div[role="dialog"] button:focus,
-div[role="dialog"] button:focus-visible {
-  outline: none !important;
-  outline-width: 0 !important;
-  box-shadow: none !important;
-  border-color: transparent !important;
+/* Subtle focus ring for zoom modal - visible but minimal */
+div[role="dialog"] button:focus-visible,
+div[role="dialog"] a:focus-visible {
+  outline: 2px solid var(--color-xbox-green);
+  outline-offset: 2px;
 }
 
-/* Remove any potential border/outline from zoomed image */
+/* Keep zoomed image clean */
 div[role="dialog"] img {
-  border: none !important;
-  outline: none !important;
+  border: none;
+  outline: none;
 }
 
 /* ===== animations.css ===== */
@@ -399,27 +390,6 @@ div[role="dialog"] img {
   animation: slideInLeft 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Animations */
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
 @keyframes spin {
   from {
     transform: rotate(0deg);
@@ -427,14 +397,6 @@ div[role="dialog"] img {
   to {
     transform: rotate(360deg);
   }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .animate-spin {

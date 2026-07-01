@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 
 export default function Error({
   error,
@@ -23,12 +24,20 @@ export default function Error({
         <p className="text-[var(--foreground)]/60 text-sm mb-6">
           An unexpected error occurred. Please try again.
         </p>
-        <button
-          onClick={reset}
-          className="btn-xbox px-6 py-2 rounded-lg text-sm"
-        >
-          Try again
-        </button>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <button
+            onClick={reset}
+            className="btn-xbox px-6 py-2 rounded-lg text-sm"
+          >
+            Try again
+          </button>
+          <Link
+            href="/"
+            className="btn-xbox-secondary px-6 py-2 rounded-lg text-sm inline-block text-center"
+          >
+            Go to Home
+          </Link>
+        </div>
       </div>
     </div>
   );

@@ -1,8 +1,21 @@
 "use client";
 
+import { useState, useEffect } from "react";
+
 export function BackgroundLayers() {
+  const [pageVisible, setPageVisible] = useState(true);
+
+  useEffect(() => {
+    const handleVisibility = () => setPageVisible(!document.hidden);
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
+  }, []);
+
   return (
-    <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+    <div
+      className="fixed inset-0 -z-10 overflow-hidden pointer-events-none"
+      style={{ animationPlayState: pageVisible ? "running" : "paused" }}
+    >
       {/* Mica Layer */}
       <div className="absolute inset-0 mica-layer" />
 

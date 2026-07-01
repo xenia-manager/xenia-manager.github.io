@@ -196,6 +196,7 @@ export function ScreenshotsSection({
                 <img
                   src={slide.src}
                   alt={slide.title}
+                  loading="lazy"
                   onClick={handleZoomIn}
                   className="w-full h-full object-contain p-4 cursor-zoom-in hover:brightness-110 transition-all duration-300"
                 />
@@ -329,11 +330,12 @@ export function ScreenshotsSection({
                   aria-label={`Go to ${slide.title}`}
                   aria-current={index === currentSlide ? "true" : "false"}
                 >
-                  <img
-                    src={slide.src}
-                    alt={slide.title}
-                    className="w-full h-full object-cover"
-                  />
+                    <img
+                      src={slide.src}
+                      alt={slide.title}
+                      loading="lazy"
+                      className="w-full h-full object-cover"
+                    />
                 </button>
               ))}
             </div>
@@ -369,8 +371,6 @@ export function ScreenshotsSection({
   );
 }
 
-let _animationCounter = 0;
-
 export function ScreenshotZoomModal({
   imageSrc,
   title,
@@ -387,6 +387,7 @@ export function ScreenshotZoomModal({
   onNext: () => void;
 }) {
   const [animationClass, setAnimationClass] = useState("animate-popup-content");
+  const animationCounter = useRef(0);
 
   useBodyScrollLock();
 
@@ -402,10 +403,10 @@ export function ScreenshotZoomModal({
   }, [onClose, onPrev, onNext]);
 
   useEffect(() => {
-    const prev = _animationCounter;
-    _animationCounter++;
+    const prev = animationCounter.current;
+    animationCounter.current++;
     setAnimationClass(
-      _animationCounter > prev
+      animationCounter.current > prev
         ? "animate-slide-in-right"
         : "animate-slide-in-left",
     );

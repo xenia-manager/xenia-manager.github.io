@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { formatDate, parseDate } from "@/lib/dateUtils";
 import { useClickOutside } from "@/lib/hooks";
-import { XeniaCanaryCustomSelect } from "./XeniaCanaryCustomSelect";
+import { CustomSelect } from "./CustomSelect";
 
 interface XeniaCanaryDatePickerProps {
   value: string;
@@ -97,7 +97,7 @@ export function XeniaCanaryDatePicker({
         <div className="absolute z-50 mt-2 p-4 rounded-xl shadow-2xl min-w-[320px] mica-surface backdrop-blur-xl">
           <div className="flex gap-3 mb-4">
             <div className="flex-1">
-              <XeniaCanaryCustomSelect
+              <CustomSelect
                 label="Year"
                 value={year}
                 onChange={(y) => setTempDate(`${y}-${month}-${day}`)}
@@ -112,7 +112,7 @@ export function XeniaCanaryDatePicker({
               />
             </div>
             <div className="flex-1">
-              <XeniaCanaryCustomSelect
+              <CustomSelect
                 label="Month"
                 value={month}
                 onChange={(m) => setTempDate(`${year}-${m}-${day}`)}
@@ -121,7 +121,7 @@ export function XeniaCanaryDatePicker({
               />
             </div>
             <div className="flex-1">
-              <XeniaCanaryCustomSelect
+              <CustomSelect
                 label="Day"
                 value={day}
                 onChange={(d) => setTempDate(`${year}-${month}-${d}`)}

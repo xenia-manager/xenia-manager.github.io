@@ -252,6 +252,7 @@ export function Footer() {
             <img
               src="/favicon.png"
               alt="Xenia Manager"
+              loading="lazy"
               className="w-8 h-8 rounded-lg"
             />
             <span className="text-[var(--foreground)]/60 text-sm">

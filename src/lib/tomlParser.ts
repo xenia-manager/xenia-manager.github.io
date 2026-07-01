@@ -1,5 +1,6 @@
 import { SettingSection } from "@/lib/types";
 import { fetchWithFallback, getSettingsConfig } from "@/lib/fetchWithFallback";
+import { reportError } from "@/lib/errorReporter";
 
 /**
  * Parse TOML content into structured sections and entries
@@ -94,7 +95,7 @@ export async function fetchOptimizedSettings(
     const tomlContent = await response.text();
     return parseToml(tomlContent);
   } catch (error) {
-    console.error(`Failed to fetch settings for game ${gameId}:`, error);
+    reportError(error, `fetchOptimizedSettings:${gameId}`);
     return null;
   }
 }

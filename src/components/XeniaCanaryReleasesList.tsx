@@ -32,8 +32,7 @@ export function XeniaCanaryReleasesList({
   const [sortOption, setSortOption] = useState<"newest" | "oldest">("newest");
   const [earliestDate, setEarliestDate] = useState("");
 
-  const observer = useRef<IntersectionObserver | null>(null);
-  const lastReleaseRef = useRef<HTMLDivElement>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     async function fetchReleases() {
@@ -161,44 +160,38 @@ export function XeniaCanaryReleasesList({
     }, 300);
   }, [displayedReleases.length, sortedReleases, hasMore, loadingMore]);
 
+  const hasMoreRef = useRef(hasMore);
+  const loadingMoreRef = useRef(loadingMore);
+  const loadingRef = useRef(loading);
+  const loadMoreRef = useRef(loadMoreReleases);
+
+  hasMoreRef.current = hasMore;
+  loadingMoreRef.current = loadingMore;
+  loadingRef.current = loading;
+  loadMoreRef.current = loadMoreReleases;
+
   useEffect(() => {
     setDisplayedReleases(sortedReleases.slice(0, BATCH_SIZE));
     setHasMore(sortedReleases.length > BATCH_SIZE);
   }, [sortedReleases]);
 
-  useEffect(() => {
-    if (loading || loadingMore) return;
-
-    if (observer.current) {
-      observer.current.disconnect();
-    }
-
-    observer.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && hasMore && !loadingMore) {
-        loadMoreReleases();
+  const lastReleaseCallbackRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
       }
-    });
-
-    const timer = setTimeout(() => {
-      if (lastReleaseRef.current && observer.current) {
-        observer.current.observe(lastReleaseRef.current);
+      if (node && !loadingRef.current && !loadingMoreRef.current && hasMoreRef.current) {
+        observerRef.current = new IntersectionObserver(() => {
+          if (hasMoreRef.current && !loadingMoreRef.current) {
+            loadMoreRef.current();
+          }
+        });
+        observerRef.current.observe(node);
       }
-    }, 0);
-
-    return () => {
-      clearTimeout(timer);
-      if (observer.current) {
-        observer.current.disconnect();
-      }
-    };
-  }, [
-    hasMore,
-    loadingMore,
-    loading,
-    loadMoreReleases,
-    displayedReleases.length,
-    sortOption,
-  ]);
+    },
+    [],
+  );
 
   const handleClear = () => {
     setSearchValue("");
@@ -258,7 +251,7 @@ export function XeniaCanaryReleasesList({
                   {displayedReleases.map((release, index) => {
                     if (index === displayedReleases.length - 1) {
                       return (
-                        <div key={release.tag_name} ref={lastReleaseRef}>
+                        <div key={release.tag_name} ref={lastReleaseCallbackRef}>
                           <XeniaCanaryReleaseCard release={release} />
                         </div>
                       );

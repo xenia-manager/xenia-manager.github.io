@@ -115,7 +115,7 @@ function ArtworkImage({
   if (errored) return null;
 
   return (
-    <img src={src} alt={alt} onError={handleError} className={className} />
+    <img src={src} alt={alt} loading="lazy" onError={handleError} className={className} />
   );
 }
 

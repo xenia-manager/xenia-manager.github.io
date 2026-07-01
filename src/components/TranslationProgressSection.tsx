@@ -17,6 +17,7 @@ export function TranslationProgressSection() {
           <img
             src={TRANSLATION_PROGRESS_IMG}
             alt="Translation progress chart showing completion percentage for each supported language"
+            loading="lazy"
             className="w-full h-auto rounded-xl"
           />
         </div>

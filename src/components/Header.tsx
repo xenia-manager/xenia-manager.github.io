@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "./ThemeProvider";
+import { ImageWithFallback } from "./ImageWithFallback";
+import { MoonIcon, SunIcon, CoffeeIcon, CloseIcon, MenuIcon } from "./Icons";
 import { FAQ_URL, KOFI_URL } from "@/lib/constants";
 
 export function Header() {
@@ -25,10 +27,11 @@ export function Header() {
             href="/"
             className="flex items-center gap-3 group flex-shrink-0"
           >
-            <img
+            <ImageWithFallback
               src="/favicon.png"
               alt="Xenia Manager"
               className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl shadow-lg"
+              fetchPriority="high"
             />
             <span className="text-base sm:text-xl font-bold gradient-text truncate">
               Xenia Manager
@@ -91,39 +94,9 @@ export function Header() {
             >
               <span className="block w-5 h-5 flex items-center justify-center">
                 {theme === "dark" ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="w-5 h-5"
-                  >
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                  </svg>
+                  <MoonIcon className="w-5 h-5" />
                 ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="w-5 h-5"
-                  >
-                    <circle cx="12" cy="12" r="4" />
-                    <path d="M12 2v2" />
-                    <path d="M12 20v2" />
-                    <path d="m4.93 4.93 1.41 1.41" />
-                    <path d="m17.66 17.66 1.41 1.41" />
-                    <path d="M2 12h2" />
-                    <path d="M20 12h2" />
-                    <path d="m6.34 17.66-1.41 1.41" />
-                    <path d="m19.07 4.93-1.41 1.41" />
-                  </svg>
+                  <SunIcon className="w-5 h-5" />
                 )}
               </span>
             </button>
@@ -141,22 +114,7 @@ export function Header() {
                          min-w-[40px] min-h-[40px] flex items-center justify-center
                          flex-shrink-0 text-[var(--foreground)]/80 hover:text-[var(--foreground)]"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-5 h-5"
-              >
-                <path d="M17 8h1a4 4 0 1 1 0 8h-1" />
-                <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" />
-                <line x1="6" y1="2" x2="6" y2="4" />
-                <line x1="10" y1="2" x2="10" y2="4" />
-                <line x1="14" y1="2" x2="14" y2="4" />
-              </svg>
+              <CoffeeIcon className="w-5 h-5" />
             </a>
 
             {/* Mobile Menu Button */}
@@ -171,28 +129,11 @@ export function Header() {
                          min-w-[40px] min-h-[40px] flex items-center justify-center
                          flex-shrink-0 ml-2"
             >
-              <svg
-                className="w-5 h-5 text-[var(--foreground)]"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                {mobileMenuOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                )}
-              </svg>
+              {mobileMenuOpen ? (
+                <CloseIcon className="w-5 h-5 text-[var(--foreground)]" />
+              ) : (
+                <MenuIcon className="w-5 h-5 text-[var(--foreground)]" />
+              )}
             </button>
           </div>
         </div>

@@ -11,7 +11,7 @@ import {
   getStateIcon,
 } from "@/lib/types";
 import { fetchOptimizedSettings } from "@/lib/tomlParser";
-import { formatDate } from "@/lib/dateUtils";
+import { formatDate, formatDateShort } from "@/lib/dateUtils";
 import { TomlDisplay } from "./TomlDisplay";
 
 type SortColumn = "title" | "state" | "updated" | null;
@@ -165,9 +165,10 @@ export function GameCompatibilityTable({
               direction={sortDirection}
               onSort={onSort}
               width="100px"
-              className="hidden md:table-cell text-xs sm:text-sm"
+              className="text-xs sm:text-sm"
             >
-              Updated
+              <span className="hidden sm:inline">Updated</span>
+              <span className="sm:hidden">Upd.</span>
             </SortableHeader>
             <th
               className="text-left py-3 px-2 sm:px-4 font-semibold text-fluent-primary text-xs sm:text-sm whitespace-nowrap"
@@ -235,9 +236,10 @@ export function GameCompatibilityTable({
                       </span>
                     </span>
                   </td>
-                  <td className="py-3 px-3 sm:px-4 hidden sm:table-cell align-middle">
+                  <td className="py-3 px-3 sm:px-4 align-middle">
                     <span className="text-xs sm:text-sm text-fluent-secondary">
-                      {formatDate(game.updated)}
+                      <span className="hidden sm:inline">{formatDate(game.updated)}</span>
+                      <span className="sm:hidden">{formatDateShort(game.updated)}</span>
                     </span>
                   </td>
                   <td className="py-3 px-3 sm:px-4 align-middle">

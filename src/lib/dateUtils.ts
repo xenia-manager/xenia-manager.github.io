@@ -12,6 +12,19 @@ export function formatDate(dateString: string): string {
   }
 }
 
+export function formatDateShort(dateString: string): string {
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "?";
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    });
+  } catch {
+    return "?";
+  }
+}
+
 export function parseDate(dateStr: string): { year: string; month: string; day: string } {
   if (!dateStr) return { year: "", month: "", day: "" };
   const [year, month, day] = dateStr.split("-");

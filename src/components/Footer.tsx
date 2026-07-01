@@ -1,3 +1,4 @@
+import { ImageWithFallback } from "./ImageWithFallback";
 import { XENIA_OFFICIAL_URL, FREE60_URL, REPO_MANAGER, LIB_TEAM_RESURGENT, LIB_LENOVO_LEGION, LIB_AVALONIA_UI, LIB_FLUENT_AVALONIA, LIB_FLUENT_ICONS, LIB_NLOG, LIB_ZSTD_SHARP, LIB_SHARP_COMPRESS } from "@/lib/constants";
 
 export function Footer() {
@@ -249,10 +250,9 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-[var(--border-color)] pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-3">
-            <img
+            <ImageWithFallback
               src="/favicon.png"
               alt="Xenia Manager"
-              loading="lazy"
               className="w-8 h-8 rounded-lg"
             />
             <span className="text-[var(--foreground)]/60 text-sm">

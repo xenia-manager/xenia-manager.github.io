@@ -186,53 +186,59 @@ export function ScreenshotsSection({
             className="relative aspect-video"
             style={{ backgroundColor: "var(--slide-bg)" }}
           >
-            {slides.map((slide, index) => (
-              <div
-                key={index}
-                className={`absolute inset-0 transition-opacity duration-500 ${
-                  index === currentSlide ? "opacity-100" : "opacity-0"
-                }`}
-              >
-                <img
-                  src={slide.src}
-                  alt={slide.title}
-                  loading="lazy"
-                  onClick={handleZoomIn}
-                  className="w-full h-full object-contain p-4 cursor-zoom-in hover:brightness-110 transition-all duration-300"
-                />
-                {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-8 pointer-events-none">
-                  <div className="pointer-events-auto">
-                    <h3 className="text-2xl font-bold text-white mb-2">
-                      {slide.title}
-                    </h3>
-                    <p className="text-white/80">{slide.description}</p>
+            {(() => {
+              const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+              const nextIndex = (currentSlide + 1) % slides.length;
+              const visibleSlides = [prevIndex, currentSlide, nextIndex];
+              return slides.map((slide, index) => (
+                <div
+                  key={index}
+                  className={`absolute inset-0 transition-opacity duration-500 ${
+                    index === currentSlide ? "opacity-100" : "opacity-0"
+                  } ${visibleSlides.includes(index) ? "" : "hidden"}`}
+                >
+                  <img
+                    src={slide.src}
+                    alt={slide.title}
+                    loading="lazy"
+                    fetchPriority={index === 0 ? "high" : undefined}
+                    onClick={handleZoomIn}
+                    className="w-full h-full object-contain p-4 cursor-zoom-in hover:brightness-110 transition-all duration-300"
+                  />
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-8 pointer-events-none">
+                    <div className="pointer-events-auto">
+                      <h3 className="text-2xl font-bold text-white mb-2">
+                        {slide.title}
+                      </h3>
+                      <p className="text-white/80">{slide.description}</p>
+                    </div>
                   </div>
-                </div>
-                {/* Zoom Indicator */}
-                <div className="absolute bottom-4 right-4 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                  <div
-                    className="text-white text-xs px-3 py-1.5 rounded-lg flex items-center gap-2"
-                    style={{ backgroundColor: "var(--slide-badge)" }}
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                  {/* Zoom Indicator */}
+                  <div className="absolute bottom-4 right-4 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                    <div
+                      className="text-white text-xs px-3 py-1.5 rounded-lg flex items-center gap-2"
+                      style={{ backgroundColor: "var(--slide-badge)" }}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
-                      />
-                    </svg>
-                    Click to zoom
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
+                        />
+                      </svg>
+                      Click to zoom
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ));
+            })()}
 
             {/* Navigation Arrows */}
             <button

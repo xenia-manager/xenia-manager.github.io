@@ -1,14 +1,16 @@
 "use client";
 
-import { useEffect, useState, useMemo, useCallback, useRef } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { XeniaCanaryRelease } from "@/lib/xeniaCanaryTypes";
 import { fetchWithFallback, FETCH_CONFIGS } from "@/lib/fetchWithFallback";
 import { normalizeForSearch } from "@/lib/searchUtils";
 import { XeniaCanaryReleaseCard } from "./XeniaCanaryReleaseCard";
 import { XeniaCanaryFilterBar } from "./XeniaCanaryFilterBar";
+import { CustomSelect } from "./CustomSelect";
+import { Pagination } from "./Pagination";
 import { LoadingErrorOverlay } from "./LoadingErrorOverlay";
 
-const BATCH_SIZE = 20;
+const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
 interface XeniaCanaryReleasesListProps {
   onLoadingChange?: (loading: boolean) => void;
@@ -18,13 +20,8 @@ export function XeniaCanaryReleasesList({
   onLoadingChange,
 }: XeniaCanaryReleasesListProps) {
   const [allReleases, setAllReleases] = useState<XeniaCanaryRelease[]>([]);
-  const [displayedReleases, setDisplayedReleases] = useState<
-    XeniaCanaryRelease[]
-  >([]);
   const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [hasMore, setHasMore] = useState(true);
 
   const [searchValue, setSearchValue] = useState("");
   const [fromDate, setFromDate] = useState("");
@@ -32,7 +29,8 @@ export function XeniaCanaryReleasesList({
   const [sortOption, setSortOption] = useState<"newest" | "oldest">("newest");
   const [earliestDate, setEarliestDate] = useState("");
 
-  const observerRef = useRef<IntersectionObserver | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTIONS[1]);
 
   useEffect(() => {
     async function fetchReleases() {
@@ -42,8 +40,6 @@ export function XeniaCanaryReleasesList({
         );
         const data = await response.json();
         setAllReleases(data);
-        setDisplayedReleases(data.slice(0, BATCH_SIZE));
-        setHasMore(data.length > BATCH_SIZE);
 
         if (data.length > 0) {
           const dates = data
@@ -144,54 +140,15 @@ export function XeniaCanaryReleasesList({
     });
   }, [filteredReleases, sortOption]);
 
-  const loadMoreReleases = useCallback(() => {
-    if (loadingMore || !hasMore) return;
-
-    setLoadingMore(true);
-    setTimeout(() => {
-      const currentLength = displayedReleases.length;
-      const nextReleases = sortedReleases.slice(
-        currentLength,
-        currentLength + BATCH_SIZE,
-      );
-      setDisplayedReleases((prev) => [...prev, ...nextReleases]);
-      setHasMore(currentLength + nextReleases.length < sortedReleases.length);
-      setLoadingMore(false);
-    }, 300);
-  }, [displayedReleases.length, sortedReleases, hasMore, loadingMore]);
-
-  const hasMoreRef = useRef(hasMore);
-  const loadingMoreRef = useRef(loadingMore);
-  const loadingRef = useRef(loading);
-  const loadMoreRef = useRef(loadMoreReleases);
-
-  hasMoreRef.current = hasMore;
-  loadingMoreRef.current = loadingMore;
-  loadingRef.current = loading;
-  loadMoreRef.current = loadMoreReleases;
+  const totalPages = Math.ceil(sortedReleases.length / pageSize);
+  const paginatedReleases = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return sortedReleases.slice(start, start + pageSize);
+  }, [sortedReleases, currentPage, pageSize]);
 
   useEffect(() => {
-    setDisplayedReleases(sortedReleases.slice(0, BATCH_SIZE));
-    setHasMore(sortedReleases.length > BATCH_SIZE);
-  }, [sortedReleases]);
-
-  const lastReleaseCallbackRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-        observerRef.current = null;
-      }
-      if (node && !loadingRef.current && !loadingMoreRef.current && hasMoreRef.current) {
-        observerRef.current = new IntersectionObserver(() => {
-          if (hasMoreRef.current && !loadingMoreRef.current) {
-            loadMoreRef.current();
-          }
-        });
-        observerRef.current.observe(node);
-      }
-    },
-    [],
-  );
+    setCurrentPage(1);
+  }, [searchValue, fromDate, toDate, sortOption, pageSize]);
 
   const handleClear = () => {
     setSearchValue("");
@@ -225,13 +182,29 @@ export function XeniaCanaryReleasesList({
         {/* Main content - parent component handles fade-in animation */}
         <div>
           <section className="rounded-2xl p-6 shadow-lg bg-[var(--bg-secondary)]">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
               <h2 className="text-xl font-semibold text-fluent-primary">
                 Releases
               </h2>
-              <div className="text-sm text-fluent-secondary">
-                {sortedReleases.length}{" "}
-                {sortedReleases.length === 1 ? "release" : "releases"} found
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <label className="text-xs text-fluent-secondary">
+                    Per page
+                  </label>
+                  <CustomSelect
+                    options={PAGE_SIZE_OPTIONS.map((size) => ({
+                      value: size,
+                      label: `${size}`,
+                    }))}
+                    value={pageSize}
+                    onChange={(val) => setPageSize(Number(val))}
+                    className="w-[110px]"
+                  />
+                </div>
+                <div className="text-sm text-fluent-secondary">
+                  {sortedReleases.length}{" "}
+                  {sortedReleases.length === 1 ? "release" : "releases"} found
+                </div>
               </div>
             </div>
 
@@ -248,40 +221,25 @@ export function XeniaCanaryReleasesList({
                 </div>
               ) : (
                 <>
-                  {displayedReleases.map((release, index) => {
-                    if (index === displayedReleases.length - 1) {
-                      return (
-                        <div key={release.tag_name} ref={lastReleaseCallbackRef}>
-                          <XeniaCanaryReleaseCard release={release} />
-                        </div>
-                      );
-                    }
-                    return (
-                      <XeniaCanaryReleaseCard
-                        key={release.tag_name}
-                        release={release}
-                      />
-                    );
-                  })}
-
-                  {loadingMore && (
-                    <div className="flex justify-center py-6">
-                      <div className="spinner"></div>
-                    </div>
-                  )}
-
-                  {!hasMore && displayedReleases.length > 0 && (
-                    <div className="text-center py-6">
-                      <div className="inline-flex items-center gap-2 text-lg font-medium">
-                        <span className="text-fluent-secondary">
-                          You&apos;ve reached the end!
-                        </span>
-                      </div>
-                    </div>
-                  )}
+                  {paginatedReleases.map((release) => (
+                    <XeniaCanaryReleaseCard
+                      key={release.tag_name}
+                      release={release}
+                    />
+                  ))}
                 </>
               )}
             </div>
+
+            {totalPages > 1 && (
+              <div className="mt-6">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              </div>
+            )}
           </section>
         </div>
       </div>

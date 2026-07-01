@@ -19,6 +19,7 @@ import { fetchWithFallback, type FetchConfig } from "@/lib/fetchWithFallback";
 import { normalizeForSearch } from "@/lib/searchUtils";
 import { getMissingGameEntryUrl } from "@/lib/github";
 import { PAGES_X360DB, RAW_X360DB } from "@/lib/constants";
+import { SkeletonGameList } from "@/components/Skeleton";
 
 const X360DB_GAMES_CONFIG: FetchConfig = {
   primary: `${PAGES_X360DB}/games.json`,
@@ -286,13 +287,8 @@ export default function GamesDatabasePage() {
 
           {/* Content */}
           {loading ? (
-            <div className="flex items-center justify-center py-20">
-              <div className="text-center">
-                <div className="animate-spin w-10 h-10 border-2 border-[var(--color-xbox-green)] border-t-transparent rounded-full mx-auto mb-4" />
-                <p className="text-[var(--foreground)]/60 text-sm">
-                  Loading game database...
-                </p>
-              </div>
+            <div className="py-4">
+              <SkeletonGameList />
             </div>
           ) : error ? (
             <div className="text-center py-20">

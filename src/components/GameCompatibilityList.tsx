@@ -13,6 +13,7 @@ import { CustomSelect } from "./CustomSelect";
 import { LetterFilterBar } from "./LetterFilterBar";
 import { Pagination } from "./Pagination";
 import { LoadingErrorOverlay } from "./LoadingErrorOverlay";
+import { SkeletonTable } from "./Skeleton";
 import { fetchWithFallback, FETCH_CONFIGS } from "@/lib/fetchWithFallback";
 import { normalizeForSearch } from "@/lib/searchUtils";
 
@@ -219,6 +220,7 @@ export function GameCompatibilityList({
         loading={loading}
         error={error}
         loadingMessage="Loading game compatibility data..."
+        skeleton={<SkeletonTable />}
       />
 
       {/* Main content - parent component handles fade-in animation */}

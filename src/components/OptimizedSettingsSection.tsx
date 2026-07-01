@@ -8,6 +8,7 @@ import { TomlDisplay } from "./TomlDisplay";
 import { normalizeForSearch } from "@/lib/searchUtils";
 import { useBodyScrollLock } from "@/lib/hooks";
 import { formatDate } from "@/lib/dateUtils";
+import { SkeletonSettingsPanel } from "./Skeleton";
 interface OptimizedSettingsPopupProps {
   onClose: () => void;
 }
@@ -158,10 +159,10 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
             {/* Games List */}
             <div className="flex-1 overflow-y-auto p-2">
               {loading ? (
-                <div className="flex items-center justify-center h-32">
-                  <div className="animate-pulse text-[var(--foreground)]/60">
-                    Loading games...
-                  </div>
+                <div className="space-y-2 p-2">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <div key={i} className="h-16 bg-[var(--bg-tertiary)] rounded-lg animate-pulse" />
+                  ))}
                 </div>
               ) : error ? (
                 <div className="text-[var(--color-error)] p-4 text-center">
@@ -204,14 +205,7 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
             className={`lg:w-3/5 flex flex-col ${!selectedGame ? "hidden lg:flex" : "flex"}`}
           >
             {settingsLoading ? (
-              <div className="flex items-center justify-center h-full">
-                <div className="text-center">
-                  <div className="animate-spin w-8 h-8 border-2 border-[var(--color-xbox-green)] border-t-transparent rounded-full mx-auto mb-3"></div>
-                  <div className="text-[var(--foreground)]/60">
-                    Loading settings...
-                  </div>
-                </div>
-              </div>
+              <SkeletonSettingsPanel />
             ) : selectedGame ? (
               <>
                 {/* Mobile back button */}

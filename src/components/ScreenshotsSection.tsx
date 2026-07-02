@@ -178,7 +178,7 @@ export function ScreenshotsSection({
           Screenshots
         </h2>
         <p className="text-center text-[var(--foreground)]/60 mb-8 text-sm">
-          Use arrow keys to navigate â€¢ Space to pause/play
+          Use arrow keys to navigate {"\u2022"} Space to pause/play
         </p>
 
         <div className="glass-card rounded-2xl overflow-hidden border border-[var(--border-color)]">

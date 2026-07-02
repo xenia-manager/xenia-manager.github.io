@@ -95,11 +95,13 @@ function ArtworkImage({
   fallbackUrl,
   alt,
   className,
+  onZoom,
 }: {
   localPath: string;
   fallbackUrl: string | null;
   alt: string;
   className?: string;
+  onZoom?: (src: string) => void;
 }) {
   const [src, setSrc] = useState(`${PAGES_X360DB}${localPath}`);
   const [fallbackTried, setFallbackTried] = useState(false);
@@ -116,8 +118,31 @@ function ArtworkImage({
 
   if (errored) return null;
 
+  if (onZoom) {
+    return (
+      <button
+        onClick={() => onZoom(src)}
+        className="block w-full focus-indicator rounded-lg overflow-hidden border-2 border-transparent hover:border-[var(--color-xbox-green)] transition-colors"
+      >
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          onError={handleError}
+          className={className}
+        />
+      </button>
+    );
+  }
+
   return (
-    <img src={src} alt={alt} loading="lazy" onError={handleError} className={className} />
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      onError={handleError}
+      className={className}
+    />
   );
 }
 
@@ -128,8 +153,8 @@ function RatingStars({ rating }: { rating: string | null }) {
   const stars = Math.round(num);
   return (
     <span className="text-yellow-500 text-sm" title={`${num}/5`}>
-      {"â˜…".repeat(Math.min(stars, 5))}
-      {"â˜†".repeat(Math.max(0, 5 - stars))}
+      {"\u2605".repeat(Math.min(stars, 5))}
+      {"\u2606".repeat(Math.max(0, 5 - stars))}
     </span>
   );
 }
@@ -168,6 +193,7 @@ export function GameDetailModal({
   const [imagesReady, setImagesReady] = useState(false);
   const [expandedMedia, setExpandedMedia] = useState(false);
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
 
   useBodyScrollLock();
 
@@ -236,15 +262,20 @@ export function GameDetailModal({
   }, [totalGallery]);
 
   useEffect(() => {
-    if (galleryIndex === null) return;
+    if (galleryIndex === null && zoomedImage === null) return;
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setGalleryIndex(null);
-      if (e.key === "ArrowRight") goNext();
-      if (e.key === "ArrowLeft") goPrev();
+      if (e.key === "Escape") {
+        setGalleryIndex(null);
+        setZoomedImage(null);
+      }
+      if (galleryIndex !== null) {
+        if (e.key === "ArrowRight") goNext();
+        if (e.key === "ArrowLeft") goPrev();
+      }
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [galleryIndex, goNext, goPrev]);
+  }, [galleryIndex, zoomedImage, goNext, goPrev]);
 
   const handleOverlayClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -370,6 +401,7 @@ export function GameDetailModal({
                 fallbackUrl={info.artwork.background}
                 alt={`${info.title.full} background`}
                 className="w-full h-32 sm:h-48 object-cover rounded-xl"
+                onZoom={setZoomedImage}
               />
 
               <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
@@ -379,6 +411,7 @@ export function GameDetailModal({
                     fallbackUrl={info.artwork.boxart}
                     alt={`${info.title.full} boxart`}
                     className="w-full rounded-lg shadow-lg"
+                    onZoom={setZoomedImage}
                   />
                 </div>
 
@@ -708,6 +741,51 @@ export function GameDetailModal({
               <GalleryImage
                 url={galleryUrls[galleryIndex]}
                 alt={`Screenshot ${galleryIndex + 1}`}
+                className="max-w-full max-h-[85vh] object-contain rounded-lg"
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {zoomedImage && (
+          <motion.div
+            key="artwork-zoom"
+            className="fixed inset-0 z-[120] flex items-center justify-center p-4"
+            style={{ backgroundColor: "var(--modal-overlay)" }}
+            variants={popupOverlay}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            onClick={() => setZoomedImage(null)}
+          >
+            <button
+              onClick={() => setZoomedImage(null)}
+              className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full flex items-center justify-center text-white modal-button"
+              aria-label="Close zoom"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            <div
+              className="flex flex-col items-center justify-center max-w-full max-h-full p-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={zoomedImage}
+                alt=""
                 className="max-w-full max-h-[85vh] object-contain rounded-lg"
               />
             </div>

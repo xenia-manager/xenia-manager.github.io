@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, Fragment } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   GameCompatibility,
   OptimizedSettingGame,
@@ -254,19 +254,27 @@ export function GameCompatibilityTable({
                     </a>
                   </td>
                 </tr>
-                {isExpanded && (
-                  <tr>
-                    <td colSpan={5} className="py-0 px-0 align-top">
-                      <ExpandedContent
-                        isLoading={isLoading}
-                        sections={sections}
-                        lastModified={getOptimizedGame(game.id)?.last_modified}
-                        gameId={game.id}
-                        gameTitle={game.title}
-                      />
-                    </td>
-                  </tr>
-                )}
+                <AnimatePresence>
+                  {isExpanded && (
+                    <motion.tr
+                      key={`${game.issue}-expanded`}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.15 }}
+                    >
+                      <td colSpan={5} className="py-0 px-0 align-top">
+                        <ExpandedContent
+                          isLoading={isLoading}
+                          sections={sections}
+                          lastModified={getOptimizedGame(game.id)?.last_modified}
+                          gameId={game.id}
+                          gameTitle={game.title}
+                        />
+                      </td>
+                    </motion.tr>
+                  )}
+                </AnimatePresence>
               </Fragment>
             );
           })}

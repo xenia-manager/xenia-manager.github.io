@@ -32,3 +32,21 @@ export function useBodyScrollLock(locked = true) {
     return () => { document.body.style.overflow = prev; };
   }, [locked]);
 }
+
+export function useSearchFocus(inputRef: RefObject<HTMLInputElement | null>) {
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if ((e.ctrlKey || e.metaKey) && e.key === "f") {
+        if (document.activeElement === inputRef.current) {
+          return;
+        }
+        e.preventDefault();
+        inputRef.current?.focus();
+        inputRef.current?.select();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [inputRef]);
+}

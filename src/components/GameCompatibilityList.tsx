@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import {
   GameCompatibility,
   OptimizedSettingGame,
@@ -16,6 +16,7 @@ import { LoadingErrorOverlay } from "./LoadingErrorOverlay";
 import { SkeletonTable } from "./Skeleton";
 import { fetchWithFallback, FETCH_CONFIGS } from "@/lib/fetchWithFallback";
 import { normalizeForSearch } from "@/lib/searchUtils";
+import { useSearchFocus } from "@/lib/hooks";
 
 type SortColumn = "title" | "state" | "updated" | null;
 type SortDirection = "asc" | "desc";
@@ -44,10 +45,13 @@ export function GameCompatibilityList({
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
 
   // Filter states
+  const searchRef = useRef<HTMLInputElement | null>(null);
   const [searchValue, setSearchValue] = useState("");
   const [stateFilter, setStateFilter] = useState("");
   const [letterFilter, setLetterFilter] = useState("");
   const [showOptimizedOnly, setShowOptimizedOnly] = useState(false);
+
+  useSearchFocus(searchRef);
 
   // Sorting
   const [sortColumn, setSortColumn] = useState<SortColumn>("title");
@@ -235,6 +239,7 @@ export function GameCompatibilityList({
                 </label>
                 <div className="relative">
                   <input
+                    ref={searchRef}
                     type="text"
                     placeholder="Search by title or ID..."
                     value={searchValue}

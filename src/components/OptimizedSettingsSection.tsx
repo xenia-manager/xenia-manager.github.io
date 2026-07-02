@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { type OptimizedSettingGame, type SettingSection, sortOptimizedSettings } from "@/lib/types";
 import { fetchWithFallback, FETCH_CONFIGS } from "@/lib/fetchWithFallback";
 import { fetchOptimizedSettings } from "@/lib/tomlParser";
 import { TomlDisplay } from "./TomlDisplay";
 import { normalizeForSearch } from "@/lib/searchUtils";
-import { useBodyScrollLock } from "@/lib/hooks";
+import { useBodyScrollLock, useSearchFocus } from "@/lib/hooks";
 import { formatDate } from "@/lib/dateUtils";
 import { SkeletonSettingsPanel } from "./Skeleton";
 import { popupOverlay, popupContent } from "@/lib/animation";
@@ -17,6 +17,9 @@ interface OptimizedSettingsPopupProps {
 }
 
 function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
+  const searchRef = useRef<HTMLInputElement | null>(null);
+  useSearchFocus(searchRef);
+
   const [games, setGames] = useState<OptimizedSettingGame[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -144,6 +147,7 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
               <div className="w-full h-full px-4 flex items-center">
                 <div className="relative w-full">
                   <input
+                    ref={searchRef}
                     type="text"
                     placeholder="Search games..."
                     value={searchQuery}

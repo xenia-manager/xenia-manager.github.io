@@ -1,5 +1,7 @@
 "use client";
 
+import { useRef } from "react";
+import { useSearchFocus } from "@/lib/hooks";
 import { XeniaCanaryDatePicker } from "./XeniaCanaryDatePicker";
 
 interface XeniaCanaryFilterBarProps {
@@ -27,6 +29,9 @@ export function XeniaCanaryFilterBar({
   onSortChange,
   onClear,
 }: XeniaCanaryFilterBarProps) {
+  const searchRef = useRef<HTMLInputElement | null>(null);
+  useSearchFocus(searchRef);
+
   return (
     <section className="mb-8 rounded-2xl p-6 shadow-lg bg-[var(--bg-secondary)]">
       <h2 className="text-xl font-semibold mb-4 text-fluent-primary">
@@ -39,6 +44,7 @@ export function XeniaCanaryFilterBar({
             Search
           </label>
           <input
+            ref={searchRef}
             type="text"
             placeholder="Search by tag or title..."
             value={searchValue}

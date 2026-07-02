@@ -6,6 +6,7 @@ import {
   useMemo,
   useCallback,
   useDeferredValue,
+  useRef,
 } from "react";
 import { Header } from "@/components/Header";
 import { BackgroundLayers } from "@/components/BackgroundLayers";
@@ -20,6 +21,7 @@ import { normalizeForSearch } from "@/lib/searchUtils";
 import { getMissingGameEntryUrl } from "@/lib/github";
 import { PAGES_X360DB, RAW_X360DB } from "@/lib/constants";
 import { SkeletonGameList } from "@/components/Skeleton";
+import { useSearchFocus } from "@/lib/hooks";
 import { AnimatePresence } from "framer-motion";
 import { StaggerContainer, StaggerItem } from "@/components/animations/StaggerContainer";
 
@@ -82,6 +84,9 @@ export default function GamesDatabasePage() {
     title: string;
     alternativeId: string[];
   } | null>(null);
+
+  const searchRef = useRef<HTMLInputElement | null>(null);
+  useSearchFocus(searchRef);
 
   const [letterFilter, setLetterFilter] = useState("");
   const [hideIndieGames, setHideIndieGames] = useState(true);
@@ -258,6 +263,7 @@ export default function GamesDatabasePage() {
                 />
               </svg>
               <input
+                ref={searchRef}
                 type="text"
                 placeholder="Search games..."
                 value={searchQuery}

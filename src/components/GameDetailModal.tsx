@@ -96,12 +96,14 @@ function ArtworkImage({
   alt,
   className,
   onZoom,
+  fallbackElement,
 }: {
   localPath: string;
   fallbackUrl: string | null;
   alt: string;
   className?: string;
   onZoom?: (src: string) => void;
+  fallbackElement?: React.ReactNode;
 }) {
   const [src, setSrc] = useState(`${PAGES_X360DB}${localPath}`);
   const [fallbackTried, setFallbackTried] = useState(false);
@@ -116,7 +118,9 @@ function ArtworkImage({
     }
   };
 
-  if (errored) return null;
+  if (errored) {
+    return fallbackElement ? <>{fallbackElement}</> : null;
+  }
 
   if (onZoom) {
     return (
@@ -405,13 +409,37 @@ export function GameDetailModal({
               />
 
               <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                <div className="w-32 sm:w-40 flex-shrink-0 mx-auto sm:mx-0">
+                <div className="w-32 sm:w-40 flex-shrink-0 mx-auto sm:mx-0 relative">
                   <ArtworkImage
                     localPath={`/titles/${gameId}/artwork/boxart.jpg`}
                     fallbackUrl={info.artwork.boxart}
                     alt={`${info.title.full} boxart`}
                     className="w-full rounded-lg shadow-lg"
                     onZoom={setZoomedImage}
+                    fallbackElement={
+                      <div className="w-full rounded-lg shadow-lg bg-[var(--bg-secondary)] overflow-hidden" style={{ aspectRatio: "3/4" }}>
+                        <div className="w-full h-full flex items-center justify-center p-3">
+                          <div className="text-center">
+                            <svg
+                              className="w-6 h-6 mx-auto mb-1.5 text-[var(--foreground)]/30"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={1.5}
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                              />
+                            </svg>
+                            <p className="text-[10px] text-[var(--foreground)]/30 break-words leading-tight">
+                              {info.title.full}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    }
                   />
                 </div>
 

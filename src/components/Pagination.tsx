@@ -1,3 +1,7 @@
+"use client";
+
+import { motion } from "framer-motion";
+
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
@@ -43,23 +47,32 @@ export function Pagination({
   };
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-1.5">
-      <button
+    <motion.div
+      className="flex flex-wrap items-center justify-center gap-1.5"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <motion.button
         onClick={() => goToPage(1)}
         disabled={currentPage === 1}
         className="px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:bg-gray-500 bg-white/10 hover:bg-white/15"
         aria-label="First page"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
       >
         &laquo;&laquo;
-      </button>
-      <button
+      </motion.button>
+      <motion.button
         onClick={() => goToPage(currentPage - 1)}
         disabled={currentPage === 1}
         className="px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:bg-gray-500 bg-white/10 hover:bg-white/15"
         aria-label="Previous page"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
       >
         &laquo;
-      </button>
+      </motion.button>
 
       <div className="flex items-center gap-0.5">
         {getPageNumbers().map((page, index) =>
@@ -71,37 +84,43 @@ export function Pagination({
               ...
             </span>
           ) : (
-            <button
+            <motion.button
               key={page}
               onClick={() => goToPage(page as number)}
               className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 cursor-pointer ${
                 currentPage === page
-                  ? "btn-xbox hover:scale-105 border border-xbox-green"
-                  : "bg-white/10 hover:bg-white/15 text-fluent-primary hover:scale-105 border border-[var(--border-color)]"
+                  ? "btn-xbox border border-xbox-green"
+                  : "bg-white/10 hover:bg-white/15 text-fluent-primary border border-[var(--border-color)]"
               }`}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
             >
               {page}
-            </button>
+            </motion.button>
           ),
         )}
       </div>
 
-      <button
+      <motion.button
         onClick={() => goToPage(currentPage + 1)}
         disabled={currentPage === totalPages}
         className="px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:bg-gray-500 bg-white/10 hover:bg-white/15"
         aria-label="Next page"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
       >
         &raquo;
-      </button>
-      <button
+      </motion.button>
+      <motion.button
         onClick={() => goToPage(totalPages)}
         disabled={currentPage === totalPages}
         className="px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:bg-gray-500 bg-white/10 hover:bg-white/15"
         aria-label="Last page"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
       >
         &raquo;&raquo;
-      </button>
-    </div>
+      </motion.button>
+    </motion.div>
   );
 }

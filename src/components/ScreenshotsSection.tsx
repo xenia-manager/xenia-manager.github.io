@@ -1,8 +1,10 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { slides } from "@/lib/slides";
 import { useBodyScrollLock } from "@/lib/hooks";
+import { popupOverlay } from "@/lib/animation";
 
 interface ScreenshotsSectionProps {
   onZoomImage?: (slide: {
@@ -14,19 +16,32 @@ interface ScreenshotsSectionProps {
   currentSlideIndex?: number;
 }
 
+const slideVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? 300 : -300,
+    opacity: 0,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+  },
+  exit: (direction: number) => ({
+    x: direction > 0 ? -300 : 300,
+    opacity: 0,
+  }),
+};
+
 export function ScreenshotsSection({
   onZoomImage,
   currentSlideIndex,
 }: ScreenshotsSectionProps) {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [[currentSlide, direction], setSlideState] = useState([0, 0]);
   const [isPlaying, setIsPlaying] = useState(true);
   const slideshowRef = useRef<HTMLDivElement>(null);
   const thumbnailsRef = useRef<HTMLDivElement>(null);
   const hasInteractedWithZoom = useRef(false);
 
-  // Scroll thumbnail into view when slide changes from zoom modal navigation
   useEffect(() => {
-    // Only scroll thumbnails if user has interacted with zoom modal
     if (
       !hasInteractedWithZoom.current ||
       currentSlideIndex === null ||
@@ -35,14 +50,12 @@ export function ScreenshotsSection({
       return;
 
     if (currentSlideIndex !== currentSlide) {
-      setCurrentSlide(currentSlideIndex);
+      const dir = currentSlideIndex > currentSlide ? 1 : -1;
+      setSlideState([currentSlideIndex, dir]);
     }
   }, [currentSlideIndex, currentSlide]);
 
-  // Mark that user has interacted with zoom modal
   useEffect(() => {
-    // Only mark as interacted if currentSlideIndex is a number (not null/undefined)
-    // and ensure this doesn't happen on initial mount
     if (typeof currentSlideIndex === "number" && currentSlideIndex >= 0) {
       const timer = setTimeout(() => {
         hasInteractedWithZoom.current = true;
@@ -51,7 +64,6 @@ export function ScreenshotsSection({
     }
   }, [currentSlideIndex]);
 
-  // Auto-scroll thumbnails when currentSlide changes
   useEffect(() => {
     if (
       thumbnailsRef.current &&
@@ -62,7 +74,6 @@ export function ScreenshotsSection({
         currentSlide
       ] as HTMLElement;
       if (thumbnail) {
-        // Use scrollLeft to scroll only the thumbnail container without affecting page scroll
         const container = thumbnailsRef.current;
         const thumbnailLeft = thumbnail.offsetLeft;
         const containerWidth = container.offsetWidth;
@@ -89,54 +100,46 @@ export function ScreenshotsSection({
     setIsPlaying(false);
   }, [currentSlide, onZoomImage]);
 
+  const paginate = useCallback(
+    (newDirection: number) => {
+      setSlideState(([prev]) => {
+        const next = (prev + newDirection + slides.length) % slides.length;
+        return [next, newDirection];
+      });
+    },
+    [],
+  );
+
   const goToSlide = useCallback((index: number) => {
-    setCurrentSlide(index);
+    setSlideState(([prev]) => {
+      const dir = index > prev ? 1 : -1;
+      return [index, dir];
+    });
   }, []);
 
-  const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
-  }, []);
-
-  const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-  }, []);
-
-  const goToFirst = useCallback(() => {
-    setCurrentSlide(0);
-  }, []);
-
-  const goToLast = useCallback(() => {
-    setCurrentSlide(slides.length - 1);
-  }, []);
-
-  // Auto-play functionality
   useEffect(() => {
-    if (!isPlaying) {
-      return;
-    }
+    if (!isPlaying) return;
 
     const interval = setInterval(() => {
-      nextSlide();
+      paginate(1);
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [isPlaying, nextSlide]);
+  }, [isPlaying, paginate]);
 
-  // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Only handle keyboard events when slideshow is focused
       if (!slideshowRef.current?.contains(document.activeElement)) {
         return;
       }
 
       switch (e.key) {
         case "ArrowLeft":
-          prevSlide();
+          paginate(-1);
           setIsPlaying(false);
           break;
         case "ArrowRight":
-          nextSlide();
+          paginate(1);
           setIsPlaying(false);
           break;
         case " ":
@@ -144,11 +147,11 @@ export function ScreenshotsSection({
           setIsPlaying((prev) => !prev);
           break;
         case "Home":
-          goToFirst();
+          goToSlide(0);
           setIsPlaying(false);
           break;
         case "End":
-          goToLast();
+          goToSlide(slides.length - 1);
           setIsPlaying(false);
           break;
       }
@@ -156,9 +159,8 @@ export function ScreenshotsSection({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [nextSlide, prevSlide, goToFirst, goToLast]);
+  }, [paginate, goToSlide]);
 
-  // Pause on user interaction
   const handleUserInteraction = () => {
     setIsPlaying(false);
   };
@@ -176,74 +178,71 @@ export function ScreenshotsSection({
           Screenshots
         </h2>
         <p className="text-center text-[var(--foreground)]/60 mb-8 text-sm">
-          Use arrow keys to navigate • Space to pause/play
+          Use arrow keys to navigate â€¢ Space to pause/play
         </p>
 
-        {/* Steam-style Slideshow Container */}
         <div className="glass-card rounded-2xl overflow-hidden border border-[var(--border-color)]">
-          {/* Main Image Area */}
           <div
             className="relative aspect-video"
             style={{ backgroundColor: "var(--slide-bg)" }}
           >
-            {(() => {
-              const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
-              const nextIndex = (currentSlide + 1) % slides.length;
-              const visibleSlides = [prevIndex, currentSlide, nextIndex];
-              return slides.map((slide, index) => (
-                <div
-                  key={index}
-                  className={`absolute inset-0 transition-opacity duration-500 ${
-                    index === currentSlide ? "opacity-100" : "opacity-0"
-                  } ${visibleSlides.includes(index) ? "" : "hidden"}`}
-                >
-                  <img
-                    src={slide.src}
-                    alt={slide.title}
-                    loading="lazy"
-                    fetchPriority={index === 0 ? "high" : undefined}
-                    onClick={handleZoomIn}
-                    className="w-full h-full object-contain p-4 cursor-zoom-in hover:brightness-110 transition-all duration-300"
-                  />
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-8 pointer-events-none">
-                    <div className="pointer-events-auto">
-                      <h3 className="text-2xl font-bold text-white mb-2">
-                        {slide.title}
-                      </h3>
-                      <p className="text-white/80">{slide.description}</p>
-                    </div>
-                  </div>
-                  {/* Zoom Indicator */}
-                  <div className="absolute bottom-4 right-4 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                    <div
-                      className="text-white text-xs px-3 py-1.5 rounded-lg flex items-center gap-2"
-                      style={{ backgroundColor: "var(--slide-badge)" }}
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
-                        />
-                      </svg>
-                      Click to zoom
-                    </div>
+            <AnimatePresence initial={false} custom={direction} mode="popLayout">
+              <motion.div
+                key={currentSlide}
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  x: { type: "spring", stiffness: 300, damping: 30 },
+                  opacity: { duration: 0.2 },
+                }}
+                className="absolute inset-0"
+              >
+                <img
+                  src={slides[currentSlide].src}
+                  alt={slides[currentSlide].title}
+                  loading="lazy"
+                  fetchPriority={currentSlide === 0 ? "high" : undefined}
+                  onClick={handleZoomIn}
+                  className="w-full h-full object-contain p-4 cursor-zoom-in hover:brightness-110 transition-all duration-300"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-8 pointer-events-none">
+                  <div className="pointer-events-auto">
+                    <h3 className="text-2xl font-bold text-white mb-2">
+                      {slides[currentSlide].title}
+                    </h3>
+                    <p className="text-white/80">{slides[currentSlide].description}</p>
                   </div>
                 </div>
-              ));
-            })()}
+                <div className="absolute bottom-4 right-4 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  <div
+                    className="text-white text-xs px-3 py-1.5 rounded-lg flex items-center gap-2"
+                    style={{ backgroundColor: "var(--slide-badge)" }}
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
+                      />
+                    </svg>
+                    Click to zoom
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
 
-            {/* Navigation Arrows */}
             <button
               onClick={() => {
-                prevSlide();
+                paginate(-1);
                 handleUserInteraction();
               }}
               className="slide-nav-button absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white"
@@ -265,7 +264,7 @@ export function ScreenshotsSection({
             </button>
             <button
               onClick={() => {
-                nextSlide();
+                paginate(1);
                 handleUserInteraction();
               }}
               className="slide-nav-button absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white"
@@ -286,7 +285,6 @@ export function ScreenshotsSection({
               </svg>
             </button>
 
-            {/* Play/Pause Button */}
             <button
               onClick={() => setIsPlaying(!isPlaying)}
               className="slide-nav-button absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center text-white"
@@ -312,7 +310,6 @@ export function ScreenshotsSection({
             </button>
           </div>
 
-          {/* Thumbnails */}
           <div
             className="p-4"
             style={{ backgroundColor: "var(--thumbnails-bg)" }}
@@ -346,7 +343,6 @@ export function ScreenshotsSection({
               ))}
             </div>
 
-            {/* Progress Dots */}
             <div className="flex justify-center gap-2 mt-4">
               {slides.map((_, index) => (
                 <button
@@ -392,40 +388,47 @@ export function ScreenshotZoomModal({
   onPrev: () => void;
   onNext: () => void;
 }) {
-  const [animationClass, setAnimationClass] = useState("animate-popup-content");
-  const animationCounter = useRef(0);
+  const directionRef = useRef(1);
 
   useBodyScrollLock();
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
-      if (e.key === "ArrowLeft") onPrev();
-      if (e.key === "ArrowRight") onNext();
+      if (e.key === "ArrowLeft") { directionRef.current = -1; onPrev(); }
+      if (e.key === "ArrowRight") { directionRef.current = 1; onNext(); }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose, onPrev, onNext]);
 
-  useEffect(() => {
-    const prev = animationCounter.current;
-    animationCounter.current++;
-    setAnimationClass(
-      animationCounter.current > prev
-        ? "animate-slide-in-right"
-        : "animate-slide-in-left",
-    );
-  }, [imageSrc]);
+  const zoomVariants = {
+    enter: (dir: number) => ({
+      x: dir > 0 ? 200 : -200,
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+    },
+    exit: (dir: number) => ({
+      x: dir > 0 ? -200 : 200,
+      opacity: 0,
+    }),
+  };
 
   if (!imageSrc) {
     return null;
   }
 
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-popup-overlay"
+    <motion.div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
       style={{ backgroundColor: "var(--modal-overlay)" }}
+      variants={popupOverlay}
+      initial="hidden"
+      animate="visible"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
@@ -455,12 +458,23 @@ export function ScreenshotZoomModal({
         className="flex flex-col items-center justify-center max-w-full max-h-full"
         onClick={(e) => e.stopPropagation()}
       >
-        <img
-          key={imageSrc}
-          src={imageSrc}
-          alt={title}
-          className={`max-w-full max-h-[80vh] object-contain ${animationClass}`}
-        />
+        <AnimatePresence mode="popLayout" custom={directionRef.current}>
+          <motion.img
+            key={imageSrc}
+            src={imageSrc}
+            alt={title}
+            custom={directionRef.current}
+            variants={zoomVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: "spring", stiffness: 300, damping: 30 },
+              opacity: { duration: 0.2 },
+            }}
+            className="max-w-full max-h-[80vh] object-contain"
+          />
+        </AnimatePresence>
         {title && (
           <div
             className="text-center mt-4 px-4"
@@ -484,6 +498,7 @@ export function ScreenshotZoomModal({
       <button
         onClick={(e) => {
           e.stopPropagation();
+          directionRef.current = -1;
           onPrev();
         }}
         className="modal-button absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white z-10"
@@ -506,6 +521,7 @@ export function ScreenshotZoomModal({
       <button
         onClick={(e) => {
           e.stopPropagation();
+          directionRef.current = 1;
           onNext();
         }}
         className="modal-button absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white z-10"
@@ -525,6 +541,7 @@ export function ScreenshotZoomModal({
           />
         </svg>
       </button>
-    </div>
+    </motion.div>
   );
 }
+

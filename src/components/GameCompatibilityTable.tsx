@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, Fragment } from "react";
+import { motion } from "framer-motion";
 import {
   GameCompatibility,
   OptimizedSettingGame,
@@ -292,7 +293,11 @@ function ExpandedContent({
     <div className="overflow-x-auto pr-2 sm:pr-4 pt-4 pb-2">
       {isLoading ? (
         <div className="flex items-center gap-2 py-4">
-          <div className="spinner"></div>
+          <motion.div
+            className="w-6 h-6 border-2 border-[var(--color-xbox-green)] border-t-transparent rounded-full flex-shrink-0"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          />
           <span className="text-fluent-secondary text-sm">
             Loading optimized settings...
           </span>

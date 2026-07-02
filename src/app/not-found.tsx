@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { BackgroundLayers } from "@/components/BackgroundLayers";
+import { FadeInUp } from "@/components/animations/FadeInUp";
 
 export default function NotFound() {
   return (
     <>
       <BackgroundLayers />
-      <div className="min-h-[70vh] flex items-center justify-center px-4">
-        <div className="text-center max-w-2xl mx-auto fade-in-up">
+      <FadeInUp as="section" className="min-h-[70vh] flex items-center justify-center px-4">
+        <div className="text-center max-w-2xl mx-auto">
           <div className="mb-8">
             <h1 className="text-8xl sm:text-9xl font-bold gradient-text mb-4">
               404
@@ -42,7 +43,7 @@ export default function NotFound() {
             </Link>
           </div>
         </div>
-      </div>
+      </FadeInUp>
     </>
   );
 }

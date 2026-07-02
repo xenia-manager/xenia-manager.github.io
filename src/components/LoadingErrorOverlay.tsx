@@ -1,8 +1,22 @@
+"use client";
+
+import { motion } from "framer-motion";
+
 interface LoadingErrorOverlayProps {
   loading: boolean;
   error: string | null;
   loadingMessage?: string;
   skeleton?: React.ReactNode;
+}
+
+function Spinner() {
+  return (
+    <motion.div
+      className="w-6 h-6 border-2 border-[var(--color-xbox-green)] border-t-transparent rounded-full mb-4"
+      animate={{ rotate: 360 }}
+      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+    />
+  );
 }
 
 export function LoadingErrorOverlay({
@@ -17,7 +31,7 @@ export function LoadingErrorOverlay({
       {loading ? (
         skeleton ?? (
           <div className="flex flex-col items-center justify-center">
-            <div className="spinner mb-4" />
+            <Spinner />
             <div className="text-fluent-secondary text-lg">Loading...</div>
           </div>
         )

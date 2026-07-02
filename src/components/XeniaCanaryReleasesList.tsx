@@ -9,6 +9,7 @@ import { XeniaCanaryFilterBar } from "./XeniaCanaryFilterBar";
 import { CustomSelect } from "./CustomSelect";
 import { Pagination } from "./Pagination";
 import { LoadingErrorOverlay } from "./LoadingErrorOverlay";
+import { StaggerContainer, StaggerItem } from "@/components/animations/StaggerContainer";
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
@@ -208,8 +209,7 @@ export function XeniaCanaryReleasesList({
               </div>
             </div>
 
-            <div className="flex flex-col gap-6">
-              {sortedReleases.length === 0 ? (
+            {sortedReleases.length === 0 ? (
                 <div className="text-center py-12">
                   <div className="text-5xl mb-4">🔍</div>
                   <p className="text-fluent-secondary text-lg mb-2">
@@ -221,15 +221,17 @@ export function XeniaCanaryReleasesList({
                 </div>
               ) : (
                 <>
-                  {paginatedReleases.map((release) => (
-                    <XeniaCanaryReleaseCard
-                      key={release.tag_name}
-                      release={release}
-                    />
-                  ))}
+                  <StaggerContainer className="flex flex-col gap-6">
+                    {paginatedReleases.map((release) => (
+                      <StaggerItem key={release.tag_name}>
+                        <XeniaCanaryReleaseCard
+                          release={release}
+                        />
+                      </StaggerItem>
+                    ))}
+                  </StaggerContainer>
                 </>
               )}
-            </div>
 
             {totalPages > 1 && (
               <div className="mt-6">

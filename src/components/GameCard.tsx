@@ -1,6 +1,7 @@
 "use client";
 
 import { memo } from "react";
+import { motion } from "framer-motion";
 import { PAGES_X360DB as X360DB_BASE } from "@/lib/constants";
 import { ImageWithFallback } from "./ImageWithFallback";
 
@@ -20,11 +21,14 @@ export const GameCard = memo(function GameCard({
   const primarySrc = `${X360DB_BASE}/titles/${id}/artwork/boxart.jpg`;
 
   return (
-    <button
+    <motion.button
       onClick={() => onSelectGame?.(id)}
       title={title}
-      className="w-full text-left mica-card rounded-xl overflow-hidden cursor-pointer card-hover group focus-indicator flex flex-col"
+      className="w-full text-left mica-card rounded-xl overflow-hidden cursor-pointer group focus-indicator flex flex-col"
       style={{ contentVisibility: "auto", containIntrinsicSize: "auto 290px" }}
+      whileHover={{ y: -6, boxShadow: "0 12px 24px rgba(119, 185, 0, 0.25)" }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
     >
       <div
         className="relative bg-[var(--bg-secondary)] overflow-hidden"
@@ -34,7 +38,7 @@ export const GameCard = memo(function GameCard({
           src={primarySrc}
           alt={title}
           fallbackSrc={boxartUrl ?? undefined}
-          className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+          className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-110"
           fallbackElement={
             <div className="absolute inset-0 flex items-center justify-center p-4">
               <div className="text-center">
@@ -58,7 +62,9 @@ export const GameCard = memo(function GameCard({
             </div>
           }
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        />
       </div>
       <div className="p-2 sm:p-3 flex-1">
         <p className="text-xs sm:text-sm font-medium text-[var(--foreground)] leading-snug line-clamp-2">
@@ -68,6 +74,6 @@ export const GameCard = memo(function GameCard({
           {id}
         </p>
       </div>
-    </button>
+    </motion.button>
   );
 });

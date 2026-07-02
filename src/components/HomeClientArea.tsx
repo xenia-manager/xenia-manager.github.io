@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { FeaturesSection } from "@/components/FeaturesSection";
 import { ScreenshotsSection } from "@/components/ScreenshotsSection";
 import { slides } from "@/lib/slides";
+import { FadeInUp } from "@/components/animations/FadeInUp";
 
 const OptimizedSettingsPopup = dynamic(() =>
   import("@/components/OptimizedSettingsSection").then(
@@ -97,17 +98,17 @@ export function HomeClientArea() {
 
   return (
     <>
-      <div className="fade-in-up" style={{ animationDelay: "100ms" }}>
+      <FadeInUp delay={0.1}>
         <FeaturesSection
           onOpenOptimizedSettings={handleOpenOptimizedSettings}
         />
-      </div>
-      <div className="fade-in-up" style={{ animationDelay: "400ms" }}>
+      </FadeInUp>
+      <FadeInUp delay={0.4}>
         <ScreenshotsSection
           onZoomImage={handleZoomImage}
           currentSlideIndex={currentSlideIndex ?? undefined}
         />
-      </div>
+      </FadeInUp>
       {showOptimizedSettings && (
         <OptimizedSettingsPopup onClose={handleCloseOptimizedSettings} />
       )}

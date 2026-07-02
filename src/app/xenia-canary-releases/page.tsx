@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Header } from "@/components/Header";
 import { BackgroundLayers } from "@/components/BackgroundLayers";
 import { XeniaCanaryFooter } from "@/components/XeniaCanaryFooter";
@@ -16,12 +17,20 @@ export default function XeniaCanaryReleasesPage() {
       <BackgroundLayers />
       <main className="flex-1">
         <div className="container mx-auto px-4 py-8 max-w-5xl">
-          <div className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isLoading ? 0 : 1 }}
+            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+          >
             <HeroSection />
-          </div>
-          <div className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isLoading ? 0 : 1 }}
+            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
+          >
             <ReleasesList onLoadingChange={setIsLoading} />
-          </div>
+          </motion.div>
         </div>
       </main>
       <XeniaCanaryFooter />

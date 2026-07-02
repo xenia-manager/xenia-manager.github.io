@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { type OptimizedSettingGame, type SettingSection, sortOptimizedSettings } from "@/lib/types";
 import { fetchWithFallback, FETCH_CONFIGS } from "@/lib/fetchWithFallback";
 import { fetchOptimizedSettings } from "@/lib/tomlParser";
@@ -9,6 +10,8 @@ import { normalizeForSearch } from "@/lib/searchUtils";
 import { useBodyScrollLock } from "@/lib/hooks";
 import { formatDate } from "@/lib/dateUtils";
 import { SkeletonSettingsPanel } from "./Skeleton";
+import { popupOverlay, popupContent } from "@/lib/animation";
+
 interface OptimizedSettingsPopupProps {
   onClose: () => void;
 }
@@ -24,12 +27,10 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
   const [settings, setSettings] = useState<SettingSection[]>([]);
   const [settingsLoading, setSettingsLoading] = useState(false);
 
-  // Handle close
   const handleClose = () => {
     onClose();
   };
 
-  // Fetch optimized settings list
   useEffect(() => {
     async function fetchGames() {
       try {
@@ -53,7 +54,6 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
     fetchGames();
   }, []);
 
-  // Fetch settings for selected game
   const loadSettings = async (game: OptimizedSettingGame) => {
     setSettingsLoading(true);
     try {
@@ -78,16 +78,22 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
   useBodyScrollLock();
 
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-popup-overlay"
+    <motion.div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
       style={{ backgroundColor: "var(--bg-overlay)" }}
+      variants={popupOverlay}
+      initial="hidden"
+      animate="visible"
       onClick={handleClose}
       role="dialog"
       aria-modal="true"
       aria-label="Optimized settings popup"
     >
-      <div
-        className="glass-card rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden border border-[var(--border-color)] shadow-2xl animate-popup-content"
+      <motion.div
+        className="glass-card rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden border border-[var(--border-color)] shadow-2xl"
+        variants={popupContent}
+        initial="hidden"
+        animate="visible"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -291,8 +297,8 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
             )}
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 

@@ -1,10 +1,12 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { getInvalidGameEntryUrl } from "@/lib/github";
 import { fetchWithFallback, getX360dbInfoConfig } from "@/lib/fetchWithFallback";
 import { useBodyScrollLock } from "@/lib/hooks";
 import { PAGES_X360DB } from "@/lib/constants";
+import { popupOverlay, popupContent, fadeIn } from "@/lib/animation";
 
 interface GameInfo {
   id: string;
@@ -126,9 +128,29 @@ function RatingStars({ rating }: { rating: string | null }) {
   const stars = Math.round(num);
   return (
     <span className="text-yellow-500 text-sm" title={`${num}/5`}>
-      {"★".repeat(Math.min(stars, 5))}
-      {"☆".repeat(Math.max(0, 5 - stars))}
+      {"â˜…".repeat(Math.min(stars, 5))}
+      {"â˜†".repeat(Math.max(0, 5 - stars))}
     </span>
+  );
+}
+
+function LoadingSpinner({ text }: { text: string }) {
+  return (
+    <motion.div
+      className="flex items-center justify-center py-20"
+      variants={fadeIn}
+      initial="hidden"
+      animate="visible"
+    >
+      <div className="text-center">
+        <motion.div
+          className="w-10 h-10 border-2 border-[var(--color-xbox-green)] border-t-transparent rounded-full mx-auto mb-4"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        />
+        <p className="text-[var(--foreground)]/60 text-sm">{text}</p>
+      </div>
+    </motion.div>
   );
 }
 
@@ -235,16 +257,22 @@ export function GameDetailModal({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-popup-overlay"
+    <motion.div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
       style={{ backgroundColor: "var(--bg-overlay)" }}
+      variants={popupOverlay}
+      initial="hidden"
+      animate="visible"
       onClick={handleOverlayClick}
       role="dialog"
       aria-modal="true"
       aria-label={gameTitle}
     >
-      <div
-        className="glass-card rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden border border-[var(--border-color)] shadow-2xl animate-popup-content"
+      <motion.div
+        className="glass-card rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden border border-[var(--border-color)] shadow-2xl"
+        variants={popupContent}
+        initial="hidden"
+        animate="visible"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-[var(--border-color)]">
@@ -310,16 +338,14 @@ export function GameDetailModal({
           style={{ maxHeight: "calc(90vh - 80px)" }}
         >
           {loading ? (
-            <div className="flex items-center justify-center py-20">
-              <div className="text-center">
-                <div className="animate-spin w-10 h-10 border-2 border-[var(--color-xbox-green)] border-t-transparent rounded-full mx-auto mb-4" />
-                <p className="text-[var(--foreground)]/60 text-sm">
-                  Loading game details...
-                </p>
-              </div>
-            </div>
+            <LoadingSpinner text="Loading game details..." />
           ) : error ? (
-            <div className="p-8 text-center">
+            <motion.div
+              className="p-8 text-center"
+              variants={fadeIn}
+              initial="hidden"
+              animate="visible"
+            >
               <p className="text-[var(--color-error)]">{error}</p>
               <button
                 onClick={onClose}
@@ -327,18 +353,16 @@ export function GameDetailModal({
               >
                 Close
               </button>
-            </div>
+            </motion.div>
           ) : !imagesReady ? (
-            <div className="flex items-center justify-center py-20">
-              <div className="text-center">
-                <div className="animate-spin w-10 h-10 border-2 border-[var(--color-xbox-green)] border-t-transparent rounded-full mx-auto mb-4" />
-                <p className="text-[var(--foreground)]/60 text-sm">
-                  Loading images...
-                </p>
-              </div>
-            </div>
+            <LoadingSpinner text="Loading images..." />
           ) : info ? (
-            <div className="p-4 sm:p-6 pt-2 sm:pt-3 space-y-6">
+            <motion.div
+              className="p-4 sm:p-6 pt-2 sm:pt-3 space-y-6"
+              variants={fadeIn}
+              initial="hidden"
+              animate="visible"
+            >
               <ArtworkImage
                 localPath={`/titles/${gameId}/artwork/background.jpg`}
                 fallbackUrl={info.artwork.background}
@@ -585,103 +609,110 @@ export function GameDetailModal({
                   </div>
                 </div>
               )}
-            </div>
+            </motion.div>
           ) : null}
         </div>
-      </div>
+      </motion.div>
 
-      {/* Gallery Viewer */}
-      {galleryIndex !== null && galleryUrls[galleryIndex] && (
-        <div
-          className="fixed inset-0 z-[110] flex items-center justify-center animate-popup-overlay"
-          style={{ backgroundColor: "var(--modal-overlay)" }}
-          onClick={() => setGalleryIndex(null)}
-        >
-          <button
+      <AnimatePresence>
+        {galleryIndex !== null && galleryUrls[galleryIndex] && (
+          <motion.div
+            key="gallery-viewer"
+            className="fixed inset-0 z-[110] flex items-center justify-center"
+            style={{ backgroundColor: "var(--modal-overlay)" }}
+            variants={popupOverlay}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
             onClick={() => setGalleryIndex(null)}
-            className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full flex items-center justify-center text-white modal-button"
-            aria-label="Close gallery"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+            <button
+              onClick={() => setGalleryIndex(null)}
+              className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full flex items-center justify-center text-white modal-button"
+              aria-label="Close gallery"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            <span className="absolute top-4 left-4 z-20 text-white/70 text-sm font-mono">
+              {galleryIndex + 1} / {totalGallery}
+            </span>
+
+            {totalGallery > 1 && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    goPrev();
+                  }}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full flex items-center justify-center text-white modal-button"
+                  aria-label="Previous image"
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    goNext();
+                  }}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full flex items-center justify-center text-white modal-button"
+                  aria-label="Next image"
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+              </>
+            )}
+
+            <div
+              className="flex flex-col items-center justify-center max-w-full max-h-full p-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <GalleryImage
+                url={galleryUrls[galleryIndex]}
+                alt={`Screenshot ${galleryIndex + 1}`}
+                className="max-w-full max-h-[85vh] object-contain rounded-lg"
               />
-            </svg>
-          </button>
-
-          <span className="absolute top-4 left-4 z-20 text-white/70 text-sm font-mono">
-            {galleryIndex + 1} / {totalGallery}
-          </span>
-
-          {totalGallery > 1 && (
-            <>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  goPrev();
-                }}
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full flex items-center justify-center text-white modal-button"
-                aria-label="Previous image"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  goNext();
-                }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full flex items-center justify-center text-white modal-button"
-                aria-label="Next image"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </button>
-            </>
-          )}
-
-          <div
-            className="flex flex-col items-center justify-center max-w-full max-h-full p-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <GalleryImage
-              url={galleryUrls[galleryIndex]}
-              alt={`Screenshot ${galleryIndex + 1}`}
-              className="max-w-full max-h-[85vh] object-contain rounded-lg animate-popup-content"
-            />
-          </div>
-        </div>
-      )}
-    </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }
+

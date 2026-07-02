@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { XeniaCanaryRelease } from "@/lib/xeniaCanaryTypes";
 import { formatDate } from "@/lib/dateUtils";
 
@@ -19,10 +20,13 @@ export function XeniaCanaryReleaseCard({
   };
 
   return (
-    <div
+    <motion.div
       className="glass-card rounded-xl p-6 shadow-md
-                  transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-[var(--color-xbox-green)]/10
                   border border-[var(--border-color)]"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{ y: -4, boxShadow: "0 12px 24px rgba(119, 185, 0, 0.15)" }}
     >
       <div className="text-lg font-semibold mb-3 break-words">
         <a
@@ -65,18 +69,20 @@ export function XeniaCanaryReleaseCard({
 
       <div className="flex flex-wrap gap-3">
         {release.assets.map((asset, index) => (
-          <a
+          <motion.a
             key={index}
             href={asset.url}
             target="_blank"
             rel="noopener noreferrer"
             className="flex-1 text-center py-3 px-4 btn-xbox rounded-lg
-                       transition-all duration-200 min-w-[140px] flex items-center justify-center gap-2"
+                       min-w-[140px] flex items-center justify-center gap-2"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
           >
             <span>{getAssetLabel(asset.name)}</span>
-          </a>
+          </motion.a>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }

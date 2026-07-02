@@ -1,7 +1,9 @@
-"use client";
+﻿"use client";
 
+import { motion } from "framer-motion";
 import { REPO_GAME_PATCHES, WEBSERVICES_URL, OPTIMIZED_SETTINGS_CONTRIB_URL } from "@/lib/constants";
 import { LightningIcon, RefreshIcon, SettingsIcon, FolderIcon, ShoppingBagIcon, PuzzleIcon, PlayIcon, MagicIcon, CopyIcon, EyeIcon } from "./Icons";
+import { StaggerScrollReveal, StaggerScrollItem } from "@/components/animations/StaggerScrollReveal";
 
 interface FeaturesSectionProps {
   onOpenOptimizedSettings?: () => void;
@@ -113,30 +115,34 @@ export function FeaturesSection({
           <h2 className="text-3xl font-bold text-center mb-12 gradient-text">
             Main Features
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <StaggerScrollReveal className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {features.map((feature, index) => (
-              <div
-                key={index}
-                className="glass-card rounded-2xl p-6 card-hover border border-[var(--border-color)] flex flex-col"
-              >
-                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[var(--color-xbox-green)] to-[var(--color-xbox-button)] flex items-center justify-center text-white mb-4">
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl font-semibold mb-2 text-[var(--foreground)]">
-                  {feature.title}
-                </h3>
-                <p className="text-[var(--foreground)]/70 leading-relaxed flex-1">
-                  {feature.description}
-                </p>
-              </div>
+              <StaggerScrollItem key={index}>
+                <motion.div
+                  className="glass-card rounded-2xl p-6 border border-[var(--border-color)] flex flex-col h-full"
+                  whileHover={{ y: -4, boxShadow: "0 12px 24px rgba(119, 185, 0, 0.2)" }}
+                  transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[var(--color-xbox-green)] to-[var(--color-xbox-button)] flex items-center justify-center text-white mb-4">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2 text-[var(--foreground)]">
+                    {feature.title}
+                  </h3>
+                  <p className="text-[var(--foreground)]/70 leading-relaxed flex-1">
+                    {feature.description}
+                  </p>
+                </motion.div>
+              </StaggerScrollItem>
             ))}
-          </div>
+          </StaggerScrollReveal>
 
-          {/* Optimized Settings - Full Width Row */}
           <div className="mt-6">
-            <div
-              className="glass-card rounded-2xl p-8 card-hover border border-[var(--border-color)] flex flex-col items-center text-center cursor-pointer"
+            <motion.div
+              className="glass-card rounded-2xl p-8 border border-[var(--border-color)] flex flex-col items-center text-center cursor-pointer"
               onClick={handleOpenPopup}
+              whileHover={{ y: -4, boxShadow: "0 12px 24px rgba(119, 185, 0, 0.2)" }}
+              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
             >
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[var(--color-xbox-green)] to-[var(--color-xbox-button)] flex items-center justify-center text-white mb-4">
                 {optimizedSettingsFeature.icon}
@@ -181,10 +187,11 @@ export function FeaturesSection({
                     Contributing Guide
                   </a>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
     </>
   );
 }
+

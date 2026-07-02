@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "./ThemeProvider";
@@ -18,11 +19,16 @@ export function Header() {
   const shouldHideFAQ =
     isCompatibilityPage || isXeniaCanaryReleasesPage || isGamesDatabasePage;
 
+  const navItems = [
+    { href: "/compatibility", label: "Compatibility" },
+    { href: "/gamesdatabase", label: "x360db" },
+    { href: "/xenia-canary-releases", label: "Xenia Canary Releases" },
+  ];
+
   return (
     <header className="sticky top-0 z-50 glass-card border-b border-[var(--border-color)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo and Title */}
           <Link
             href="/"
             className="flex items-center gap-3 group flex-shrink-0"
@@ -38,36 +44,23 @@ export function Header() {
             </span>
           </Link>
 
-          {/* Navigation Links - Desktop (Centered) */}
           <nav className="hidden lg:flex items-center gap-6 absolute left-1/2 -translate-x-1/2">
-            <Link
-              href="/compatibility"
-              className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium whitespace-nowrap"
-            >
-              Compatibility
-            </Link>
-            <Link
-              href="/gamesdatabase"
-              title="Games Database"
-              className={`transition-colors font-medium whitespace-nowrap ${
-                isGamesDatabasePage
-                  ? "text-[var(--color-xbox-green)]"
-                  : "text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)]"
-              }`}
-            >
-              x360db
-            </Link>
-            <Link
-              href="/xenia-canary-releases"
-              className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium whitespace-nowrap"
-            >
-              Xenia Canary Releases
-            </Link>
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`transition-colors font-medium whitespace-nowrap ${
+                  pathname === item.href
+                    ? "text-[var(--color-xbox-green)]"
+                    : "text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)]"
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
           </nav>
 
-          {/* Right Side Actions */}
           <div className="flex items-center gap-2">
-            {/* Navigation Links - Mobile (shown before theme toggle) */}
             {!shouldHideFAQ && (
               <nav className="hidden lg:flex items-center gap-2 mr-2">
                 <a
@@ -81,8 +74,7 @@ export function Header() {
               </nav>
             )}
 
-            {/* Theme Toggle */}
-            <button
+            <motion.button
               onClick={toggleTheme}
               aria-label="Toggle Theme"
               className="p-2.5 rounded-lg cursor-pointer text-lg
@@ -91,6 +83,8 @@ export function Header() {
                          bg-[var(--bg-accent)] hover:bg-[var(--bg-accent)]/80
                          min-w-[40px] min-h-[40px] flex items-center justify-center
                          flex-shrink-0"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
             >
               <span className="block w-5 h-5 flex items-center justify-center">
                 {theme === "dark" ? (
@@ -99,10 +93,9 @@ export function Header() {
                   <SunIcon className="w-5 h-5" />
                 )}
               </span>
-            </button>
+            </motion.button>
 
-            {/* Ko-fi Link */}
-            <a
+            <motion.a
               href={KOFI_URL}
               target="_blank"
               rel="noopener noreferrer"
@@ -113,12 +106,13 @@ export function Header() {
                          bg-[var(--bg-accent)] hover:bg-[var(--bg-accent)]/80
                          min-w-[40px] min-h-[40px] flex items-center justify-center
                          flex-shrink-0 text-[var(--foreground)]/80 hover:text-[var(--foreground)]"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
             >
               <CoffeeIcon className="w-5 h-5" />
-            </a>
+            </motion.a>
 
-            {/* Mobile Menu Button */}
-            <button
+            <motion.button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle Menu"
               aria-expanded={mobileMenuOpen}
@@ -128,55 +122,53 @@ export function Header() {
                          bg-[var(--bg-accent)] hover:bg-[var(--bg-accent)]/80
                          min-w-[40px] min-h-[40px] flex items-center justify-center
                          flex-shrink-0 ml-2"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
             >
               {mobileMenuOpen ? (
                 <CloseIcon className="w-5 h-5 text-[var(--foreground)]" />
               ) : (
                 <MenuIcon className="w-5 h-5 text-[var(--foreground)]" />
               )}
-            </button>
+            </motion.button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        <div
-          className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-            mobileMenuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
-          }`}
-        >
-          <nav className="flex flex-col gap-2 pb-4">
-            <Link
-              href="/compatibility"
-              className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium py-2 px-3 rounded-lg hover:bg-[var(--bg-accent)]"
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="lg:hidden overflow-hidden"
             >
-              Compatibility
-            </Link>
-            <Link
-              href="/gamesdatabase"
-              title="Games Database"
-              className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium py-2 px-3 rounded-lg hover:bg-[var(--bg-accent)]"
-            >
-              x360db
-            </Link>
-            <Link
-              href="/xenia-canary-releases"
-              className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium py-2 px-3 rounded-lg hover:bg-[var(--bg-accent)]"
-            >
-              Xenia Canary Releases
-            </Link>
-            {!shouldHideFAQ && (
-              <a
-                href={FAQ_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium py-2 px-3 rounded-lg hover:bg-[var(--bg-accent)]"
-              >
-                FAQ
-              </a>
-            )}
-          </nav>
-        </div>
+              <nav className="flex flex-col gap-2 pb-4">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium py-2 px-3 rounded-lg hover:bg-[var(--bg-accent)]"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+                {!shouldHideFAQ && (
+                  <a
+                    href={FAQ_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium py-2 px-3 rounded-lg hover:bg-[var(--bg-accent)]"
+                  >
+                    FAQ
+                  </a>
+                )}
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </header>
   );
 }
+

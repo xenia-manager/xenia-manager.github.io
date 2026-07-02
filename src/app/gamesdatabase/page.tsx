@@ -20,6 +20,7 @@ import { normalizeForSearch } from "@/lib/searchUtils";
 import { getMissingGameEntryUrl } from "@/lib/github";
 import { PAGES_X360DB, RAW_X360DB } from "@/lib/constants";
 import { SkeletonGameList } from "@/components/Skeleton";
+import { StaggerContainer, StaggerItem } from "@/components/animations/StaggerContainer";
 
 const X360DB_GAMES_CONFIG: FetchConfig = {
   primary: `${PAGES_X360DB}/games.json`,
@@ -324,17 +325,18 @@ export default function GamesDatabasePage() {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+              <StaggerContainer className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
                 {paginatedGames.map((game) => (
-                  <GameCard
-                    key={game.id}
-                    id={game.id}
-                    title={game.title}
-                    boxartUrl={game.boxart}
-                    onSelectGame={handleSelectId}
-                  />
+                  <StaggerItem key={game.id}>
+                    <GameCard
+                      id={game.id}
+                      title={game.title}
+                      boxartUrl={game.boxart}
+                      onSelectGame={handleSelectId}
+                    />
+                  </StaggerItem>
                 ))}
-              </div>
+              </StaggerContainer>
               <p className="text-sm text-center text-[var(--foreground)]/50 mt-6">
                 Showing {filteredGames.length} of {games.length} games
               </p>

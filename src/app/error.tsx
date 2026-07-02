@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { FadeInUp } from "@/components/animations/FadeInUp";
 
 export default function Error({
   error,
@@ -15,7 +16,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <FadeInUp className="min-h-screen flex items-center justify-center p-4">
       <div className="glass-card rounded-2xl max-w-md w-full p-8 text-center border border-[var(--border-color)]">
         <div className="text-5xl mb-4">⚠️</div>
         <h2 className="text-2xl font-bold gradient-text mb-2">
@@ -39,6 +40,6 @@ export default function Error({
           </Link>
         </div>
       </div>
-    </div>
+    </FadeInUp>
   );
 }

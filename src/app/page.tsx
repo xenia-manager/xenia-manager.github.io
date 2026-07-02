@@ -8,6 +8,7 @@ import { CommunitySection } from "@/components/CommunitySection";
 import { TranslationProgressSection } from "@/components/TranslationProgressSection";
 import { Footer } from "@/components/Footer";
 import { HomeClientArea } from "@/components/HomeClientArea";
+import { ScrollReveal } from "@/components/animations/ScrollReveal";
 
 export default function Home() {
   return (
@@ -15,25 +16,25 @@ export default function Home() {
       <Header />
       <BackgroundLayers />
       <main className="flex-1" role="main">
-        <div className="fade-in-up" style={{ animationDelay: "0ms" }}>
-          <HeroSection />
-        </div>
-        <HomeClientArea />
-        <div className="fade-in-up" style={{ animationDelay: "200ms" }}>
+        <HeroSection />
+        <ScrollReveal as="section">
+          <HomeClientArea />
+        </ScrollReveal>
+        <ScrollReveal as="section">
           <DownloadSection />
-        </div>
-        <div className="fade-in-up" style={{ animationDelay: "300ms" }}>
+        </ScrollReveal>
+        <ScrollReveal as="section">
           <QuickstartSection />
-        </div>
-        <div className="fade-in-up" style={{ animationDelay: "500ms" }}>
+        </ScrollReveal>
+        <ScrollReveal as="section">
           <ContributingSection />
-        </div>
-        <div className="fade-in-up" style={{ animationDelay: "600ms" }}>
+        </ScrollReveal>
+        <ScrollReveal as="section">
           <CommunitySection />
-        </div>
-        <div className="fade-in-up" style={{ animationDelay: "700ms" }}>
+        </ScrollReveal>
+        <ScrollReveal as="section">
           <TranslationProgressSection />
-        </div>
+        </ScrollReveal>
       </main>
       <Footer />
     </>

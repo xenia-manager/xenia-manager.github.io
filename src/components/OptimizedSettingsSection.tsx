@@ -9,7 +9,6 @@ import { TomlDisplay } from "./TomlDisplay";
 import { normalizeForSearch } from "@/lib/searchUtils";
 import { useBodyScrollLock, useSearchFocus } from "@/lib/hooks";
 import { formatDate } from "@/lib/dateUtils";
-import { SkeletonSettingsPanel } from "./Skeleton";
 import { popupOverlay, popupContent } from "@/lib/animation";
 
 interface OptimizedSettingsPopupProps {
@@ -217,7 +216,23 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
             className={`lg:w-3/5 flex flex-col ${!selectedGame ? "hidden lg:flex" : "flex"}`}
           >
             {settingsLoading ? (
-              <SkeletonSettingsPanel />
+              <motion.div
+                className="flex-1 flex items-center justify-center"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="text-center">
+                  <motion.div
+                    className="w-10 h-10 border-2 border-[var(--color-xbox-green)] border-t-transparent rounded-full mx-auto mb-3"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  />
+                  <p className="text-sm text-[var(--foreground)]/60">
+                    Loading optimized settings...
+                  </p>
+                </div>
+              </motion.div>
             ) : selectedGame ? (
               <>
                 {/* Mobile back button */}

@@ -67,6 +67,7 @@ export function HomeClientArea() {
 
   const handleCloseZoom = useCallback(() => {
     setZoomedImage(null);
+    setCurrentSlideIndex(null);
   }, []);
 
   const handlePrevSlide = useCallback(() => {

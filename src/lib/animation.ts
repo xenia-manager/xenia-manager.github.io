@@ -64,6 +64,10 @@ export const popupOverlay: Variants = {
     opacity: 1,
     transition: { duration: durations.fast, ease: easings.smooth },
   },
+  exit: {
+    opacity: 0,
+    transition: { duration: durations.fast, ease: easings.smooth },
+  },
 };
 
 export const popupContent: Variants = {
@@ -73,6 +77,12 @@ export const popupContent: Variants = {
     scale: 1,
     y: 0,
     transition: { duration: durations.normal, ease: easings.default },
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.95,
+    y: -10,
+    transition: { duration: durations.fast, ease: easings.smooth },
   },
 };
 

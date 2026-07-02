@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
+import { AnimatePresence } from "framer-motion";
 import { FeaturesSection } from "@/components/FeaturesSection";
 import { ScreenshotsSection } from "@/components/ScreenshotsSection";
 import { slides } from "@/lib/slides";
@@ -109,19 +110,23 @@ export function HomeClientArea() {
           currentSlideIndex={currentSlideIndex ?? undefined}
         />
       </FadeInUp>
-      {showOptimizedSettings && (
-        <OptimizedSettingsPopup onClose={handleCloseOptimizedSettings} />
-      )}
-      {zoomedImage && (
-        <ScreenshotZoomModal
-          imageSrc={zoomedImage.src}
-          title={zoomedImage.title}
-          description={zoomedImage.description}
-          onClose={handleCloseZoom}
-          onPrev={handlePrevSlide}
-          onNext={handleNextSlide}
-        />
-      )}
+      <AnimatePresence>
+        {showOptimizedSettings && (
+          <OptimizedSettingsPopup onClose={handleCloseOptimizedSettings} />
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {zoomedImage && (
+          <ScreenshotZoomModal
+            imageSrc={zoomedImage.src}
+            title={zoomedImage.title}
+            description={zoomedImage.description}
+            onClose={handleCloseZoom}
+            onPrev={handlePrevSlide}
+            onNext={handleNextSlide}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 }

@@ -20,6 +20,7 @@ import { normalizeForSearch } from "@/lib/searchUtils";
 import { getMissingGameEntryUrl } from "@/lib/github";
 import { PAGES_X360DB, RAW_X360DB } from "@/lib/constants";
 import { SkeletonGameList } from "@/components/Skeleton";
+import { AnimatePresence } from "framer-motion";
 import { StaggerContainer, StaggerItem } from "@/components/animations/StaggerContainer";
 
 const X360DB_GAMES_CONFIG: FetchConfig = {
@@ -355,16 +356,18 @@ export default function GamesDatabasePage() {
       </main>
       <X360dbFooter />
 
-      {selectedGame && (
-        <GameDetailModal
-          key={selectedGame.id}
-          gameId={selectedGame.id}
-          gameTitle={selectedGame.title}
-          alternativeId={selectedGame.alternativeId}
-          onClose={() => setSelectedGame(null)}
-          onSelectId={handleSelectId}
-        />
-      )}
+      <AnimatePresence>
+        {selectedGame && (
+          <GameDetailModal
+            key={selectedGame.id}
+            gameId={selectedGame.id}
+            gameTitle={selectedGame.title}
+            alternativeId={selectedGame.alternativeId}
+            onClose={() => setSelectedGame(null)}
+            onSelectId={handleSelectId}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 }

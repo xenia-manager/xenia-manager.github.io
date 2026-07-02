@@ -429,6 +429,7 @@ export function ScreenshotZoomModal({
       variants={popupOverlay}
       initial="hidden"
       animate="visible"
+      exit="hidden"
       onClick={onClose}
       role="dialog"
       aria-modal="true"

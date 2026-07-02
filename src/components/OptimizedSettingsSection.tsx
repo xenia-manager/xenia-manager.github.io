@@ -84,6 +84,7 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
       variants={popupOverlay}
       initial="hidden"
       animate="visible"
+      exit="hidden"
       onClick={handleClose}
       role="dialog"
       aria-modal="true"
@@ -94,6 +95,7 @@ function OptimizedSettingsPopup({ onClose }: OptimizedSettingsPopupProps) {
         variants={popupContent}
         initial="hidden"
         animate="visible"
+        exit="hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

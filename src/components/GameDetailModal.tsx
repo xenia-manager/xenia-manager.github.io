@@ -263,6 +263,7 @@ export function GameDetailModal({
       variants={popupOverlay}
       initial="hidden"
       animate="visible"
+      exit="hidden"
       onClick={handleOverlayClick}
       role="dialog"
       aria-modal="true"
@@ -273,6 +274,7 @@ export function GameDetailModal({
         variants={popupContent}
         initial="hidden"
         animate="visible"
+        exit="hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-[var(--border-color)]">

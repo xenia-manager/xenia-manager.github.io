@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, Fragment } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   GameCompatibility,
@@ -97,9 +98,8 @@ export function GameCompatibilityTable({
     rect: DOMRect;
   } | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // Close tooltip on click outside
+  // Close tooltip on click outside or scroll
   useEffect(() => {
     if (!clickedTooltip) return;
     const handleClick = (e: MouseEvent) => {
@@ -110,8 +110,13 @@ export function GameCompatibilityTable({
         setClickedTooltip(null);
       }
     };
+    const handleScroll = () => setClickedTooltip(null);
     document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
+    window.addEventListener("scroll", handleScroll, true);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      window.removeEventListener("scroll", handleScroll, true);
+    };
   }, [clickedTooltip]);
 
   // Build netplay lookup map (id -> NetplayGame)
@@ -246,7 +251,7 @@ export function GameCompatibilityTable({
   }
 
   return (
-    <div ref={wrapperRef} className="relative overflow-x-auto">
+    <div className="relative overflow-x-auto">
       <table className="w-full min-w-[350px]">
         <thead>
           <tr className="border-b border-[var(--table-border)]">
@@ -576,35 +581,28 @@ export function GameCompatibilityTable({
       </table>
 
       {/* Click tooltip popover */}
-      <AnimatePresence>
-        {clickedTooltip &&
-          wrapperRef.current &&
-          (() => {
-            const wrapperRect = wrapperRef.current.getBoundingClientRect();
-            const left =
-              clickedTooltip.rect.left -
-              wrapperRect.left +
-              wrapperRef.current.scrollLeft;
-            const top = clickedTooltip.rect.bottom - wrapperRect.top + 6;
-            return (
-              <motion.div
-                ref={tooltipRef}
-                initial={{ opacity: 0, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.12 }}
-                className="absolute z-50 px-3 py-2 rounded-lg text-xs text-white shadow-lg border border-white/10 max-w-xs whitespace-pre-wrap pointer-events-auto"
-                style={{
-                  backgroundColor: "rgba(30, 30, 30, 0.95)",
-                  left,
-                  top,
-                }}
-              >
-                {clickedTooltip.text}
-              </motion.div>
-            );
-          })()}
-      </AnimatePresence>
+      {createPortal(
+        <AnimatePresence>
+          {clickedTooltip && (
+            <motion.div
+              ref={tooltipRef}
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.12 }}
+              className="fixed z-50 px-3 py-2 rounded-lg text-xs text-white shadow-lg border border-white/10 max-w-xs whitespace-pre-wrap pointer-events-auto"
+              style={{
+                backgroundColor: "rgba(30, 30, 30, 0.95)",
+                left: clickedTooltip.rect.left,
+                top: clickedTooltip.rect.bottom + 6,
+              }}
+            >
+              {clickedTooltip.text}
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body,
+      )}
     </div>
   );
 }

@@ -4,6 +4,8 @@ import { useEffect, useState, useMemo, useRef } from "react";
 import {
   GameCompatibility,
   OptimizedSettingGame,
+  MousehookGame,
+  NetplayGame,
   getStateSortValue,
   STATE_ORDER,
 } from "@/lib/types";
@@ -39,6 +41,8 @@ export function GameCompatibilityList({
   const [optimizedGames, setOptimizedGames] = useState<OptimizedSettingGame[]>(
     [],
   );
+  const [mousehookGames, setMousehookGames] = useState<MousehookGame[]>([]);
+  const [netplayGames, setNetplayGames] = useState<NetplayGame[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -50,6 +54,11 @@ export function GameCompatibilityList({
   const [stateFilter, setStateFilter] = useState("");
   const [letterFilter, setLetterFilter] = useState("");
   const [showOptimizedOnly, setShowOptimizedOnly] = useState(false);
+  const [showMousehookOnly, setShowMousehookOnly] = useState(false);
+  const [showNetplayOnly, setShowNetplayOnly] = useState(false);
+  const [netplayFilterPublic, setNetplayFilterPublic] = useState(false);
+  const [netplayFilterLocal, setNetplayFilterLocal] = useState(false);
+  const [netplayFilterSystemlink, setNetplayFilterSystemlink] = useState(false);
 
   useSearchFocus(searchRef);
 
@@ -61,16 +70,27 @@ export function GameCompatibilityList({
   useEffect(() => {
     async function fetchData() {
       try {
-        const [gamesResponse, settingsResponse] = await Promise.all([
+        const [
+          gamesResponse,
+          settingsResponse,
+          mousehookResponse,
+          netplayResponse,
+        ] = await Promise.all([
           fetchWithFallback(FETCH_CONFIGS.gameCompatibility),
           fetchWithFallback(FETCH_CONFIGS.optimizedSettingsList),
+          fetchWithFallback(FETCH_CONFIGS.mousehook),
+          fetchWithFallback(FETCH_CONFIGS.netplay),
         ]);
 
         const gamesData = await gamesResponse.json();
         const settingsData = await settingsResponse.json();
+        const mousehookData = await mousehookResponse.json();
+        const netplayData = await netplayResponse.json();
 
         setAllGames(gamesData);
         setOptimizedGames(settingsData);
+        setMousehookGames(mousehookData);
+        setNetplayGames(netplayData);
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
       } finally {
@@ -86,6 +106,23 @@ export function GameCompatibilityList({
     onLoadingChange?.(loading);
   }, [loading, onLoadingChange]);
 
+  // Build lookup sets for mousehook and netplay game IDs
+  const mousehookIdSet = useMemo(() => {
+    const ids = new Set<string>();
+    for (const game of mousehookGames) {
+      if (Array.isArray(game.id)) {
+        game.id.forEach((id) => ids.add(id));
+      } else {
+        ids.add(game.id);
+      }
+    }
+    return ids;
+  }, [mousehookGames]);
+
+  const netplayIdSet = useMemo(() => {
+    return new Set(netplayGames.map((g) => g.id));
+  }, [netplayGames]);
+
   // Filter games based on search and state
   const filteredGames = useMemo(() => {
     return allGames.filter((game) => {
@@ -98,6 +135,39 @@ export function GameCompatibilityList({
       const hasOptimizedSettings = optimizedGames.some((g) => g.id === game.id);
       if (showOptimizedOnly && !hasOptimizedSettings) {
         return false;
+      }
+
+      // Mousehook filter
+      if (showMousehookOnly && !mousehookIdSet.has(game.id)) {
+        return false;
+      }
+
+      // Netplay filter
+      if (showNetplayOnly && !netplayIdSet.has(game.id)) {
+        return false;
+      }
+
+      // Netplay sub-filters (only apply when showNetplayOnly is true)
+      if (showNetplayOnly) {
+        const netplayEntry = netplayGames.find((g) => g.id === game.id);
+        if (!netplayEntry) return false;
+
+        const anySubFilterActive =
+          netplayFilterPublic || netplayFilterLocal || netplayFilterSystemlink;
+        if (anySubFilterActive) {
+          const { status } = netplayEntry;
+          const matchesPublic =
+            !netplayFilterPublic || status.working_public !== null;
+          const matchesLocal =
+            !netplayFilterLocal ||
+            status.tested_locally !== null ||
+            status.only_local !== null;
+          const matchesSystemlink =
+            !netplayFilterSystemlink || status.systemlink !== null;
+          if (!matchesPublic || !matchesLocal || !matchesSystemlink) {
+            return false;
+          }
+        }
       }
 
       // Search filter
@@ -122,10 +192,18 @@ export function GameCompatibilityList({
   }, [
     allGames,
     optimizedGames,
+    mousehookIdSet,
+    netplayIdSet,
+    netplayGames,
     searchValue,
     stateFilter,
     letterFilter,
     showOptimizedOnly,
+    showMousehookOnly,
+    showNetplayOnly,
+    netplayFilterPublic,
+    netplayFilterLocal,
+    netplayFilterSystemlink,
   ]);
 
   // Sort filtered games
@@ -177,6 +255,15 @@ export function GameCompatibilityList({
     return optimizedGames.length;
   }, [optimizedGames]);
 
+  // Calculate mousehook and netplay counts
+  const mousehookCount = useMemo(() => {
+    return mousehookGames.length;
+  }, [mousehookGames]);
+
+  const netplayCount = useMemo(() => {
+    return netplayGames.length;
+  }, [netplayGames]);
+
   // Notify parent of state counts changes
   useEffect(() => {
     onStateCountsChange?.(stateCounts);
@@ -198,13 +285,29 @@ export function GameCompatibilityList({
   // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchValue, stateFilter, letterFilter, showOptimizedOnly, pageSize]);
+  }, [
+    searchValue,
+    stateFilter,
+    letterFilter,
+    showOptimizedOnly,
+    showMousehookOnly,
+    showNetplayOnly,
+    netplayFilterPublic,
+    netplayFilterLocal,
+    netplayFilterSystemlink,
+    pageSize,
+  ]);
 
   const handleClear = () => {
     setSearchValue("");
     setStateFilter("");
     setLetterFilter("");
     setShowOptimizedOnly(false);
+    setShowMousehookOnly(false);
+    setShowNetplayOnly(false);
+    setNetplayFilterPublic(false);
+    setNetplayFilterLocal(false);
+    setNetplayFilterSystemlink(false);
   };
 
   const handleSort = (column: SortColumn) => {
@@ -291,6 +394,18 @@ export function GameCompatibilityList({
               optimizedCount={optimizedCount}
               showOptimizedOnly={showOptimizedOnly}
               onShowOptimizedOnlyChange={setShowOptimizedOnly}
+              mousehookCount={mousehookCount}
+              showMousehookOnly={showMousehookOnly}
+              onShowMousehookOnlyChange={setShowMousehookOnly}
+              netplayCount={netplayCount}
+              showNetplayOnly={showNetplayOnly}
+              onShowNetplayOnlyChange={setShowNetplayOnly}
+              netplayFilterPublic={netplayFilterPublic}
+              onNetplayFilterPublicChange={setNetplayFilterPublic}
+              netplayFilterLocal={netplayFilterLocal}
+              onNetplayFilterLocalChange={setNetplayFilterLocal}
+              netplayFilterSystemlink={netplayFilterSystemlink}
+              onNetplayFilterSystemlinkChange={setNetplayFilterSystemlink}
             />
 
             {/* Letter filter buttons */}
@@ -308,6 +423,8 @@ export function GameCompatibilityList({
               sortDirection={sortDirection}
               onSort={handleSort}
               optimizedGames={optimizedGames}
+              mousehookGames={mousehookGames}
+              netplayGames={netplayGames}
             />
           </div>
 

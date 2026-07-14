@@ -11,7 +11,14 @@ export interface FetchConfig {
 /**
  * Predefined fetch configurations for Xenia Manager data sources
  */
-import { PAGES_DATABASE, RAW_DATABASE, PAGES_OPTIMIZED_SETTINGS, RAW_OPTIMIZED_SETTINGS, PAGES_X360DB, RAW_X360DB } from "@/lib/constants";
+import {
+  PAGES_DATABASE,
+  RAW_DATABASE,
+  PAGES_OPTIMIZED_SETTINGS,
+  RAW_OPTIMIZED_SETTINGS,
+  PAGES_X360DB,
+  RAW_X360DB,
+} from "@/lib/constants";
 
 export const FETCH_CONFIGS = {
   gameCompatibility: {
@@ -25,6 +32,14 @@ export const FETCH_CONFIGS = {
   xeniaCanaryReleases: {
     primary: `${PAGES_DATABASE}/data/xenia-releases/canary.json`,
     backup: `${RAW_DATABASE}/data/xenia-releases/canary.json`,
+  },
+  mousehook: {
+    primary: `${PAGES_DATABASE}/data/game-compatibility/mousehook.json`,
+    backup: `${RAW_DATABASE}/data/game-compatibility/mousehook.json`,
+  },
+  netplay: {
+    primary: `${PAGES_DATABASE}/data/game-compatibility/netplay.json`,
+    backup: `${RAW_DATABASE}/data/game-compatibility/netplay.json`,
   },
 } as const;
 

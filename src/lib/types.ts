@@ -85,7 +85,8 @@ export const STATE_METADATA: StateMetadata[] = [
     value: "Gameplay",
     label: "Gameplay",
     color: "#65A30D",
-    description: "You can get into the game, but it's not known to have been finished but possibly could be",
+    description:
+      "You can get into the game, but it's not known to have been finished but possibly could be",
     icon: "\u25B6\uFE0E",
   },
   {
@@ -117,7 +118,10 @@ export const STATE_METADATA: StateMetadata[] = [
  * @returns StateMetadata object or default (Unknown) if not found
  */
 export function getStateMetadata(state: string): StateMetadata {
-  return STATE_METADATA.find((s) => s.value === state) ?? STATE_METADATA.find((s) => s.value === "Unknown")!;
+  return (
+    STATE_METADATA.find((s) => s.value === state) ??
+    STATE_METADATA.find((s) => s.value === "Unknown")!
+  );
 }
 
 /**
@@ -167,10 +171,77 @@ export function getStateSortValue(state: string): number {
   return index === -1 ? STATE_ORDER.length : index;
 }
 
-export function sortOptimizedSettings(games: OptimizedSettingGame[]): OptimizedSettingGame[] {
+export function sortOptimizedSettings(
+  games: OptimizedSettingGame[],
+): OptimizedSettingGame[] {
   return [...games].sort((a, b) => {
-    const dateDiff = new Date(b.last_modified).getTime() - new Date(a.last_modified).getTime();
+    const dateDiff =
+      new Date(b.last_modified).getTime() - new Date(a.last_modified).getTime();
     if (dateDiff !== 0) return dateDiff;
     return a.title.localeCompare(b.title);
   });
+}
+
+// === Mousehook ===
+
+export type MousehookSupport = "Good" | "Fair" | "Poor";
+
+export interface MousehookGame {
+  id: string | string[];
+  title: string;
+  mouse_support: MousehookSupport;
+  supported_versions: string;
+  notes: string;
+}
+
+export interface MousehookMetadata {
+  support: MousehookSupport;
+  color: string;
+  description: string;
+}
+
+export const MOUSEHOOK_METADATA: Record<MousehookSupport, MousehookMetadata> = {
+  Good: {
+    support: "Good",
+    color: "#166534",
+    description: "Mousehook works well with minor or no issues",
+  },
+  Fair: {
+    support: "Fair",
+    color: "#CA8A04",
+    description: "Mousehook works but with noticeable issues",
+  },
+  Poor: {
+    support: "Poor",
+    color: "#DC2626",
+    description: "Mousehook has significant issues",
+  },
+};
+
+export function getMousehookColor(support: string): string {
+  return MOUSEHOOK_METADATA[support as MousehookSupport]?.color ?? "#737373";
+}
+
+// === Netplay ===
+
+export type NetplayStatusValue = "ok" | "partial" | "fail";
+
+export interface NetplayStatus {
+  working_public: NetplayStatusValue | null;
+  tested_locally: NetplayStatusValue | null;
+  only_local: "ok" | null;
+  systemlink: NetplayStatusValue | null;
+}
+
+export interface NetplayLink {
+  text: string;
+  url: string;
+}
+
+export interface NetplayGame {
+  id: string;
+  title: string;
+  status: NetplayStatus;
+  comments: string;
+  links: NetplayLink[];
 }

@@ -24,13 +24,12 @@ export const PAGE_GAMES_DATABASE = `${SITE_URL}/gamesdatabase`;
 export const PAGE_XENIA_RELEASES = `${SITE_URL}/xenia-canary-releases`;
 
 // === Common Paths (GitHub) ===
-export const FAQ_URL = `${REPO_MANAGER}/wiki/FAQ`;
 export const QUICKSTART_URL = `${REPO_MANAGER}/wiki/Quickstart`;
 export const RELEASES_URL = `${REPO_MANAGER}/releases`;
 export const ISSUES_URL = `${REPO_MANAGER}/issues`;
 export const CONTRIBUTING_URL = `${REPO_MANAGER}/blob/main/CONTRIBUTING.md`;
 export const PROJECTS_URL = `https://github.com/orgs/xenia-manager/projects/2/`;
-export const WIKI_URL = `${REPO_MANAGER}/wiki`;
+export const WIKI_URL = `${SITE_URL}/wiki/`;
 export const EXPERIMENTAL_RELEASES_URL = `${GH_XENIA_MANAGER}/experimental-builds/releases`;
 export const OPTIMIZED_SETTINGS_CONTRIB_URL = `${REPO_OPTIMIZED_SETTINGS}/blob/main/docs/CONTRIBUTING.md`;
 export const TRANSLATIONS_URL = `${REPO_MANAGER}/blob/main/TRANSLATIONS.md`;

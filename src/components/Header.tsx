@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { useTheme } from "./ThemeProvider";
 import { ImageWithFallback } from "./ImageWithFallback";
 import { MoonIcon, SunIcon, CoffeeIcon, CloseIcon, MenuIcon } from "./Icons";
-import { FAQ_URL, KOFI_URL } from "@/lib/constants";
+import { WIKI_URL, KOFI_URL } from "@/lib/constants";
 
 export function Header() {
   const { theme, toggleTheme } = useTheme();
@@ -16,7 +16,7 @@ export function Header() {
   const isCompatibilityPage = pathname === "/compatibility";
   const isXeniaCanaryReleasesPage = pathname === "/xenia-canary-releases";
   const isGamesDatabasePage = pathname === "/gamesdatabase";
-  const shouldHideFAQ =
+  const shouldHideWiki =
     isCompatibilityPage || isXeniaCanaryReleasesPage || isGamesDatabasePage;
 
   const navItems = [
@@ -61,15 +61,15 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
-            {!shouldHideFAQ && (
+            {!shouldHideWiki && (
               <nav className="hidden lg:flex items-center gap-2 mr-2">
                 <a
-                  href={FAQ_URL}
+                  href={WIKI_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium text-sm whitespace-nowrap"
                 >
-                  FAQ
+                  Wiki
                 </a>
               </nav>
             )}
@@ -153,14 +153,14 @@ export function Header() {
                     {item.label}
                   </Link>
                 ))}
-                {!shouldHideFAQ && (
+                {!shouldHideWiki && (
                   <a
-                    href={FAQ_URL}
+                    href={WIKI_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[var(--foreground)]/80 hover:text-[var(--color-xbox-green)] transition-colors font-medium py-2 px-3 rounded-lg hover:bg-[var(--bg-accent)]"
                   >
-                    FAQ
+                    Wiki
                   </a>
                 )}
               </nav>

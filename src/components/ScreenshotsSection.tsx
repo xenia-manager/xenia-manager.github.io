@@ -65,27 +65,27 @@ export function ScreenshotsSection({
   }, [currentSlideIndex]);
 
   useEffect(() => {
-    if (
-      thumbnailsRef.current &&
-      currentSlide >= 0 &&
-      hasInteractedWithZoom.current
-    ) {
-      const thumbnail = thumbnailsRef.current.children[
-        currentSlide
-      ] as HTMLElement;
-      if (thumbnail) {
-        const container = thumbnailsRef.current;
-        const thumbnailLeft = thumbnail.offsetLeft;
-        const containerWidth = container.offsetWidth;
-        const scrollTarget =
-          thumbnailLeft - containerWidth / 2 + thumbnail.offsetWidth / 2;
+    const container = thumbnailsRef.current;
+    if (!container) return;
 
-        container.scrollTo({
-          left: scrollTarget,
-          behavior: "smooth",
-        });
-      }
-    }
+    const thumbnail = container.children[currentSlide] as HTMLElement;
+    if (!thumbnail) return;
+
+    const thumbLeft = thumbnail.offsetLeft;
+    const thumbRight = thumbLeft + thumbnail.offsetWidth;
+    const visibleLeft = container.scrollLeft;
+    const visibleRight = visibleLeft + container.clientWidth;
+
+    // Only scroll when the thumbnail is out of view
+    if (thumbLeft >= visibleLeft && thumbRight <= visibleRight) return;
+
+    const target =
+      thumbLeft < visibleLeft ? thumbLeft : thumbRight - container.clientWidth;
+
+    container.scrollTo({
+      left: Math.max(0, target),
+      behavior: "smooth",
+    });
   }, [currentSlide]);
 
   const handleZoomIn = useCallback(() => {
@@ -316,7 +316,7 @@ export function ScreenshotsSection({
           >
             <div
               ref={thumbnailsRef}
-              className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin"
+              className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
               {slides.map((slide, index) => (
                 <button

@@ -60,8 +60,8 @@ A modern, responsive website for Xenia Manager built with Next.js 16 and featuri
 The application fetches data from:
 
 ### Landing Page
-- **Screenshots**: [xenia-manager/xenia-manager](https://github.com/xenia-manager/xenia-manager)
-  - `https://raw.githubusercontent.com/xenia-manager/xenia-manager/refs/heads/main/assets/Screenshots/`
+- **Screenshots**: [xenia-manager/wiki](https://github.com/xenia-manager/wiki)
+  - `https://raw.githubusercontent.com/xenia-manager/wiki/refs/heads/main/docs/assets/desktop/`
 - **Optimized Settings**: [xenia-manager/optimized-settings](https://github.com/xenia-manager/optimized-settings)
   - List: `https://xenia-manager.github.io/optimized-settings/data/settings.json`
   - Settings: `https://xenia-manager.github.io/optimized-settings/settings/{GAME_ID}.toml`

@@ -50,7 +50,7 @@ export const PAGES_OPTIMIZED_SETTINGS = `${SITE_URL}/optimized-settings`;
 export const PAGES_X360DB = `${SITE_URL}/x360db`;
 
 // === Screenshots ===
-export const SCREENSHOTS_BASE = `${RAW_XENIA_MANAGER}/xenia-manager/refs/heads/main/assets/Screenshots`;
+export const SCREENSHOTS_BASE = `${RAW_XENIA_MANAGER}/wiki/refs/heads/main/docs/assets/desktop`;
 
 // === Issue Template URLs ===
 export const OUTDATED_SETTINGS_ISSUE = `${REPO_OPTIMIZED_SETTINGS}/issues/new?template=outdated_settings.yml`;
